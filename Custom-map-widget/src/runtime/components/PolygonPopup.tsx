@@ -3,7 +3,7 @@ import { jsx } from 'jimu-core';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import './PolygonPopup.css';
 import { useLocale } from './hooks/useLocale';
-import { normalizeGuidPlain } from '../pickMatchingGeoJsonRecord';
+import { stripGuidBraces } from '../pickMatchingGeoJsonRecord';
 // @ts-ignore - JSON импорт поддерживается в webpack
 import localesData from './locales.json';
 // @ts-ignore - JSON импорт поддерживается в webpack
@@ -862,7 +862,7 @@ const PolygonPopup = ({ isOpen, onClose, properties, position, containerRef, onE
 
       const rawUnique =
         String((properties as any)?.unique_id ?? (properties as any)?.uniqueId ?? '').trim();
-      const guid = rawUnique ? normalizeGuidPlain(rawUnique) : '';
+      const guid = rawUnique ? stripGuidBraces(rawUnique) : '';
 
       if (!guid) {
         setApiFileUrls([]);

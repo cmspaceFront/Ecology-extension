@@ -8,7 +8,7 @@ import Toast from './Toast';
 import { PolygonProperties } from './PolygonPopup';
 import { readSelectionIsExclusivelyEtid5 } from './GeoServerLayerTurFilter';
 import { useLocale } from './hooks/useLocale';
-import { normalizeGuidPlain, pickMatchingGeoJsonRecord } from '../pickMatchingGeoJsonRecord';
+import { normalizeGuidPlain, pickMatchingGeoJsonRecord, stripGuidBraces } from '../pickMatchingGeoJsonRecord';
 
 interface CustomModalProps {
   isOpen: boolean;
@@ -274,11 +274,11 @@ const CustomModal = ({ isOpen, onClose, polygonData, onDataUpdated, mapPortalRoo
     if (isOpen && dataToUse) {
       const rawUnique =
         String((dataToUse as any)?.unique_id ?? (dataToUse as any)?.uniqueId ?? '').trim();
-      const currentRecordId: string | null = rawUnique
+      const currentRecordNorm: string | null = rawUnique
         ? normalizeGuidPlain(rawUnique)
         : null;
 
-      const isNewPolygon = currentRecordId !== lastLoadedRecordIdRef.current;
+      const isNewPolygon = currentRecordNorm !== lastLoadedRecordIdRef.current;
       const isFirstOpen = lastLoadedRecordIdRef.current === null;
       const tekshirishRaw = (dataToUse as any)?.tekshirish;
       const tekshirishNormalized =
@@ -297,10 +297,10 @@ const CustomModal = ({ isOpen, onClose, polygonData, onDataUpdated, mapPortalRoo
         if (isNewPolygon) {
           isUserChangedResultRef.current = false;
         }
-        lastLoadedRecordIdRef.current = currentRecordId;
+        lastLoadedRecordIdRef.current = currentRecordNorm;
         lastAppliedTekshirishRef.current = tekshirishNormalized;
 
-        const objectIdDisplay = currentRecordId || '';
+        const objectIdDisplay = rawUnique ? stripGuidBraces(rawUnique) : '';
 
         const sana = dataToUse?.sana || '';
         const maydon = dataToUse?.maydon !== undefined && dataToUse?.maydon !== null ? String(dataToUse.maydon) : '';
@@ -341,7 +341,7 @@ const CustomModal = ({ isOpen, onClose, polygonData, onDataUpdated, mapPortalRoo
 
     const rawUnique =
       String((dataToUse as any)?.unique_id ?? (dataToUse as any)?.uniqueId ?? '').trim();
-    const guid = rawUnique ? normalizeGuidPlain(rawUnique) : '';
+    const guid = rawUnique ? stripGuidBraces(rawUnique) : '';
 
     if (!guid) {
       const paths = parseFilePaths(dataToUse?.file_path);
@@ -600,7 +600,7 @@ const CustomModal = ({ isOpen, onClose, polygonData, onDataUpdated, mapPortalRoo
     const fromProps = String((dataToUse as any)?.unique_id ?? (dataToUse as any)?.uniqueId ?? '').trim();
     const fromForm = String(formData.objectId ?? '').trim();
     const rawUnique = fromProps || fromForm;
-    const recordId = rawUnique ? normalizeGuidPlain(rawUnique) : '';
+    const recordId = rawUnique ? stripGuidBraces(rawUnique) : '';
 
     if (!recordId) {
       setSubmitError(t('modal.messages.noGlobalId'));
@@ -978,7 +978,7 @@ const CustomModal = ({ isOpen, onClose, polygonData, onDataUpdated, mapPortalRoo
                   <UploadIcon />
                   <div className="custom-modal__upload-text">
                     {uploadedFiles.length === 0
-                      ? <>{t('modal.fields.fileUpload.text')} <span>{t('modal.fields.fileUpload.textSpan')}</span></>
+                      ? <div>{t('modal.fields.fileUpload.text')} <span>{t('modal.fields.fileUpload.textSpan')}</span></div>
                       : t('modal.fields.fileUpload.addMore', { count: uploadedFiles.length, max: MAX_FILES })}
                   </div>
                   <div className="custom-modal__upload-hint">
@@ -1045,14 +1045,14 @@ const CustomModal = ({ isOpen, onClose, polygonData, onDataUpdated, mapPortalRoo
   ) : null;
 
   const portalContent = (modalContent || successModalContent) && portalContainer ? (
-    <>
+    <div>
       {modalContent}
       {successModalContent}
-    </>
+    </div>
   ) : null;
 
   return (
-    <>
+    <div>
       {portalContent && portalContainer && createPortal(portalContent, portalContainer)}
       {showToast && (
         <Toast
@@ -1065,7 +1065,7 @@ const CustomModal = ({ isOpen, onClose, polygonData, onDataUpdated, mapPortalRoo
           }}
         />
       )}
-    </>
+    </div>
   );
 };
 

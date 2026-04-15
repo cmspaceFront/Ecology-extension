@@ -1,9 +1,16 @@
-/** Нормализация GUID для сравнения */
+/** Нормализация GUID для сравнения (регистронезависимо). */
 export function normalizeGuidPlain(value: unknown): string {
   return String(value ?? '')
     .replace(/[{}]/g, '')
     .trim()
     .toUpperCase();
+}
+
+/** Для URL и localStorage: только убрать `{}`, регистр как у источника (API). */
+export function stripGuidBraces(value: unknown): string {
+  return String(value ?? '')
+    .replace(/[{}]/g, '')
+    .trim();
 }
 
 /** Подсказки с атрибутов клика по карте (ArcGIS) — сужают выбор при дубликатах unique_id в geojson */

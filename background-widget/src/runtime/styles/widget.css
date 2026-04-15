@@ -1,0 +1,268 @@
+:root {
+  --bg-primary: #0b1224;
+  --bg-secondary: #111827;
+  --bg-tertiary: #0f172a;
+  --bg-accent: #0b1324;
+  
+  --gradient-blue: rgba(96, 165, 250, 0.3);
+  --gradient-pink: rgba(236, 72, 153, 0.25);
+  --gradient-green: rgba(16, 185, 129, 0.25);
+  --gradient-purple: rgba(139, 92, 246, 0.2);
+}
+
+.background-widget {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -1;
+  overflow: hidden;
+}
+
+/* Слои фона */
+.bg-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  will-change: opacity;
+  transform: translateZ(0);
+}
+
+/* Плавное появление для всех слоёв */
+.bg-layer-current,
+.bg-layer-next {
+  transition: opacity 0.5s ease-out;
+}
+
+.background-gradient {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.gradient-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Основной градиентный фон */
+.layer-1 {
+  background: linear-gradient(
+    135deg,
+    var(--bg-primary) 0%,
+    var(--bg-secondary) 35%,
+    var(--bg-tertiary) 70%,
+    var(--bg-accent) 100%
+  );
+}
+
+/* Радиальные градиенты для глубины */
+.layer-2 {
+  background: 
+    radial-gradient(circle at 20% 20%, var(--gradient-blue), transparent 40%),
+    radial-gradient(circle at 80% 25%, var(--gradient-pink), transparent 35%),
+    radial-gradient(circle at 35% 80%, var(--gradient-green), transparent 32%);
+  opacity: 0.8;
+}
+
+/* Дополнительные акценты */
+.layer-3 {
+  background: 
+    radial-gradient(circle at 60% 50%, var(--gradient-purple), transparent 30%);
+  opacity: 0.6;
+}
+
+/* Анимированные круги */
+.animated-circles {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.circle {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  pointer-events: none;
+  animation: float 15s ease-in-out infinite;
+}
+
+.circle-1 {
+  width: 500px;
+  height: 500px;
+  top: 10%;
+  left: 10%;
+  background: radial-gradient(
+    circle,
+    var(--gradient-blue) 0%,
+    transparent 70%
+  );
+  animation-delay: 0s;
+}
+
+.circle-2 {
+  width: 450px;
+  height: 450px;
+  top: 60%;
+  right: 15%;
+  background: radial-gradient(
+    circle,
+    var(--gradient-pink) 0%,
+    transparent 70%
+  );
+  animation-delay: -5s;
+}
+
+.circle-3 {
+  width: 400px;
+  height: 400px;
+  bottom: 15%;
+  left: 30%;
+  background: radial-gradient(
+    circle,
+    var(--gradient-green) 0%,
+    transparent 70%
+  );
+  animation-delay: -10s;
+}
+
+.circle-4 {
+  width: 350px;
+  height: 350px;
+  top: 30%;
+  right: 40%;
+  background: radial-gradient(
+    circle,
+    var(--gradient-purple) 0%,
+    transparent 70%
+  );
+  animation-delay: -15s;
+}
+
+.circle-5 {
+  width: 420px;
+  height: 420px;
+  top: 50%;
+  left: 50%;
+  animation-delay: -2.5s;
+  animation-duration: 12s;
+}
+
+.circle-6 {
+  width: 380px;
+  height: 380px;
+  bottom: 25%;
+  right: 30%;
+  animation-delay: -7.5s;
+  animation-duration: 15s;
+}
+
+.circle-7 {
+  width: 320px;
+  height: 320px;
+  top: 20%;
+  left: 60%;
+  animation-delay: -12s;
+  animation-duration: 10s;
+}
+
+.circle-8 {
+  width: 400px;
+  height: 400px;
+  bottom: 5%;
+  left: 20%;
+  animation-delay: -4s;
+  animation-duration: 18s;
+}
+
+/* Анимация плавающих кругов */
+@keyframes float {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.5;
+  }
+  25% {
+    transform: translate(40px, -40px) scale(1.15);
+    opacity: 0.7;
+  }
+  50% {
+    transform: translate(-30px, 30px) scale(0.85);
+    opacity: 0.6;
+  }
+  75% {
+    transform: translate(30px, 40px) scale(1.1);
+    opacity: 0.65;
+  }
+}
+
+/* Дополнительная анимация для разнообразия */
+@keyframes float2 {
+  0%, 100% {
+    transform: translate(0, 0) scale(1) rotate(0deg);
+    opacity: 0.5;
+  }
+  33% {
+    transform: translate(-35px, 35px) scale(1.2) rotate(5deg);
+    opacity: 0.7;
+  }
+  66% {
+    transform: translate(35px, -25px) scale(0.9) rotate(-5deg);
+    opacity: 0.6;
+  }
+}
+
+.circle-5,
+.circle-7 {
+  animation-name: float2;
+}
+
+/* Адаптивность */
+@media (max-width: 1920px) {
+  .circle {
+    transform: scale(0.9);
+  }
+}
+
+@media (max-width: 1440px) {
+  .circle {
+    transform: scale(0.7);
+    filter: blur(50px);
+  }
+}
+
+@media (max-width: 1024px) {
+  .circle {
+    transform: scale(0.6);
+    filter: blur(40px);
+  }
+}
+
+@media (max-width: 768px) {
+  .circle {
+    transform: scale(0.4);
+    filter: blur(30px);
+  }
+  
+  .layer-2 {
+    opacity: 0.6;
+  }
+  
+  .layer-3 {
+    opacity: 0.4;
+  }
+}
+
+/* Оптимизация производительности */
+.background-widget {
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+

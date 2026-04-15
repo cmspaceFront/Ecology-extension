@@ -1,0 +1,25 @@
+{
+  "name": "space-eco-monitoring-widget",
+  "type": "widget",
+  "version": "1.0.0",
+  "exbVersion": "1.12.0",
+  "author": "Custom",
+  "description": "Space Eco Monitoring Widget with 3D Earth and Landing Page",
+  "copyright": "",
+  "license": "http://www.apache.org/licenses/LICENSE-2.0",
+  "properties": {
+    "hasSettingPage": true
+  },
+  "translatedLocales": [
+    "en",
+    "ru",
+    "uz-Latn",
+    "uz-Cyrl"
+  ],
+  "defaultSize": {
+    "width": 1920,
+    "height": 1080
+  }
+}
+
+

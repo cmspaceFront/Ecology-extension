@@ -1,0 +1,63 @@
+{
+  "search": {
+    "placeholder": "ID kiriting",
+    "noResults": "Tanlangan hududda ushbu ID ga bog'langan ma'lumot mavjud emas",
+    "loading": "Yuklanmoqda..."
+  },
+  "languageSwitch": {
+    "title": "Til"
+  },
+  "themeSwitch": {
+    "title": "Mavzu almashtirish"
+  },
+  "videosAndFiles": {
+    "title": "Video va fayllar",
+    "videosSection": "Videolar",
+    "filesSection": "Fayllar"
+  },
+  "videos": {
+    "v1": {
+      "title": "Ekologik monitoring moduliga umumiy nuqtai nazar",
+      "description": "Kosmik kuzatuv tizimida ekologik monitoring modulidan foydalanish bo'yicha to'liq qo'llanma"
+    },
+    "v2": {
+      "title": "Xarita va qatlamlar bilan ishlash",
+      "description": "Interaktiv xarita bilan qanday ishlash, ma'lumotlar qatlamlarini qo'shish va sozlash"
+    },
+    "v3": {
+      "title": "Ekologik ma'lumotlarni tahlil qilish",
+      "description": "Real vaqtda ekologik ko'rsatkichlarni tahlil qilish va vizualizatsiya usullari"
+    },
+    "v4": {
+      "title": "Bildirishnomalar va hisobotlarni sozlash",
+      "description": "Bildirishnomalar tizimini sozlash va avtomatik hisobotlarni yaratish bo'yicha qo'llanma"
+    }
+  },
+  "videoPlayer": {
+    "closeButton": "Videoni yopish",
+    "unsupportedBrowser": "Brauzeringiz video ijro etishni qo'llab-quvvatlamaydi."
+  },
+  "files": {
+    "f1": {
+      "name": "Monitoring_hisoboti_2024.pdf"
+    },
+    "f2": {
+      "name": "Ekologik_malumotlar_tahlili.xlsx"
+    },
+    "f3": {
+      "name": "Dashboard_konfiguratsiyasi.json"
+    },
+    "f4": {
+      "name": "Foydalanuvchi_qollanmasi.docx"
+    },
+    "f5": {
+      "name": "Statistika_umumiy_nuqtai_nazar.pptx"
+    }
+  },
+  "timeAgo": {
+    "justNow": "Hozir",
+    "hoursAgo": "{n} soat oldin",
+    "daysAgo": "{n} kun oldin"
+  }
+}
+

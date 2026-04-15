@@ -1,0 +1,1846 @@
+.space-eco-header-widget {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Geologica', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* Full-viewport block when exb_auth token fails ArcGIS login verification */
+.space-eco-header-auth-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483647;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+}
+
+.space-eco-header-auth-overlay-message {
+  margin: 0;
+  font-family: 'Geologica', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: #1a1a1a;
+  text-align: center;
+}
+
+.header-frame {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  width: 100%;
+  height: 80px;
+  padding: 0 24px;
+  background: rgba(16, 28, 50, 0.3);
+  /* #101c32 with 30% opacity */
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  /* White with 5% opacity */
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+  gap: 24px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.4s ease;
+  animation: borderGlow 3s ease-in-out infinite;
+}
+
+/* Sphere Image Background - Celestial Sphere */
+.sphere-image {
+  position: absolute;
+  left: -10px;
+  top: -26px;
+  width: 117px;
+  height: 117px;
+  object-fit: fill;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* Left Side - Logo and Title */
+.header-left-side {
+  display: flex;
+  align-items: center;
+  gap: 70px;
+  flex-shrink: 0;
+}
+
+/* Center - Search Bar */
+.header-center-side {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-width: 0;
+}
+
+/* Logo */
+.header-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  height: 60px;
+}
+
+.header-logo svg {
+  width: auto;
+  height: 100%;
+  max-height: 60px;
+  display: block;
+}
+
+/* Title */
+.header-title {
+  font-family: 'Geologica', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 28px;
+  line-height: 32px;
+  letter-spacing: 4.4px;
+  color: #ffffff;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Search Bar */
+.searchbar-container {
+  flex-shrink: 0;
+  max-width: 500px;
+  min-width: 200px;
+  width: 100%;
+  height: 44px;
+}
+
+.searchbar-content {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  height: 100%;
+  padding: 0 18px;
+  background: rgba(23, 39, 68, 0.25);
+  /* #172744 with 25% opacity */
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 22px;
+  transition: all 0.2s ease;
+}
+
+.searchbar-content:focus-within {
+  border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(23, 39, 68, 0.35);
+}
+
+.search-icon {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  color: #b4b4b4;
+}
+
+.search-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: 'Geologica', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-style: normal;
+  font-weight: 300;
+  font-size: 14px;
+  line-height: 20px;
+  color: #ffffff;
+  letter-spacing: 0;
+}
+
+.search-input::placeholder {
+  color: #b4b4b4;
+}
+
+.search-input:focus {
+  color: #ffffff;
+}
+
+.search-loading-icon {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  color: #b4b4b4;
+  animation: spin 1s linear infinite;
+}
+
+.search-clear-button {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #b4b4b4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  border-radius: 4px;
+}
+
+.search-clear-button:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.search-clear-button:active {
+  transform: scale(0.9);
+}
+
+.search-clear-button svg {
+  width: 16px;
+  height: 16px;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Suggestions Dropdown */
+.suggestions-dropdown-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 99998;
+  background: transparent;
+}
+
+.suggestions-dropdown-menu {
+  background: rgba(16, 28, 50, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+  max-height: 300px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 99999;
+  animation: dropdownSlideDown 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: top left;
+  min-width: 200px;
+  will-change: transform, opacity;
+}
+
+/* Responsive adjustments for dropdown */
+@media (max-width: 1400px) {
+  .suggestions-dropdown-menu {
+    max-width: 500px;
+    min-width: 300px;
+    max-height: 300px;
+    border-radius: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .suggestions-dropdown-menu {
+    max-width: 350px;
+    max-height: 250px;
+    border-radius: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .suggestions-dropdown-menu {
+    max-width: calc(100vw - 32px);
+    min-width: 150px;
+    max-height: 200px;
+    border-radius: 12px;
+  }
+}
+
+.suggestion-item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 12px 18px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font-family: 'Geologica', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  color: #ffffff;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.suggestion-item:last-child {
+  border-bottom: none;
+}
+
+.suggestion-item:hover,
+.suggestion-item.is-highlighted {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+.suggestion-item.no-results {
+  cursor: default;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.suggestion-item.no-results:hover {
+  background: transparent;
+}
+
+.suggestion-text {
+  user-select: none;
+  letter-spacing: 0;
+  word-break: break-all;
+  /* For screens > 1400px: show full text */
+  overflow: visible;
+  white-space: normal;
+  text-overflow: clip;
+}
+
+/* For screens <= 1400px: truncate with ellipsis and scale down */
+@media (max-width: 1400px) {
+  .suggestion-text {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    word-break: normal;
+    max-width: 100%;
+    font-size: clamp(11px, 1.2vw, 14px);
+  }
+  
+  /* Further reduce on smaller screens */
+  @media (max-width: 1200px) {
+    .suggestion-text {
+      font-size: clamp(10px, 1.1vw, 13px);
+    }
+  }
+  
+  @media (max-width: 992px) {
+    .suggestion-text {
+      font-size: clamp(9px, 1vw, 12px);
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .suggestion-text {
+      font-size: clamp(8px, 0.9vw, 11px);
+    }
+  }
+}
+
+/* Right Side Actions */
+.header-right-side {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.icon-buttons-group {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+}
+
+.icon-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #ffffff;
+  transition: all 0.2s ease;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.icon-button:hover svg path {
+  fill: #1487C5;
+}
+
+/* Active state - only for non-dropdown buttons, temporary (not persistent) */
+.icon-button:active:not(.open):not(.color-button):not(.language-button) {
+  transform: scale(0.95);
+}
+
+.icon-button:active:not(.open):not(.color-button):not(.language-button) svg path {
+  fill: #1487C5;
+}
+
+/* Dropdown buttons keep gradient when open */
+.icon-button.open svg path {
+  fill: #1487C5;
+}
+
+.icon-button svg {
+  width: auto;
+  height: auto;
+  max-width: 24px;
+  max-height: 24px;
+  display: block;
+}
+
+.icon-button svg path {
+  transition: fill 0.3s ease;
+}
+
+/* Language Selector */
+.header-language-selector {
+  position: relative;
+  display: flex;
+  align-items: center;
+  z-index: 10000;
+}
+
+.language-button {
+  position: relative;
+}
+
+
+.language-dropdown-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 99998;
+  background: transparent;
+}
+
+.language-dropdown-menu {
+  background: rgba(var(--bs-tertiary-rgb), .4);
+  backdrop-filter: blur(1rem);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+  min-width: 200px;
+  z-index: 99999;
+  overflow: hidden;
+  animation: dropdownFadeIn 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: top right;
+  display: flex;
+  flex-direction: column;
+}
+
+.language-dropdown-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.language-dropdown-title {
+  font-family: 'Geologica', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 24px;
+  color: #ffffff;
+  margin: 0;
+  user-select: none;
+}
+
+.language-items-list {
+  padding: 8px 0;
+}
+
+@keyframes dropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes dropdownSlideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.language-dropdown-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 12px 16px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font-family: 'Geologica', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  color: #ffffff;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  gap: 12px;
+}
+
+.language-item-content {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+}
+
+.language-dropdown-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+.language-dropdown-item.active {
+  background: rgba(255, 255, 255, 0.15);
+  font-weight: 600;
+}
+
+.language-item-label {
+  user-select: none;
+  letter-spacing: 0.5px;
+}
+
+.language-flag-icon {
+  flex-shrink: 0;
+  border-radius: 2px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.language-check-icon {
+  flex-shrink: 0;
+  color: #ffffff;
+  animation: checkFadeIn 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes checkFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.language-dropdown-item:first-child {
+  padding-top: 12px;
+}
+
+.language-dropdown-item:last-child {
+  padding-bottom: 12px;
+}
+
+.language-dropdown-item:hover {
+  transform: translateX(4px);
+}
+
+/* Profile / logout panel — same shell + list as language dropdown */
+.profile-account-dropdown-menu {
+  min-width: 220px;
+}
+
+.profile-account-dropdown-header {
+  align-items: flex-start;
+}
+
+.profile-account-dropdown-title {
+  margin: 0;
+  max-width: 100%;
+  word-break: break-word;
+  text-align: left;
+  line-height: 1.3;
+}
+
+.profile-logout-dropdown-icon {
+  flex-shrink: 0;
+  color: #ffffff;
+}
+
+.profile-logout-dropdown-item .language-item-content {
+  width: 100%;
+}
+
+/* Profile Selector */
+.header-profile-selector {
+  position: relative;
+  display: flex;
+  align-items: center;
+  z-index: 10000;
+}
+
+.profile-button {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  background: var(--profile-button-bg, linear-gradient(135deg, #667eea 0%, #764ba2 100%));
+  color: #ffffff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Geologica', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px var(--profile-button-shadow, rgba(0, 0, 0, 0.15));
+  position: relative;
+  overflow: hidden;
+}
+
+.profile-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: 50%;
+}
+
+.profile-button:hover::before {
+  opacity: 1;
+}
+
+.profile-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--profile-button-focus-shadow, rgba(102, 126, 234, 0.4)), 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.profile-button:hover {
+  transform: scale(1.05);
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 16px var(--profile-button-hover-shadow, rgba(102, 126, 234, 0.4)), 0 0 0 1px rgba(255, 255, 255, 0.1);
+  background: var(--profile-button-bg-hover, linear-gradient(135deg, #7c8ef0 0%, #8a5db8 100%));
+}
+
+.profile-button:active {
+  transform: scale(0.98);
+  transition: all 0.15s ease;
+}
+
+.profile-button.open {
+  border-color: rgba(255, 255, 255, 0.35);
+  box-shadow: 0 4px 16px var(--profile-button-open-shadow, rgba(102, 126, 234, 0.5)), 0 0 0 1px rgba(255, 255, 255, 0.15);
+  transform: scale(1.02);
+}
+
+/* Notification Button */
+.notification-button {
+  position: relative;
+}
+
+
+.notification-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 9px;
+  background: #ef4444;
+  border: 2px solid rgba(16, 28, 50, 0.3);
+  box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.5), 0 0 6px rgba(239, 68, 68, 0.45);
+  font-family: 'Geologica', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 14px;
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  animation: notificationBadgePulse 2.2s ease-out infinite;
+}
+
+.notification-item-unread {
+  background: rgba(239, 68, 68, 0.08);
+}
+
+.notification-item-unread-dot {
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #ef4444;
+  flex-shrink: 0;
+}
+
+/* WebSocket Connection Status Indicator */
+.ws-status-indicator {
+  position: absolute;
+  bottom: -2px;
+  left: -2px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid rgba(16, 28, 50, 0.3);
+  z-index: 1;
+}
+
+.ws-status-connected {
+  background: #10b981;
+  box-shadow: 0 0 6px rgba(16, 185, 129, 0.6);
+}
+
+.ws-status-connecting {
+  background: #f59e0b;
+  box-shadow: 0 0 6px rgba(245, 158, 11, 0.6);
+  animation: connectingPulse 1.5s ease-in-out infinite;
+}
+
+.ws-status-error,
+.ws-status-disconnected {
+  background: #ef4444;
+  box-shadow: 0 0 6px rgba(239, 68, 68, 0.6);
+}
+
+.ws-status-pulse {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: inherit;
+  animation: statusPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes connectingPulse {
+
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.7;
+    transform: scale(1.1);
+  }
+}
+
+@keyframes statusPulse {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translate(-50%, -50%) scale(2);
+    opacity: 0;
+  }
+}
+
+/* Без scale — цифры остаются чёткими; «кольцо» через box-shadow */
+@keyframes notificationBadgePulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.55), 0 0 6px rgba(239, 68, 68, 0.5);
+  }
+
+  70% {
+    box-shadow: 0 0 0 7px rgba(239, 68, 68, 0), 0 0 10px rgba(239, 68, 68, 0.35);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0), 0 0 6px rgba(239, 68, 68, 0.45);
+  }
+}
+
+.notification-dropdown-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 99998;
+  background: transparent;
+}
+
+.notification-dropdown-menu {
+  background: rgba(var(--bs-tertiary-rgb), .4);
+  backdrop-filter: blur(1rem);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+  width: 400px;
+  max-height: calc(100vh - 100px);
+  height: auto;
+  z-index: 99999;
+  overflow: hidden;
+  animation: dropdownFadeIn 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: top right;
+  display: flex;
+  flex-direction: column;
+}
+
+.notification-dropdown-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.notification-dropdown-title {
+  font-family: 'Geologica', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 24px;
+  color: #ffffff;
+  margin: 0;
+  user-select: none;
+}
+
+.notification-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.notification-action-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.7);
+  transition: all 0.2s ease;
+  border-radius: 4px;
+}
+
+.notification-action-button:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.notification-list {
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+  padding: 8px 0;
+  position: relative;
+  background: rgba(16, 28, 50, 0.25);
+  border-radius: 0 0 16px 16px;
+  transition: background 0.25s ease;
+}
+
+/* При смене страницы старый список остаётся видимым, фон не прозрачный */
+.notification-list-loading-page {
+  background: rgba(16, 28, 50, 0.45);
+}
+
+.notification-list-loading-page .notification-list-page {
+  opacity: 0.7;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.notification-list-page {
+  animation: notificationPageIn 0.35s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes notificationPageIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.notification-list-loading .notification-text {
+  animation: notificationLoadingPulse 0.8s ease-in-out infinite;
+}
+
+@keyframes notificationLoadingPulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+.notification-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.notification-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.notification-list::-webkit-scrollbar-thumb {
+  background: var(--theme-primary-rgba, rgba(78, 204, 242, 0.6));
+  border-radius: 3px;
+}
+
+.notification-list::-webkit-scrollbar-thumb:hover {
+  background: var(--theme-primary-rgba-hover, rgba(78, 204, 242, 0.8));
+}
+
+.notification-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 12px 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  flex-shrink: 0;
+  animation: notificationPaginationIn 0.25s ease-out;
+}
+
+@keyframes notificationPaginationIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.notification-pagination-btn {
+  font-family: 'Geologica', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 13px;
+  padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  color: #ffffff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.notification-pagination-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.notification-pagination-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.notification-pagination-info {
+  font-family: 'Geologica', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.8);
+  min-width: 4em;
+  text-align: center;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.notification-pagination-page-num {
+  display: inline-block;
+  animation: notificationPageNumIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes notificationPageNumIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.notification-pagination-btn {
+  transition: background 0.2s ease, border-color 0.2s ease, opacity 0.2s ease, transform 0.15s ease;
+}
+
+.notification-pagination-btn:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.notification-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 20px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  position: relative;
+}
+
+.notification-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.notification-icon-wrapper {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: white;
+}
+
+.notification-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.notification-text {
+  font-family: 'Geologica', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  color: #ffffff;
+  word-wrap: break-word;
+}
+
+.notification-timestamp {
+  font-family: 'Geologica', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-style: normal;
+  font-weight: 300;
+  font-size: 12px;
+  line-height: 16px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.notification-unread-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ef4444;
+  flex-shrink: 0;
+  margin-top: 6px;
+  box-shadow: 0 0 4px rgba(239, 68, 68, 0.5);
+}
+
+.notification-mark-read-button {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: 4px;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.7);
+  transition: all 0.2s ease;
+  opacity: 0;
+}
+
+.notification-item:hover .notification-mark-read-button {
+  opacity: 1;
+}
+
+.notification-mark-read-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+
+.notification-mark-read-button svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* Color Selector */
+.header-color-selector {
+  position: relative;
+  display: flex;
+  align-items: center;
+  z-index: 10000;
+}
+
+.color-button {
+  position: relative;
+}
+
+.color-button.open {
+  background: transparent;
+}
+
+.color-dropdown-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 99998;
+  background: transparent;
+}
+
+.color-dropdown-menu {
+  background: rgba(var(--bs-tertiary-rgb), .4);
+  backdrop-filter: blur(1rem);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+  width: 400px;
+  max-height: calc(100vh - 100px);
+  height: auto;
+  z-index: 99999;
+  overflow: hidden;
+  animation: dropdownFadeIn 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: top right;
+  display: flex;
+  flex-direction: column;
+}
+
+.color-dropdown-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.color-dropdown-title {
+  font-family: 'Geologica', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 24px;
+  color: #ffffff;
+  margin: 0;
+  user-select: none;
+}
+
+.color-refresh-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.7);
+  transition: all 0.2s ease;
+  border-radius: 50%;
+}
+
+.color-refresh-button:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.theme-options-container {
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.theme-options-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.theme-options-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.theme-options-container::-webkit-scrollbar-thumb {
+  background: var(--theme-primary-rgba, rgba(78, 204, 242, 0.6));
+  border-radius: 3px;
+}
+
+.theme-options-container::-webkit-scrollbar-thumb:hover {
+  background: var(--theme-primary-rgba-hover, rgba(78, 204, 242, 0.8));
+}
+
+.theme-option {
+  width: 100%;
+  height: 80px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.theme-option:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.theme-option.selected {
+  border-color: #ffffff;
+  border-width: 2px;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3), 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.theme-check-icon {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  flex-shrink: 0;
+  animation: checkFadeIn 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 2;
+}
+
+.theme-new-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: #ef4444;
+  color: #ffffff;
+  font-family: 'Geologica', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 4px;
+  z-index: 2;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.theme-name {
+  font-family: 'Geologica', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 20px;
+  color: #ffffff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  z-index: 1;
+  position: relative;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1920px) {
+  .header-frame {
+    padding: 0 20px;
+  }
+
+  .searchbar-container {
+    max-width: 500px;
+  }
+}
+
+@media (max-width: 1440px) {
+  .header-title {
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 28px;
+    letter-spacing: 2px;
+  }
+
+  .header-center-side {
+    justify-content: center;
+    padding: 0 16px;
+  }
+
+  .searchbar-container {
+    max-width: 460px;
+    width: 100%;
+  }
+
+  .searchbar-content {
+    max-width: 100%;
+  }
+
+  .icon-buttons-group {
+    gap: 20px;
+  }
+
+  /* Ensure dropdown matches search bar at 1440px */
+  .suggestions-dropdown-menu {
+    max-width: 460px;
+    min-width: 300px;
+  }
+}
+
+@media (max-width: 1400px) {
+  .header-frame {
+    grid-template-columns: auto 1fr auto;
+    gap: 20px;
+    padding: 0 20px;
+  }
+
+  .header-left-side {
+    gap: 24px;
+  }
+
+  .header-title {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 2px;
+  }
+
+  .header-logo {
+    height: 55px;
+  }
+
+  .header-center-side {
+    justify-content: center;
+    padding: 0 20px;
+  }
+
+  .searchbar-container {
+    max-width: 500px;
+    width: 100%;
+    min-width: 300px;
+  }
+
+  .searchbar-content {
+    max-width: 100%;
+  }
+
+  .header-right-side {
+    gap: 16px;
+  }
+
+  .icon-buttons-group {
+    gap: 16px;
+  }
+
+  .icon-button {
+    width: 26px;
+    height: 26px;
+  }
+
+  .icon-button svg {
+    max-width: 22px;
+    max-height: 22px;
+  }
+
+  /* Ensure dropdown matches search bar width at 1400px */
+  .suggestions-dropdown-menu {
+    max-width: 500px;
+    min-width: 300px;
+  }
+}
+@media (max-width: 1440px) {
+
+  .header-left-side {
+    font-size: 20px;
+    font-weight: 700;
+    gap: 10px;
+  }
+
+  .header-right-side {
+    gap: 20px;
+  }
+
+  .icon-button {
+    width: 24px;
+    height: 24px;
+  }
+
+  .icon-button svg {
+    max-width: 24px;
+    max-height: 24px;
+  }
+}
+@media (max-width: 1024px) {
+  .header-frame {
+    padding: 0 16px;
+    gap: 12px;
+  }
+
+  .header-left-side {
+    gap: 10px;
+  }
+
+  .header-logo {
+    height: 45px;
+  }
+
+  .header-title {
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 1px;
+  }
+
+  .header-center-side {
+    padding: 0 12px;
+  }
+
+  .searchbar-container {
+    max-width: 280px;
+    width: 100%;
+    height: 38px;
+    min-width: 200px;
+  }
+
+  .searchbar-content {
+    padding: 0 12px;
+  }
+
+  .search-input {
+    font-size: 13px;
+  }
+
+  .icon-button {
+    width: 22px;
+    height: 22px;
+  }
+
+  .icon-button svg {
+    max-width: 18px;
+    max-height: 18px;
+  }
+
+  .user-avatar,
+  .user-avatar-container {
+    width: 32px;
+    height: 32px;
+  }
+
+  /* Smaller dropdown at 1024px */
+  .suggestions-dropdown-menu {
+    max-width: 280px;
+    min-width: 200px;
+    max-height: 250px;
+    border-radius: 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .header-frame {
+    flex-wrap: wrap;
+    height: auto;
+    min-height: 64px;
+    padding: 12px 16px;
+    gap: 12px;
+  }
+
+  .header-left-side {
+    order: 0;
+    width: 100%;
+    margin-bottom: 8px;
+  }
+
+  .header-logo {
+    height: 40px;
+  }
+
+  .header-title {
+    flex: 1;
+    text-align: left;
+  }
+
+  .header-right-side {
+    order: 1;
+    width: 100%;
+    flex-direction: column;
+    gap: 12px;
+    margin-left: 0;
+  }
+
+  .searchbar-container {
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .sphere-image {
+    display: none;
+  }
+}
+
+/* Category Button */
+.category-button {
+  position: relative;
+}
+
+
+.category-dropdown-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 99998;
+  background: transparent;
+}
+
+.category-dropdown-menu {
+  background: rgba(var(--bs-tertiary-rgb), .4);
+  backdrop-filter: blur(1rem);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+  width: 400px;
+  max-height: calc(100vh - 100px);
+  height: auto;
+  z-index: 99999;
+  overflow: hidden;
+  animation: dropdownFadeIn 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: top right;
+  display: flex;
+  flex-direction: column;
+}
+
+.category-dropdown-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.category-dropdown-title {
+  font-family: 'Geologica', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 24px;
+  color: #ffffff;
+  margin: 0;
+  user-select: none;
+}
+
+.category-content {
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+  padding: 16px 20px;
+}
+
+.category-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.category-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.category-content::-webkit-scrollbar-thumb {
+  background: var(--theme-primary-rgba, rgba(78, 204, 242, 0.6));
+  border-radius: 3px;
+}
+
+.category-content::-webkit-scrollbar-thumb:hover {
+  background: var(--theme-primary-rgba-hover, rgba(78, 204, 242, 0.8));
+}
+
+.category-section {
+  margin-bottom: 24px;
+}
+
+.category-section:last-child {
+  margin-bottom: 0;
+}
+
+.category-section-title {
+  font-family: 'Geologica', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  user-select: none;
+}
+
+.category-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.category-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+}
+
+.category-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateX(4px);
+}
+
+.video-thumbnail,
+.file-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  flex-shrink: 0;
+}
+
+/* Video Thumbnail Preview */
+.video-thumbnail-preview {
+  position: relative;
+  width: 80px;
+  height: 45px;
+  border-radius: 6px;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.video-thumbnail-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.video-play-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.3);
+  color: #ffffff;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.category-item.video-item:hover .video-play-overlay {
+  opacity: 1;
+}
+
+.category-item-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.category-item-title {
+  font-family: 'Geologica', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  color: #ffffff;
+  word-wrap: break-word;
+}
+
+.category-item-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Geologica', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-style: normal;
+  font-weight: 300;
+  font-size: 12px;
+  line-height: 16px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.file-download-icon {
+  flex-shrink: 0;
+  color: rgba(255, 255, 255, 0.6);
+  transition: all 0.2s ease;
+}
+
+.category-item:hover .file-download-icon {
+  color: #ffffff;
+  transform: translateY(-2px);
+}
+
+/* Video Player Modal */
+.video-player-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(4px);
+  z-index: 100000;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.video-player-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 95%;
+  max-width: 1600px;
+  max-height: 95vh;
+  background: rgba(var(--bs-tertiary-rgb), .95);
+  backdrop-filter: blur(1rem);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.3);
+  z-index: 100001;
+  display: flex;
+  flex-direction: column;
+  animation: modalFadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.9);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+.video-player-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  cursor: pointer;
+  color: #ffffff;
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+
+.video-player-close:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: rotate(90deg);
+}
+
+.video-player-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.video-player-title {
+  font-family: 'Geologica', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 28px;
+  color: #ffffff;
+  margin: 0;
+}
+
+.video-player-container {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%;
+  /* 16:9 aspect ratio */
+  background: #000000;
+}
+
+.video-player {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  outline: none;
+}
+
+/* Border Glow Animation - using theme colors */
+@keyframes borderGlow {
+
+  0%,
+  100% {
+    border-color: var(--border-glow-start, rgba(78, 204, 242, 0.1));
+  }
+
+  50% {
+    border-color: var(--border-glow-end, rgba(78, 204, 242, 0.35));
+  }
+}
+
+@media (max-width: 1400px) {
+  .icon-button svg {
+    max-width: 20px;
+    max-height: 20px;
+  }
+  .search-input {
+    font-size: 10px;
+  }
+}

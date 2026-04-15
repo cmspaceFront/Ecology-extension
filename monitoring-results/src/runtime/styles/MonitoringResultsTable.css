@@ -1,0 +1,860 @@
+/* Import Geologica font (keep if you rely on it here; otherwise you can move to widget.css) */
+@import url('https://fonts.googleapis.com/css2?family=Geologica:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+/* =========================================================
+   TABLE WRAPPER (container queries + responsive tokens)
+========================================================= */
+.monitoring-results-table-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  /* ✅ container queries for this table */
+  container-type: inline-size;
+  container-name: monitoringTable;
+
+  min-width: 0;
+
+  /* ✅ Responsive tokens (used across header/body) – ID larger, date, status smaller */
+  --id-col: clamp(220px, 40cqi, 520px);
+  --date-col: clamp(90px, 12cqi, 120px);
+  --id-font: clamp(12px, 1.6cqi, 14px);
+
+  --th-font: clamp(11px, 1.4cqi, 13px);
+  --td-font: clamp(12px, 1.4cqi, 13px);
+
+  --th-pad-y: clamp(12px, 1.8cqi, 20px);
+  --th-pad-x: clamp(12px, 2.4cqi, 32px);
+
+  --status-pad-x: clamp(6px, 1.2cqi, 14px);
+  --status-pad-right: clamp(8px, 2cqi, 20px);
+}
+
+/* =========================================================
+   TABLE BASE
+========================================================= */
+.monitoring-results-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: transparent;
+  table-layout: fixed;
+}
+
+/* Header table (separate from scroll body table) */
+.monitoring-results-table thead {
+  display: table;
+  width: calc(100% - 8px);
+  /* Account for scrollbar space (8px like region-statistics-chart) */
+  table-layout: fixed;
+}
+
+.monitoring-results-table thead th {
+  padding: var(--th-pad-y) var(--th-pad-x);
+  font-size: var(--th-font);
+  font-weight: 600;
+  color: #ffffff;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  letter-spacing: 0.5px;
+  animation: headerFadeIn 0.7s ease-out both;
+
+  /* ✅ allow header content to adapt */
+  white-space: normal;
+  min-width: 0;
+}
+
+/* Body scroll container — scrollbar как у region-statistics-chart */
+.monitoring-results-tbody-container {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 8px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--theme-primary, #4eccf2) transparent;
+  contain: paint;
+  transform: translateZ(0);
+  will-change: scroll-position;
+  -webkit-overflow-scrolling: touch;
+}
+
+.monitoring-results-tbody-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.monitoring-results-tbody-container::-webkit-scrollbar-button {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  background: none !important;
+  border: none !important;
+  -webkit-appearance: none !important;
+  appearance: none !important;
+}
+
+.monitoring-results-tbody-container::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 4px;
+}
+
+.monitoring-results-tbody-container::-webkit-scrollbar-thumb {
+  background: var(--theme-primary, #4eccf2);
+  border-radius: 4px;
+  transition: background 0.2s ease;
+}
+
+.monitoring-results-tbody-container::-webkit-scrollbar-thumb:hover {
+  background: var(--theme-light, #70d4f4);
+}
+
+/* Body table inside scroll container */
+.monitoring-results-tbody-container .monitoring-results-table {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+/* =========================================================
+   COLUMNS
+========================================================= */
+/* ✅ ID column responsive width (applies to colgroup + header + cells) */
+.monitoring-results-col-id,
+.monitoring-results-header-id,
+.monitoring-results-id {
+  width: var(--id-col);
+  min-width: var(--id-col);
+  max-width: var(--id-col);
+}
+
+.monitoring-results-col-date,
+.monitoring-results-header-date,
+.monitoring-results-date {
+  width: var(--date-col);
+  min-width: var(--date-col);
+  max-width: var(--date-col);
+}
+
+.monitoring-results-col-status {
+  width: auto;
+}
+
+/* =========================================================
+   HEADER: status labels (UZCOSMOS / EKOLOGIYA / PROKURATURA)
+========================================================= */
+.monitoring-results-header-status {
+  padding: var(--th-pad-y) var(--status-pad-x) !important;
+  padding-right: var(--status-pad-right) !important;
+}
+
+/* ✅ Replace absolute-positioned labels with a 3-col grid */
+.monitoring-results-header-columns {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: center;
+  gap: clamp(6px, 1.2cqi, 12px);
+
+  margin: 0;
+  min-width: 0;
+}
+
+.monitoring-results-column-label {
+  position: static;
+  transform: none;
+
+  text-align: center;
+  font-size: var(--th-font);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  /* ✅ always visible; truncates safely */
+  min-width: 0;
+}
+
+/* =========================================================
+   ROWS / CELLS
+========================================================= */
+.monitoring-results-table tbody tr {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  animation: rowFadeIn 0.6s ease-out both;
+}
+
+/* Staggered row appearance */
+.monitoring-results-table tbody tr:nth-child(1) {
+  animation-delay: 0.05s;
+}
+
+.monitoring-results-table tbody tr:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+.monitoring-results-table tbody tr:nth-child(3) {
+  animation-delay: 0.15s;
+}
+
+.monitoring-results-table tbody tr:nth-child(4) {
+  animation-delay: 0.2s;
+}
+
+.monitoring-results-table tbody tr:nth-child(5) {
+  animation-delay: 0.25s;
+}
+
+.monitoring-results-table tbody tr:nth-child(6) {
+  animation-delay: 0.3s;
+}
+
+.monitoring-results-table tbody tr:nth-child(7) {
+  animation-delay: 0.35s;
+}
+
+.monitoring-results-table tbody tr:nth-child(8) {
+  animation-delay: 0.4s;
+}
+
+.monitoring-results-table tbody tr:nth-child(9) {
+  animation-delay: 0.45s;
+}
+
+.monitoring-results-table tbody tr:nth-child(10) {
+  animation-delay: 0.5s;
+}
+
+.monitoring-results-table tbody tr:nth-child(n+11) {
+  animation-delay: 0.55s;
+}
+
+.monitoring-results-table tbody tr:hover {
+  background:
+    linear-gradient(0deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1)),
+    linear-gradient(0deg, rgba(66, 81, 242, 0.15), rgba(66, 81, 242, 0.15));
+  border-top: 1px solid #ffffff0d;
+  border-radius: 20px;
+}
+
+.monitoring-results-table tbody tr.selected {
+  background-color: rgba(74, 144, 226, 0.14);
+  border-left: 2px solid var(--theme-primary, #4eccf2);
+}
+
+.monitoring-results-table tbody tr.selected .monitoring-results-id {
+  color: rgba(255, 255, 255, 0.95);
+  font-weight: 600;
+}
+
+.monitoring-results-table tbody td {
+  padding: var(--th-pad-y) var(--th-pad-x);
+  color: #ffffff;
+  font-size: var(--td-font);
+  vertical-align: middle;
+  min-width: 0;
+}
+
+/* ✅ ID smaller + dots at the end */
+.monitoring-results-id {
+  font-family: 'Geologica', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  color: #ffffff;
+  font-size: var(--id-font);
+  font-weight: 500;
+  letter-spacing: 0.3px;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.monitoring-results-status-cell {
+  padding: var(--th-pad-y) var(--status-pad-x) !important;
+  padding-right: var(--status-pad-right) !important;
+}
+
+/* =========================================================
+   ERROR / LOADING
+========================================================= */
+.monitoring-results-error,
+.monitoring-results-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  color: #ffffff;
+  font-size: 14px;
+}
+
+/* =========================================================
+   BOTTOM FADE
+========================================================= */
+.monitoring-results-bottom-fade {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 8px;
+  /* scrollbar space */
+  height: 80px;
+  pointer-events: none;
+  background: linear-gradient(to bottom,
+      #0A335700,
+      #0A335700,
+      #0D1B3100,
+      #0D1B3100,
+      #0D1B33);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 10;
+  mask-image: linear-gradient(to bottom,
+      transparent 0%,
+      rgba(0, 0, 0, 0.3) 30%,
+      rgba(0, 0, 0, 1) 100%);
+  -webkit-mask-image: linear-gradient(to bottom,
+      transparent 0%,
+      rgba(0, 0, 0, 0.3) 30%,
+      rgba(0, 0, 0, 1) 100%);
+}
+
+/* =========================================================
+   ANIMATIONS
+========================================================= */
+@keyframes rowFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes headerFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =========================================================
+   LOAD MORE
+========================================================= */
+.monitoring-results-load-more-row {
+  animation: none !important;
+  border-bottom: none !important;
+}
+
+.monitoring-results-load-more-row:hover {
+  background: transparent !important;
+  border: none !important;
+}
+
+.monitoring-results-load-more-row td {
+  padding: 12px 32px 20px !important;
+  text-align: center;
+}
+
+.monitoring-results-load-more-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 20px;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  color: rgba(255, 255, 255, 0.6);
+  font-family: 'Geologica', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.monitoring-results-load-more-button:hover {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.monitoring-results-load-more-button:hover .load-more-text {
+  text-decoration: underline;
+}
+
+.monitoring-results-load-more-button .load-more-text {
+  font-weight: 500;
+}
+
+.monitoring-results-load-more-button .load-more-count {
+  font-size: 12px;
+  opacity: 0.6;
+}
+
+/* =========================================================
+   EMPTY STATE (unchanged from your version)
+========================================================= */
+.monitoring-results-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  min-height: 320px;
+  padding: 40px 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.monitoring-results-empty-state::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(66, 81, 242, 0.08) 0%, transparent 70%);
+  transform: translate(-50%, -50%);
+  animation: emptyPulseGlow 4s ease-in-out infinite;
+}
+
+.monitoring-results-empty-icon-wrapper {
+  position: relative;
+  margin-bottom: 24px;
+  opacity: 0;
+  animation: emptyIconBounce 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s forwards;
+}
+
+.monitoring-results-empty-ring {
+  position: absolute;
+  top: -12px;
+  left: -12px;
+  right: -12px;
+  bottom: -12px;
+  border: 2px dashed rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  animation: emptyRingSpin 20s linear infinite;
+}
+
+.monitoring-results-empty-dots {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100px;
+  height: 100px;
+  transform: translate(-50%, -50%);
+}
+
+.monitoring-results-empty-dot {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: rgba(66, 81, 242, 0.5);
+  border-radius: 50%;
+  animation: emptyDotPulse 2s ease-in-out infinite;
+}
+
+.monitoring-results-empty-dot:nth-child(1) {
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  animation-delay: 0s;
+}
+
+.monitoring-results-empty-dot:nth-child(2) {
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  animation-delay: 0.5s;
+}
+
+.monitoring-results-empty-dot:nth-child(3) {
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  animation-delay: 1s;
+}
+
+.monitoring-results-empty-dot:nth-child(4) {
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  animation-delay: 1.5s;
+}
+
+.monitoring-results-empty-icon {
+  position: relative;
+  z-index: 1;
+  width: 72px;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, rgba(66, 81, 242, 0.15), rgba(74, 144, 226, 0.1));
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.monitoring-results-empty-icon svg {
+  width: 32px;
+  height: 32px;
+  stroke: rgba(255, 255, 255, 0.5);
+  animation: emptyIconFloat 3s ease-in-out infinite;
+}
+
+.monitoring-results-empty-title {
+  font-family: 'Geologica', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.85);
+  margin-bottom: 8px;
+  opacity: 0;
+  animation: emptyTextUp 0.6s ease-out 0.3s forwards;
+  text-align: center;
+}
+
+.monitoring-results-empty-subtitle {
+  font-family: 'Geologica', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.45);
+  opacity: 0;
+  animation: emptyTextUp 0.6s ease-out 0.45s forwards;
+  text-align: center;
+}
+
+.monitoring-results-empty-line {
+  width: 40px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(66, 81, 242, 0.5), transparent);
+  margin: 16px 0;
+  opacity: 0;
+  animation: emptyLineExpand 0.8s ease-out 0.6s forwards;
+}
+
+@keyframes emptyPulseGlow {
+
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.2);
+  }
+}
+
+@keyframes emptyIconBounce {
+  0% {
+    opacity: 0;
+    transform: scale(0.3) translateY(20px);
+  }
+
+  50% {
+    transform: scale(1.1) translateY(-5px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes emptyIconFloat {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+@keyframes emptyRingSpin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes emptyDotPulse {
+
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: translateX(-50%) scale(1);
+  }
+
+  50% {
+    opacity: 1;
+    transform: translateX(-50%) scale(1.5);
+  }
+}
+
+@keyframes emptyTextUp {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes emptyLineExpand {
+  from {
+    opacity: 0;
+    width: 0;
+  }
+
+  to {
+    opacity: 1;
+    width: 40px;
+  }
+}
+
+/* Center header texts */
+.monitoring-results-header-id {
+  text-align: center;
+}
+
+.monitoring-results-header-status {
+  text-align: center;
+}
+
+/* Optional: center ID values too */
+.monitoring-results-id {
+  text-align: center;
+}
+
+.monitoring-results-header-date {
+  text-align: center;
+}
+
+.monitoring-results-header-date-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(4px, 0.8cqi, 10px);
+  flex-wrap: nowrap;
+  min-width: 0;
+}
+
+.monitoring-results-header-date-label {
+  min-width: 0;
+}
+
+.monitoring-results-date-sort-btn {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  margin: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.92);
+  cursor: pointer;
+  transition: color 0.15s ease, opacity 0.15s ease;
+}
+
+.monitoring-results-date-sort-btn:hover {
+  color: #fff;
+}
+
+.monitoring-results-date-sort-btn:focus-visible {
+  outline: 2px solid rgba(40, 190, 193, 0.7);
+  outline-offset: 2px;
+}
+
+.monitoring-results-sort-arrows {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  width: 10px;
+  height: 14px;
+}
+
+.monitoring-results-sort-arrows svg {
+  display: block;
+  width: 10px;
+  height: 7px;
+}
+
+.monitoring-results-date-sort-btn.is-desc .sort-arrow-up,
+.monitoring-results-date-sort-btn.is-asc .sort-arrow-down {
+  opacity: 0.35;
+}
+
+.monitoring-results-date-sort-btn.is-desc .sort-arrow-down,
+.monitoring-results-date-sort-btn.is-asc .sort-arrow-up {
+  opacity: 1;
+}
+
+.monitoring-results-date {
+  text-align: center;
+  font-size: var(--td-font);
+  color: rgba(255, 255, 255, 0.85);
+}
+
+@media (max-width: 1440px) {
+  .monitoring-results-column-label {
+    font-size: 8px;
+  }
+}
+
+
+/* =========================================================
+   ID TOOLTIP (custom popup instead of native title tooltip)
+========================================================= */
+.monitoring-id-tooltip {
+  position: fixed;
+  z-index: 99999;
+  pointer-events: none;
+
+  padding: 8px 10px;
+  border-radius: 12px;
+
+  background: rgba(13, 27, 51, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(255, 255, 255, 0.02) inset;
+
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  color: rgba(255, 255, 255, 0.92);
+  font-family: 'Geologica', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  line-height: 1.2;
+
+  max-width: min(420px, 72vw);
+  white-space: normal;
+  word-break: break-all;
+
+  transform: translate(12px, calc(-100% - 12px)) scale(0.98);
+  opacity: 0;
+  animation: monitoringIdTipIn 120ms ease-out forwards;
+
+  filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.35));
+}
+
+.monitoring-id-tooltip::after {
+  content: "";
+  position: absolute;
+  left: 16px;
+  bottom: -6px;
+
+  border-width: 6px;
+  border-style: solid;
+  border-color: rgba(13, 27, 51, 0.92) transparent transparent transparent;
+}
+
+@keyframes monitoringIdTipIn {
+  to {
+    opacity: 1;
+    transform: translate(12px, calc(-100% - 12px)) scale(1);
+  }
+}
+
+
+.monitoring-id-tooltip {
+  position: fixed;
+  z-index: 99999;
+  pointer-events: none;
+
+  padding: 8px 10px;
+  border-radius: 12px;
+
+  background: rgba(13, 27, 51, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(255, 255, 255, 0.02) inset;
+
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  color: rgba(255, 255, 255, 0.92);
+  font-family: 'Geologica', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  line-height: 1.2;
+
+  max-width: min(420px, 72vw);
+  white-space: normal;
+  word-break: break-all;
+
+  /* ✅ bottom side (below anchor point) */
+  transform: translate(12px, 12px) scale(0.98);
+  opacity: 0;
+  animation: monitoringIdTipIn 120ms ease-out forwards;
+}
+
+/* ✅ arrow on TOP (pointing up to the cell) */
+.monitoring-id-tooltip::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -6px;
+  transform: translateX(-50%);
+
+  border-width: 6px;
+  border-style: solid;
+  border-color: transparent transparent rgba(13, 27, 51, 0.92) transparent;
+}
+
+@keyframes monitoringIdTipIn {
+  to {
+    opacity: 1;
+    transform: translate(12px, 12px) scale(1);
+  }
+}
+
+/* Parent adds this class after 10s: freeze table / empty-state motion */
+.monitoring-results-widget.monitoring-results-animations-settled .monitoring-results-table thead th,
+.monitoring-results-widget.monitoring-results-animations-settled .monitoring-results-table tbody tr {
+  animation: none !important;
+  animation-delay: 0s !important;
+  opacity: 1;
+  transform: none;
+}
+
+.monitoring-results-widget.monitoring-results-animations-settled .monitoring-results-empty-state::before {
+  animation: none !important;
+  opacity: 0.75;
+  transform: translate(-50%, -50%) scale(1.1);
+}
+
+.monitoring-results-widget.monitoring-results-animations-settled .monitoring-results-empty-ring {
+  animation: none !important;
+}
+
+.monitoring-results-widget.monitoring-results-animations-settled .monitoring-results-empty-dot {
+  animation: none !important;
+}
+
+.monitoring-results-widget.monitoring-results-animations-settled .monitoring-results-empty-icon svg {
+  animation: none !important;
+}

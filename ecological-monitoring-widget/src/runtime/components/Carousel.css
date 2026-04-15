@@ -1,0 +1,95 @@
+:root {
+  --carousel-transition-duration: 1.2s;
+  --carousel-transition-ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --carousel-drag-duration: 0s;
+}
+
+.carousel-track {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  touch-action: pan-y;
+  cursor: grab;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.carousel-track:active,
+.carousel-track.dragging {
+  cursor: grabbing;
+}
+
+/* Во время перетаскивания - без transition для мгновенного отклика */
+.carousel-track.dragging .carousel-card {
+  transition: none !important;
+}
+
+/* Без перетаскивания - плавные переходы только для некоторых свойств */
+.carousel-track:not(.dragging) .carousel-card {
+  /* Не используем transition на transform - он управляется через JS */
+  transition: opacity 0.3s ease-out,
+    box-shadow 0.3s ease-out,
+    clip-path 0.3s ease-out,
+    -webkit-clip-path 0.3s ease-out;
+}
+
+.carousel-track * {
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.carousel-wrapper {
+  transition: transform var(--carousel-transition-duration) var(--carousel-transition-ease);
+}
+
+.carousel-card {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
+  /* Убираем will-change для лучшей производительности */
+}
+
+.carousel-track,
+.carousel-card {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Оптимизация для плавности */
+.carousel-card {
+  contain: layout style;
+}
+
+.carousel-card .glass-filter,
+.carousel-card .glass-overlay,
+.carousel-card .glass-specular,
+.carousel-card .glass-content {
+  will-change: auto;
+}
+
+/* ==== CARD WIDTH (make cards a bit narrower) ==== */
+:root {
+  /* было условно 58–62vw, делаем чуть уже */
+  --carousel-card-width: clamp(340px, 54vw, 760px);
+}
+
+/* Основная карточка */
+.carousel-card {
+  width: var(--carousel-card-width) !important;
+  max-width: var(--carousel-card-width) !important;
+}
+
+/* Подстройка на 1024 и меньше (по желанию) */
+@media (max-width: 1024px) {
+  :root {
+    --carousel-card-width: clamp(320px, 60vw, 700px);
+  }
+}
+
+/* Телефоны: чтобы гарантированно не вылезало */
+@media (max-width: 600px) {
+  :root {
+    --carousel-card-width: calc(100vw - 56px);
+  }
+}

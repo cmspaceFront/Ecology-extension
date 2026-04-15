@@ -1,0 +1,18 @@
+{
+  "rootId": "space-eco-header",
+  "name": "space-eco-header",
+  "label": "Space Eco Header",
+  "version": "1.0.0",
+  "type": "widget",
+  "exbVersion": "1.11.0",
+  "author": "you",
+  "description": "Header widget matching Figma design with dark theme",
+  "properties": {
+    "hasSettingPage": true,
+    "hasStyle": true
+  },
+  "settingPanel": {
+    "title": "Header Settings",
+    "size": "small"
+  }
+}

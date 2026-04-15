@@ -1,0 +1,107 @@
+/* Import Geologica font */
+@import url('https://fonts.googleapis.com/css2?family=Geologica:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+.monitoring-results-widget {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: rgba(16, 28, 50, 0.3);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: #ffffff;
+  overflow: hidden;
+  box-sizing: border-box;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  z-index: 9999;
+  position: relative;
+  font-family: 'Geologica', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: border-color 0.4s ease;
+  animation: borderGlow 3s ease-in-out infinite, widgetFadeIn 0.8s ease-out;
+  contain: layout style;
+  isolation: isolate;
+}
+
+/* After INTRO_ANIMATIONS_DURATION_MS: stop border glow; keep static border */
+.monitoring-results-widget.monitoring-results-animations-settled {
+  animation: none;
+  border-color: var(--border-glow-start, rgba(40, 190, 193, 0.1));
+}
+
+.monitoring-results-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
+}
+
+.monitoring-results-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #ffffff;
+  letter-spacing: 0.5px;
+}
+
+.monitoring-results-content {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  box-sizing: border-box;
+}
+
+.monitoring-results-table-section {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.monitoring-results-chart-section {
+  width: 500px;
+  min-width: 500px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Responsive layout */
+@media (max-width: 1200px) {
+  .monitoring-results-content {
+    flex-direction: column;
+  }
+
+  .monitoring-results-chart-section {
+    width: 100%;
+    min-width: 100%;
+    height: 400px;
+  }
+}
+
+/* Border Glow Animation - using theme colors (only border, no box-shadow) */
+@keyframes borderGlow {
+
+  0%,
+  100% {
+    border-color: var(--border-glow-start, rgba(40, 190, 193, 0.1));
+  }
+
+  50% {
+    border-color: var(--border-glow-end, rgba(40, 190, 193, 0.35));
+  }
+}
+
+/* Widget fade in animation */
+@keyframes widgetFadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}

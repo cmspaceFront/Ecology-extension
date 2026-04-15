@@ -1,0 +1,8 @@
+[
+  {
+    "from": "src/runtime/assets",
+    "to": "dist/runtime/assets"
+  }
+]
+
+

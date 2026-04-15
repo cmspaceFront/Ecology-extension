@@ -1,0 +1,48 @@
+{
+  "rootId": "monitoring-results",
+  "name": "monitoring-results",
+  "label": "Monitoring Results Widget",
+  "version": "1.0.0",
+  "type": "widget",
+  "exbVersion": "1.11.0",
+  "author": "you",
+  "description": "Display monitoring results with status indicators for UZCOSMOS, EKOLOGIYA, and PROKRATURA",
+  "properties": {
+    "hasSettingPage": true,
+    "hasStyle": true
+  },
+  "style": {
+    "styleConfig": {
+      "useCustom": {
+        "type": "boolean"
+      }
+    }
+  },
+  "propertiesConfig": {
+    "apiBaseUrl": {
+      "type": "string",
+      "title": "API Base URL",
+      "description": "Base URL for the monitoring API",
+      "default": "https://geomodul.cmspace.uz/api"
+    },
+    "apiToken": {
+      "type": "string",
+      "title": "API Token",
+      "description": "JWT token for API authentication",
+      "default": ""
+    },
+    "enablePagination": {
+      "type": "boolean",
+      "title": "Enable Pagination",
+      "description": "Enable pagination for the table",
+      "default": true
+    },
+    "itemsPerPage": {
+      "type": "number",
+      "title": "Items Per Page",
+      "description": "Number of items to display per page",
+      "default": 20
+    }
+  }
+}
+

@@ -1,0 +1,813 @@
+@import url('https://fonts.googleapis.com/css2?family=Geologica:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+/* =========================================================
+   ROOT
+========================================================= */
+.ecological-monitoring-widget {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #000011;
+}
+
+/* Three.js safety: never block UI */
+.ecological-monitoring-widget canvas {
+  position: absolute !important;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+  pointer-events: none !important;
+}
+
+/* =========================================================
+   TITLE (clean + truly responsive)
+========================================================= */
+.ecological-title-container {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: clamp(64px, 9vh, 150px);
+
+  width: min(1400px, 96vw);
+  padding: 0 clamp(10px, 3vw, 28px);
+
+  text-align: center;
+  z-index: 120;
+  pointer-events: none;
+
+  /* prevents title eating too much space */
+  max-height: 38vh;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.ecological-title-line1,
+.ecological-title-line2 {
+  margin: 0;
+  font-family: 'Geologica', sans-serif;
+  font-weight: 800;
+  text-transform: uppercase;
+
+  /* key: scale by min(vw, vh) so it never becomes huge */
+  font-size: clamp(20px, min(5vw, 5.2vh), 86px);
+  letter-spacing: clamp(0.3px, 0.35vw, 5px);
+  line-height: 1.05;
+
+  white-space: normal;
+  overflow-wrap: anywhere;
+  max-width: 100%;
+  text-wrap: balance;
+
+  color: #ffffff;
+
+  transform: perspective(500px) rotateX(2deg);
+  transform-style: preserve-3d;
+}
+
+.ecological-title-line2 {
+  margin-top: clamp(6px, 1.6vh, 14px);
+}
+
+.ecological-monitoring-widget[data-locale="ru"] .ecological-title-line1,
+.ecological-monitoring-widget[data-locale="ru"] .ecological-title-line2 {
+  letter-spacing: clamp(0.2px, 0.28vw, 4px);
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+.ecological-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+
+  z-index: 1000;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+
+  padding: clamp(12px, 3.5vw, 50px);
+  pointer-events: none;
+  gap: 12px;
+}
+
+.ecological-header>* {
+  pointer-events: auto;
+}
+
+.ecological-header-logo {
+  display: flex;
+  align-items: center;
+  height: clamp(52px, 8vh, 80px);
+}
+
+.ecological-logo-button {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.ecological-logo-button:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.8);
+  outline-offset: 4px;
+}
+
+.ecological-logo-image {
+  max-height: clamp(42px, 7vh, 80px);
+  max-width: min(250px, 55vw);
+  height: auto;
+  width: auto;
+  object-fit: contain;
+}
+
+.ecological-header-right-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* =========================================================
+   LANGUAGE / PROFILE BUTTONS (keep your glass effect)
+========================================================= */
+.ecological-language-selector,
+.ecological-profile-selector {
+  position: relative;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ecological-language-toggle,
+.ecological-profile-toggle {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  margin: 0 !important;
+
+  background: transparent !important;
+  backdrop-filter: none !important;
+  border: none !important;
+  border-radius: 50% !important;
+  cursor: pointer;
+
+  width: clamp(42px, 6vw, 56px) !important;
+  height: clamp(42px, 6vw, 56px) !important;
+  min-width: clamp(42px, 6vw, 56px) !important;
+  min-height: clamp(42px, 6vw, 56px) !important;
+
+  transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+
+  position: relative;
+
+  box-shadow:
+    0 12px 48px rgba(20, 20, 40, 0.65),
+    0 40px 80px rgba(0, 0, 0, 0.7) !important;
+
+  isolation: isolate;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.ecological-language-toggle::before,
+.ecological-profile-toggle::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: transparent !important;
+  pointer-events: none;
+  z-index: 0;
+  transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ecological-language-toggle::after,
+.ecological-profile-toggle::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow:
+    inset 1px 1px 0 rgba(255, 255, 255, 0.75),
+    inset 0 0 5px rgba(255, 255, 255, 0.75);
+  pointer-events: none;
+  transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ecological-language-toggle.open,
+.ecological-profile-toggle.open {
+  box-shadow:
+    0 12px 48px rgba(20, 20, 40, 0.75),
+    0 40px 80px rgba(0, 0, 0, 0.8) !important;
+}
+
+.ecological-language-toggle.open::after,
+.ecological-profile-toggle.open::after {
+  box-shadow:
+    inset 1px 1px 0 rgba(255, 255, 255, 0.85),
+    inset 0 0 8px rgba(255, 255, 255, 0.85);
+}
+
+.ecological-language-toggle:hover,
+.ecological-profile-toggle:hover {
+  box-shadow:
+    0 12px 48px rgba(20, 20, 40, 0.75),
+    0 40px 80px rgba(0, 0, 0, 0.8) !important;
+  transform: scale(1.02);
+}
+
+.ecological-language-toggle img,
+.ecological-profile-toggle img,
+.ecological-icon {
+  width: clamp(20px, 3.5vw, 28px) !important;
+  height: clamp(20px, 3.5vw, 28px) !important;
+  display: block !important;
+  object-fit: contain !important;
+  position: relative;
+  z-index: 3 !important;
+  filter: brightness(1.1);
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* =========================================================
+   DROPDOWN MENU
+========================================================= */
+.ecological-dropdown-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 99998;
+  background: transparent;
+}
+
+.ecological-dropdown-menu {
+  background: transparent;
+  border: none;
+  border-radius: 12px;
+  box-shadow:
+    0 12px 48px rgba(20, 20, 40, 0.65),
+    0 40px 80px rgba(0, 0, 0, 0.7);
+  min-width: 150px;
+  padding: 8px;
+  z-index: 99999;
+  isolation: isolate;
+  overflow: hidden;
+  position: relative;
+}
+
+.ecological-dropdown-menu::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+  overflow: hidden;
+  box-shadow:
+    inset 1px 1px 0 rgba(255, 255, 255, 0.75),
+    inset 0 0 5px rgba(255, 255, 255, 0.75);
+  pointer-events: none;
+}
+
+.ecological-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 16px;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.95);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  position: relative;
+  z-index: 2;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+}
+
+.ecological-dropdown-item:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.ecological-dropdown-item.active {
+  color: rgba(255, 255, 255, 1);
+  backdrop-filter: blur(6px);
+  box-shadow:
+    inset 1px 1px 0 rgba(255, 255, 255, 0.3),
+    inset 0 0 3px rgba(255, 255, 255, 0.2);
+}
+
+.ecological-profile-info {
+  padding: 10px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+  z-index: 2;
+}
+
+.ecological-profile-email {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
+  word-break: break-all;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* =========================================================
+   CAROUSEL (single source of truth)
+========================================================= */
+.carousel-container {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: clamp(12px, 6vh, 10%);
+
+  width: 100%;
+  height: clamp(320px, 62vh, 720px);
+
+  z-index: 140;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  pointer-events: none;
+  padding: 0 clamp(10px, 3vw, 28px);
+  box-sizing: border-box;
+}
+
+.carousel-container>* {
+  pointer-events: auto;
+}
+
+/* viewport of carousel */
+.carousel-wrapper {
+  width: min(1600px, 100%);
+  height: 100%;
+  margin: 0 auto;
+
+  position: relative;
+  overflow: hidden;
+
+  perspective: 1000px;
+  contain: layout style;
+
+  box-sizing: border-box;
+}
+
+/* track */
+.carousel-track {
+  display: flex;
+  height: 100%;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.carousel-track.transitioning .carousel-card {
+  transition:
+    transform 0.65s cubic-bezier(0.25, 0.8, 0.25, 1),
+    opacity 0.55s cubic-bezier(0.25, 0.8, 0.25, 1),
+    box-shadow 0.55s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* arrows */
+.carousel-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+
+  width: clamp(38px, 5vw, 60px);
+  height: clamp(38px, 5vw, 60px);
+  border-radius: 50%;
+
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  padding: 0 !important;
+  border: none !important;
+  background: transparent !important;
+  color: #ffffff;
+
+  cursor: pointer;
+  z-index: 200;
+
+  isolation: isolate;
+  overflow: hidden;
+
+  transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+
+  box-shadow:
+    0 12px 48px rgba(20, 20, 40, 0.65),
+    0 40px 80px rgba(0, 0, 0, 0.7) !important;
+}
+
+.carousel-arrow::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  z-index: 2;
+  box-shadow:
+    inset 1px 1px 0 rgba(255, 255, 255, 0.75),
+    inset 0 0 5px rgba(255, 255, 255, 0.75);
+  pointer-events: none;
+  transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.carousel-arrow>* {
+  position: relative;
+  z-index: 3;
+}
+
+.carousel-arrow svg {
+  width: clamp(18px, 3vw, 50px);
+  height: clamp(18px, 3vw, 50px);
+  filter: brightness(1.1) drop-shadow(0 1px 3px rgba(0, 0, 0, 0.4));
+}
+
+.carousel-arrow:hover {
+  box-shadow:
+    0 12px 48px rgba(20, 20, 40, 0.75),
+    0 40px 80px rgba(0, 0, 0, 0.8) !important;
+  transform: translateY(-50%) scale(1.05);
+}
+
+.carousel-arrow:active {
+  transform: translateY(-50%) scale(0.98);
+}
+
+.carousel-arrow-left {
+  left: clamp(12px, 10vw, 120px);
+}
+
+.carousel-arrow-right {
+  right: clamp(12px, 10vw, 120px);
+}
+
+.carousel-empty {
+  color: white;
+  font-size: 18px;
+  text-align: center;
+  padding: 40px;
+}
+
+/* =========================================================
+   CARD (single source of truth)
+========================================================= */
+.carousel-card {
+  display: flex;
+  flex-direction: column;
+
+  /* center card width: keep room for side cards */
+  width: clamp(520px, 62vw, 860px);
+  height: 100%;
+  max-height: 100%;
+
+  overflow: hidden;
+  box-sizing: border-box;
+  margin-left: 0;
+}
+
+/* image */
+.carousel-card-image {
+  flex: 0 0 auto;
+  height: clamp(200px, 44vh, 440px);
+  width: 100%;
+  overflow: hidden;
+}
+
+.carousel-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* content */
+.carousel-card-content {
+  flex: 1 1 auto;
+  min-height: 0;
+  height: auto;
+
+  padding: clamp(12px, 2vw, 22px);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.carousel-card-title {
+  margin: 0 0 10px 0;
+  line-height: 1.15;
+}
+
+.carousel-card-description {
+  flex: 1 1 auto;
+  min-height: 0;
+
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+}
+
+.carousel-card-button {
+  flex: 0 0 auto;
+  margin-top: 12px;
+}
+
+/* =========================================================
+   HEIGHT FIX (short screens)
+========================================================= */
+@media (max-height: 650px) {
+  .carousel-container {
+    height: clamp(300px, 58vh, 620px);
+    bottom: clamp(10px, 4vh, 8%);
+  }
+
+  .carousel-card-image {
+    height: clamp(165px, 35vh, 310px);
+  }
+
+  .carousel-card-description {
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+  }
+}
+
+/* =========================================================
+   RESPONSIVE BREAKPOINTS
+========================================================= */
+
+/* <= 1100px */
+@media (max-width: 1100px) {
+  .ecological-title-container {
+    top: clamp(58px, 8vh, 120px);
+    max-height: 34vh;
+  }
+
+  .ecological-title-line1,
+  .ecological-title-line2 {
+    font-size: clamp(20px, min(4.2vw, 4.4vh), 60px);
+    letter-spacing: clamp(0.2px, 0.25vw, 3px);
+  }
+
+  .carousel-card {
+    width: min(78vw, 720px);
+  }
+}
+
+/* <= 768px (tablet portrait)
+   show a bit more side cards */
+@media (max-width: 768px) {
+  .ecological-title-container {
+    top: clamp(56px, 7vh, 100px);
+    max-height: 30vh;
+  }
+
+  .ecological-title-line1,
+  .ecological-title-line2 {
+    font-size: clamp(18px, min(6vw, 3.8vh), 44px);
+    letter-spacing: clamp(0px, 0.18vw, 2px);
+  }
+
+  .carousel-wrapper {
+    overflow: visible;
+    /* show side cards peek */
+  }
+
+  .carousel-card {
+    width: min(72vw, 560px);
+  }
+
+  .carousel-arrow-left {
+    left: 20px;
+  }
+
+  .carousel-arrow-right {
+    right: 20px;
+  }
+
+  .carousel-arrow {
+    box-shadow:
+      0 8px 28px rgba(20, 20, 40, 0.55),
+      0 20px 50px rgba(0, 0, 0, 0.6) !important;
+  }
+}
+
+/* <= 540px (phone)
+   disable peek and add clean gutters */
+@media (max-width: 540px) {
+  .ecological-title-container {
+    top: clamp(52px, 6.5vh, 90px);
+    max-height: 28vh;
+  }
+
+  .ecological-title-line1,
+  .ecological-title-line2 {
+    font-size: clamp(16px, min(7vw, 3.6vh), 34px);
+    letter-spacing: 0.5px;
+  }
+
+  .carousel-wrapper {
+    overflow: hidden;
+    /* no peek on phone */
+  }
+
+  .carousel-container {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .carousel-card {
+    width: calc(100vw - 32px);
+    max-width: 420px;
+  }
+
+  .carousel-card-image {
+    height: clamp(165px, 33vh, 275px);
+  }
+
+  .carousel-card-description {
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+  }
+}
+
+/* <= 425px (small phone)
+   THIS is the critical fix you asked for */
+@media (max-width: 425px) {
+  .carousel-container {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  .carousel-card {
+    width: calc(100vw - 36px);
+    /* always safe */
+    max-width: 360px;
+    /* prevent fat card */
+    border-radius: 22px;
+  }
+
+  .carousel-arrow-left {
+    left: 12px;
+  }
+
+  .carousel-arrow-right {
+    right: 12px;
+  }
+
+  .carousel-arrow {
+    width: 38px;
+    height: 38px;
+  }
+
+  .carousel-arrow svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+@media (max-width: 1400px) {
+  .ecological-title-line1,
+  .ecological-title-line2 {
+    font-size: clamp(20px, min(4.5vw, 4.7vh), 50px) !important;
+  }
+}
+
+/* 1195px and less - smaller title, buttons, and add top spacing */
+@media (max-width: 1195px) {
+  .ecological-title-container {
+    top: clamp(80px, 12vh, 180px) !important; /* Add more space at top */
+    padding-top: clamp(20px, 3vh, 40px) !important;
+  }
+
+  .ecological-title-line1,
+  .ecological-title-line2 {
+    font-size: clamp(18px, min(4vw, 4.2vh), 42px) !important;
+    letter-spacing: clamp(0.2px, 0.25vw, 3px) !important;
+  }
+
+  /* Smaller language and quit buttons */
+  .ecological-language-toggle,
+  .ecological-profile-toggle {
+    width: clamp(36px, 5vw, 48px) !important;
+    height: clamp(36px, 5vw, 48px) !important;
+    min-width: clamp(36px, 5vw, 48px) !important;
+    min-height: clamp(36px, 5vw, 48px) !important;
+  }
+
+  .ecological-language-toggle img,
+  .ecological-profile-toggle img,
+  .ecological-icon {
+    width: clamp(18px, 3vw, 24px) !important;
+    height: clamp(18px, 3vw, 24px) !important;
+  }
+}
+
+/* =========================================================
+   ALWAYS SHOW SIDE SLIDES (PEEK) + ARROWS ON SIDE SLIDES
+   Works on all sizes incl 540/425
+========================================================= */
+
+/* 1) Карусельное окно должно позволять видеть боковые карточки */
+.carousel-wrapper {
+  overflow: visible !important;
+  /* ✅ показываем кусочки слева/справа всегда */
+}
+
+/* 2) Делаем реальные "гуттеры" внутри карусели, чтобы peek был стабильный */
+.carousel-container {
+  padding-left: clamp(10px, 3vw, 28px) !important;
+  padding-right: clamp(10px, 3vw, 28px) !important;
+}
+
+/* 3) Центр-карта всегда меньше ширины viewport (чтобы были видны боковые) */
+.carousel-card {
+  width: clamp(280px, 72vw, 820px) !important;
+  /* ✅ уже => появятся боковые */
+  max-width: 90% !important;
+}
+
+/* 4) Стрелки ближе к карточкам */
+.carousel-arrow-left {
+  left: clamp(12px, 10vw, 120px) !important;
+}
+
+.carousel-arrow-right {
+  right: clamp(12px, 10vw, 120px) !important;
+}
+
+/* 5) Чтобы стрелки были над боковыми кусочками (и не давили на центр) */
+.carousel-arrow {
+  z-index: 400 !important;
+}
+
+/* =========================
+   Small screens: keep peek
+========================= */
+@media (max-width: 540px) {
+
+  /* ✅ на телефоне делаем карту ещё уже, чтобы peek сохранялся */
+  .carousel-card {
+    width: 78vw !important;
+    max-width: 360px !important;
+  }
+
+  /* ✅ стрелки ближе к карточкам */
+  .carousel-arrow-left {
+    left: 20px !important;
+  }
+
+  .carousel-arrow-right {
+    right: 20px !important;
+  }
+}
+
+@media (max-width: 425px) {
+
+  /* ✅ на маленьком телефоне все равно держим боковые */
+  .carousel-card {
+    width: 76vw !important;
+    max-width: 330px !important;
+  }
+
+  .carousel-arrow {
+    width: 38px !important;
+    height: 38px !important;
+  }
+
+  .carousel-arrow svg {
+    width: 20px !important;
+    height: 20px !important;
+  }
+
+  .carousel-arrow-left {
+    left: 12px !important;
+  }
+
+  .carousel-arrow-right {
+    right: 12px !important;
+  }
+}

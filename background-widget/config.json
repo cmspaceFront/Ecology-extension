@@ -1,0 +1,22 @@
+{
+  "rootId": "background-widget",
+  "name": "background-widget",
+  "label": "Background Widget",
+  "version": "1.0.0",
+  "type": "widget",
+  "exbVersion": "1.14.0",
+  "author": "you",
+  "description": "Универсальный виджет для создания красивого заднего фона с градиентами и эффектами",
+  "properties": {
+    "hasSettingPage": false,
+    "hasStyle": true
+  },
+  "style": {
+    "styleConfig": {
+      "useCustom": {
+        "type": "boolean"
+      }
+    }
+  }
+}
+

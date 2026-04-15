@@ -1,0 +1,431 @@
+.status-indicator-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 0;
+  padding-right: 0;
+}
+
+.status-indicator-track {
+  position: relative;
+  width: calc(100% - 16px);
+  max-width: calc(100% - 16px);
+  height: 3px;
+  display: flex;
+  align-items: center;
+  margin: 0 auto;
+}
+
+/* Background line (inactive state) - blur effect */
+.status-indicator-line-background {
+  position: absolute;
+  height: 3px;
+  background-color: rgba(45, 62, 95, 0.3);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  filter: blur(2px);
+  z-index: 1;
+}
+
+/* Progress line (active state) */
+.status-indicator-line {
+  position: absolute;
+  height: 3px;
+  background-color: #28BEC1;
+  z-index: 2;
+  overflow: hidden;
+  transform-origin: left center;
+}
+
+/* First segment: UZCOSMOS to EKOLOGIYA - appears after UZCOSMOS */
+.status-indicator-line.first-segment {
+  animation: lineExpand 0.5s ease-out 0.4s forwards;
+  transform: scaleX(0);
+}
+
+/* Second segment: EKOLOGIYA to PROKURATURA - appears after EKOLOGIYA */
+.status-indicator-line.second-segment {
+  animation: lineExpand 0.5s ease-out 1.2s forwards;
+  transform: scaleX(0);
+}
+
+@keyframes lineExpand {
+  from {
+    transform: scaleX(0);
+  }
+
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* Animation for the progress line - flowing wave that fades */
+.status-indicator-line.animated {
+  background: linear-gradient(90deg,
+      rgba(40, 190, 193, 0.2) 0%,
+      rgba(40, 190, 193, 0.4) 15%,
+      rgba(40, 190, 193, 1) 30%,
+      rgba(40, 190, 193, 0.4) 45%,
+      rgba(40, 190, 193, 0.2) 60%,
+      rgba(40, 190, 193, 0) 75%,
+      rgba(40, 190, 193, 0) 100%);
+  background-size: 300% 100%;
+  animation: lineExpand 0.5s ease-out 0.4s forwards, lineWaveFlow 6s linear 0.9s infinite;
+  transform: scaleX(0);
+}
+
+.status-indicator-line.animated.second-segment {
+  animation: lineExpand 0.5s ease-out 1.2s forwards, lineWaveFlow 6s linear 1.7s infinite;
+}
+
+@keyframes lineWaveFlow {
+  0% {
+    background-position: 100% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Ensure seamless connection between segments */
+.status-indicator-line.first-segment,
+.status-indicator-line.second-segment {
+  border-radius: 0;
+}
+
+.status-indicator-circle {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  transform: translateX(-50%);
+  transition: all 0.3s ease;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  animation: circleAppear 0.5s ease-out forwards;
+}
+
+/* Specific styling for each dot with sequential appearance */
+/* Timeline: UZCOSMOS(0.1s) -> Line1(0.4s-0.9s) -> EKOLOGIYA(0.9s) -> Line2(1.2s-1.7s) -> PROKURATURA(1.7s) */
+/* Pulse animation only runs when .pulse-on is set (line has reached that point) */
+
+.status-indicator-circle.uzcosmos {
+  z-index: 3;
+  animation: circleAppear 0.3s ease-out 0.1s forwards;
+}
+
+.status-indicator-circle.uzcosmos.pulse-on {
+  animation: circleAppear 0.3s ease-out 0.1s forwards, pulseBlue 2s ease-in-out 0.5s infinite;
+}
+
+.status-indicator-circle.ekologiya {
+  z-index: 4;
+}
+
+/* Apply animations based on EKOLOGIYA value - pulse only when line has reached (pulse-on) */
+.status-indicator-circle.ekologiya.animate-red {
+  animation: circleAppear 0.3s ease-out 0.9s forwards;
+}
+
+.status-indicator-circle.ekologiya.animate-red.pulse-on {
+  animation: circleAppear 0.3s ease-out 0.9s forwards, pulseRedEkologiya 2s ease-in-out 1.3s infinite;
+}
+
+.status-indicator-circle.ekologiya.animate-yellow {
+  animation: circleAppear 0.3s ease-out 0.9s forwards;
+}
+
+.status-indicator-circle.ekologiya.animate-yellow.pulse-on {
+  animation: circleAppear 0.3s ease-out 0.9s forwards, pulseYellow 2s ease-in-out 1.3s infinite;
+}
+
+.status-indicator-circle.ekologiya.animate-blue {
+  animation: circleAppear 0.3s ease-out 0.9s forwards;
+}
+
+.status-indicator-circle.ekologiya.animate-blue.pulse-on {
+  animation: circleAppear 0.3s ease-out 0.9s forwards, pulseBlueEkologiya 2s ease-in-out 1.3s infinite;
+}
+
+.status-indicator-circle.ekologiya.animate-cyan {
+  animation: circleAppear 0.3s ease-out 0.9s forwards;
+}
+
+.status-indicator-circle.ekologiya.animate-cyan.pulse-on {
+  animation: circleAppear 0.3s ease-out 0.9s forwards, pulseCyan 2s ease-in-out 1.3s infinite;
+}
+
+.status-indicator-circle.ekologiya.animate-blue-gray {
+  animation: circleAppear 0.3s ease-out 0.9s forwards;
+}
+
+.status-indicator-circle.ekologiya.animate-blue-gray.pulse-on {
+  animation: circleAppear 0.3s ease-out 0.9s forwards, pulseBlueGray 2s ease-in-out 1.3s infinite;
+}
+
+/* PROKURATURA - pulse only when line has reached */
+.status-indicator-circle.prokratura {
+  z-index: 5;
+  animation: circleAppear 0.3s ease-out 1.7s forwards;
+}
+
+.status-indicator-circle.prokratura.pulse-on {
+  animation: circleAppear 0.3s ease-out 1.7s forwards, pulseGray 2s ease-in-out 2.1s infinite;
+}
+
+/* Inner circle for PROKRATURA */
+.status-indicator-inner-circle {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: #0d1f3c;
+}
+
+/* Cyan/turquoise pulsing animation for UZCOSMOS (#28BEC1) */
+@keyframes pulseBlue {
+
+  0%,
+  100% {
+    transform: translateX(-50%) scale(1);
+    box-shadow: 0 0 0 0 rgba(40, 190, 193, 0.7);
+  }
+
+  50% {
+    transform: translateX(-50%) scale(1.15);
+    box-shadow: 0 0 0 10px rgba(40, 190, 193, 0);
+  }
+}
+
+/* Gray-blue pulsing animation for PROKRATURA */
+@keyframes pulseGray {
+
+  0%,
+  100% {
+    transform: translateX(-50%) scale(1);
+    box-shadow: 0 0 0 0 rgba(122, 168, 224, 0.7);
+  }
+
+  50% {
+    transform: translateX(-50%) scale(1.15);
+    box-shadow: 0 0 0 10px rgba(122, 168, 224, 0);
+  }
+}
+
+/* Red glow and pulse animation for false ekologiya value (#C12862) */
+@keyframes pulseRedEkologiya {
+
+  0%,
+  100% {
+    transform: translateX(-50%) scale(1);
+    box-shadow: 0 0 0 0 rgba(193, 40, 98, 0.8), 0 0 20px rgba(193, 40, 98, 0.4);
+  }
+
+  50% {
+    transform: translateX(-50%) scale(1.2);
+    box-shadow: 0 0 0 12px rgba(193, 40, 98, 0), 0 0 25px rgba(193, 40, 98, 0.6);
+  }
+}
+
+/* Red glow and pulse animation for warning status (legacy) */
+@keyframes pulseRed {
+
+  0%,
+  100% {
+    transform: translateX(-50%) scale(1);
+    box-shadow: 0 0 0 0 rgba(255, 59, 59, 0.8), 0 0 20px rgba(255, 59, 59, 0.4);
+  }
+
+  50% {
+    transform: translateX(-50%) scale(1.2);
+    box-shadow: 0 0 0 12px rgba(255, 59, 59, 0), 0 0 25px rgba(255, 59, 59, 0.6);
+  }
+}
+
+/* Yellow glow and pulse animation for caution status */
+@keyframes pulseYellow {
+
+  0%,
+  100% {
+    transform: translateX(-50%) scale(1);
+    box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.8), 0 0 20px rgba(255, 193, 7, 0.4);
+  }
+
+  50% {
+    transform: translateX(-50%) scale(1.2);
+    box-shadow: 0 0 0 12px rgba(255, 193, 7, 0), 0 0 25px rgba(255, 193, 7, 0.6);
+  }
+}
+
+/* Bright blue animation for completed/pending EKOLOGIYA */
+@keyframes pulseBlueEkologiya {
+
+  0%,
+  100% {
+    transform: translateX(-50%) scale(1);
+    box-shadow: 0 0 0 0 rgba(74, 144, 226, 0.7);
+  }
+
+  50% {
+    transform: translateX(-50%) scale(1.15);
+    box-shadow: 0 0 0 10px rgba(74, 144, 226, 0);
+  }
+}
+
+/* Cyan/turquoise glow and pulse animation for true ekologiya value (#28BEC1) */
+@keyframes pulseCyan {
+
+  0%,
+  100% {
+    transform: translateX(-50%) scale(1);
+    box-shadow: 0 0 0 0 rgba(40, 190, 193, 0.8), 0 0 20px rgba(40, 190, 193, 0.4);
+  }
+
+  50% {
+    transform: translateX(-50%) scale(1.2);
+    box-shadow: 0 0 0 12px rgba(40, 190, 193, 0), 0 0 25px rgba(40, 190, 193, 0.6);
+  }
+}
+
+/* Blue-gray glow and pulse animation for null ekologiya value (#517492) */
+@keyframes pulseBlueGray {
+
+  0%,
+  100% {
+    transform: translateX(-50%) scale(1);
+    box-shadow: 0 0 0 0 rgba(81, 116, 146, 0.8), 0 0 20px rgba(81, 116, 146, 0.4);
+  }
+
+  50% {
+    transform: translateX(-50%) scale(1.2);
+    box-shadow: 0 0 0 12px rgba(81, 116, 146, 0), 0 0 25px rgba(81, 116, 146, 0.6);
+  }
+}
+
+/* Circle appear animation with scale effect */
+@keyframes circleAppear {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) scale(0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+  }
+}
+
+/* Progress line appear animation */
+@keyframes lineGrow {
+  from {
+    width: 0%;
+  }
+
+  to {
+    width: var(--line-width, 50%);
+  }
+}
+
+.status-indicator-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 0;
+}
+
+/* exactly matches 3 status columns */
+.status-indicator-grid {
+  position: relative;
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  align-items: center;
+  min-height: 26px;
+}
+
+.status-slot {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* lines overlay spans across all 3 columns */
+.status-indicator-lines {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 3px;
+  pointer-events: none;
+}
+
+/* background segments: center col1->col2 and col2->col3 */
+.status-indicator-line-background.first-segment-bg {
+  left: calc(100% / 6);
+  /* center of col1 */
+  width: calc(100% / 3);
+  /* to center of col2 */
+}
+
+.status-indicator-line-background.second-segment-bg {
+  left: 50%;
+  /* center of col2 */
+  width: calc(100% / 3);
+  /* to center of col3 */
+}
+
+/* progress segment geometry (progress uses scaleX from inline styles) */
+.status-indicator-line.first-segment {
+  left: calc(100% / 6);
+  width: calc(100% / 3);
+  transform-origin: left center;
+}
+
+.status-indicator-line.second-segment {
+  left: 50%;
+  width: calc(100% / 3);
+  transform-origin: left center;
+}
+
+/* dots centered inside each slot */
+.status-indicator-circle {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin-top: -6px;
+  /* 12/2 */
+  transform: translateX(-50%);
+}
+
+/* Parent adds this class after 10s: stop line motion but keep gradient + soft tail past the tip */
+.monitoring-results-widget.monitoring-results-animations-settled .status-indicator-line.animated {
+  animation: none !important;
+  overflow: visible;
+  /* Same palette as animated line; bright band and fade sit at the right (end) of the segment */
+  background: linear-gradient(90deg,
+      rgba(40, 190, 193, 0.35) 0%,
+      rgba(40, 190, 193, 0.75) 45%,
+      rgba(40, 190, 193, 1) 78%,
+      rgba(40, 190, 193, 0.55) 92%,
+      rgba(40, 190, 193, 0) 100%);
+  background-size: 100% 100%;
+  background-position: 0 0;
+  /* Soft glow just past the line end (reads as “shade after” the tip) */
+  box-shadow: 4px 0 10px rgba(40, 190, 193, 0.35);
+}
+
+.monitoring-results-widget.monitoring-results-animations-settled .status-indicator-circle {
+  animation: none !important;
+  opacity: 1 !important;
+  transform: translateX(-50%) !important;
+  box-shadow: none !important;
+}

@@ -1,0 +1,14 @@
+{
+  "name": "background-widget",
+  "label": "Background Widget",
+  "description": "Универсальный виджет для создания красивого заднего фона с градиентами и эффектами",
+  "version": "1.0.0",
+  "exbVersion": "1.14.0",
+  "author": "ArcGIS Experience Builder",
+  "icon": "icon.svg",
+  "properties": {
+    "hasSettingPage": false,
+    "hasStyle": true
+  }
+}
+

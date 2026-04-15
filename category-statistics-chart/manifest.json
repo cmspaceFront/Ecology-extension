@@ -1,0 +1,17 @@
+{
+  "name": "category-statistics-chart",
+  "label": "Category Statistics Chart",
+  "description": "Widget with donut chart and category legend",
+  "version": "1.0.0",
+  "exbVersion": "1.14.0",
+  "author": "",
+  "icon": "icon.svg",
+  "properties": {
+    "hasSettingPage": false,
+    "hasStyle": false
+  },
+  "defaultSize": {
+    "width": 659,
+    "height": 336
+  }
+}

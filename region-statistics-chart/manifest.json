@@ -1,0 +1,17 @@
+{
+  "name": "region-statistics-chart",
+  "label": "Region Statistics Chart",
+  "description": "Widget with year filter and region statistics chart",
+  "version": "1.0.0",
+  "exbVersion": "1.14.0",
+  "author": "",
+  "icon": "icon.svg",
+  "properties": {
+    "hasSettingPage": false,
+    "hasStyle": false
+  },
+  "defaultSize": {
+    "width": 500,
+    "height": 600
+  }
+}

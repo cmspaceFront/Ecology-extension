@@ -1,0 +1,794 @@
+/* ============================================
+   FONT IMPORT
+   ============================================ */
+
+/* Import Geologica font */
+@import url('https://fonts.googleapis.com/css2?family=Geologica:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+/* ============================================
+   CUSTOMIZATION SECTION
+   ============================================ */
+
+/* 
+  CARD COLORS - Change these to customize card appearance
+  All cards will use the same gradient by default
+  
+  Example colors:
+  - Purple: #667eea to #764ba2 (current)
+  - Blue: #4facfe to #00f2fe
+  - Pink: #f093fb to #f5576c
+  - Green: #43e97b to #38f9d7
+  - Orange: #fa709a to #fee140
+  - Red: #f54ea2 to #ff7676
+*/
+
+:root {
+  --card-gradient-start: #667eea;
+  --card-gradient-end: #764ba2;
+  --card-min-height: 60px;
+  --card-padding: 12px;
+  --card-border-radius: 16px;
+  --card-gap: 6px;
+}
+
+/* ============================================
+   MAIN WIDGET
+   ============================================ */
+
+/* Main Widget Container */
+.statistics-dashboard-widget {
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
+  opacity: 0;
+  animation: fadeInWidget 0.8s ease-out forwards;
+  border-radius: 20px;
+  -webkit-backdrop-filter: blur(10px);
+  font-family: 'Geologica', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+}
+
+.statistics-dashboard-widget.visible {
+  opacity: 1;
+}
+
+/* Cards Container */
+.statistics-cards-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  width: 100%;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+  width: 100%;
+  height: 100%;
+}
+
+/* Individual Card Styles */
+.statistics-card {
+  /* Use CSS variables for easy customization */
+  background: #101C324D;
+
+  border-radius: var(--card-border-radius);
+  padding: var(--card-padding);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+
+  /* Adjustable dimensions */
+  min-height: var(--card-min-height);
+  height: 100%;
+  width: 100%;
+  border: 1px solid #FFFFFF0D;
+
+  /* Initial state */
+  transform: translateY(30px);
+  opacity: 0;
+
+  /* Animations - entrance and minimal border glow */
+  animation: slideUpFadeIn 0.6s ease-out forwards, borderGlow 3s ease-in-out infinite;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.4s ease;
+}
+
+/* Sequential border glow delays - each card glows after the previous one */
+.statistics-card:nth-child(1) {
+  animation-delay: 0s, 0s;
+}
+
+.statistics-card:nth-child(2) {
+  animation-delay: 0.6s, 0.75s;
+}
+
+.statistics-card:nth-child(3) {
+  animation-delay: 1.2s, 1.5s;
+}
+
+.statistics-card:nth-child(4) {
+  animation-delay: 1.8s, 2.25s;
+}
+
+/* Hover Effect for Cards - enhanced with border glow */
+.statistics-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2), 0 0 20px rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Remove complex background effects - keeping it minimal */
+.statistics-card::before {
+  display: none;
+}
+
+/* Card Left Section */
+.statistics-card-left {
+  flex: 1;
+  z-index: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* Value Row - sequential cycle */
+.statistics-card-value-row {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  margin-bottom: 1px;
+  animation: floatValue 3s ease-in-out infinite;
+}
+
+/* Sequential floatValue delays - each card floats after the previous one */
+.statistics-card:nth-child(1) .statistics-card-value-row {
+  animation-delay: 0s;
+}
+
+.statistics-card:nth-child(2) .statistics-card-value-row {
+  animation-delay: 0.75s;
+}
+
+.statistics-card:nth-child(3) .statistics-card-value-row {
+  animation-delay: 1.5s;
+}
+
+.statistics-card:nth-child(4) .statistics-card-value-row {
+  animation-delay: 2.25s;
+}
+
+/* No animation change on hover */
+
+/* Card Value */
+.statistics-card-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: white;
+  line-height: 1.1;
+  letter-spacing: 0;
+  transition: all 0.3s ease;
+  font-family: 'Geologica', sans-serif;
+}
+
+/* No animation change on hover for value */
+
+/* Card Unit */
+.statistics-card-unit {
+  font-size: 22px;
+  font-weight: 500;
+  color: white;
+  opacity: 0.9;
+  transition: all 0.3s ease;
+  font-family: 'Geologica', sans-serif;
+}
+
+/* No animation change on hover for unit */
+
+/* Card Label */
+.statistics-card-label {
+  font-size: 16px;
+  font-weight: 300;
+  color: white;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: all 0.3s ease;
+  font-family: 'Geologica', sans-serif;
+}
+
+/* No animation change on hover for label */
+
+/* Card Icon Container - sequential cycle */
+.statistics-card-icon {
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border-radius: 12px;
+  z-index: 1;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: pulse 2s ease-in-out infinite;
+  margin-right: 8px;
+}
+
+/* Sequential pulse delays - each icon pulses after the previous one */
+.statistics-card:nth-child(1) .statistics-card-icon {
+  animation-delay: 0s;
+}
+
+.statistics-card:nth-child(2) .statistics-card-icon {
+  animation-delay: 0.5s;
+}
+
+.statistics-card:nth-child(3) .statistics-card-icon {
+  animation-delay: 1s;
+}
+
+.statistics-card:nth-child(4) .statistics-card-icon {
+  animation-delay: 1.5s;
+}
+
+/* SVG Icon Styling */
+.statistics-card-icon svg {
+  width: 28.33px;
+  height: 28.33px;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+  transition: transform 0.3s ease, filter 0.3s ease;
+  transform-origin: center;
+}
+
+.statistics-card-icon svg path {
+  fill: #ffffff !important;
+  transition: fill 0.3s ease;
+}
+
+/* Icon color changes to theme color on hover */
+.statistics-card:hover .statistics-card-icon svg path {
+  fill: var(--theme-icon-color, #4eccf2) !important;
+}
+
+/* Icon rotation and scale on hover - applied to SVG to avoid conflict with pulse animation on container */
+.statistics-card:hover .statistics-card-icon svg {
+  transform: rotate(10deg) scale(1.1);
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+}
+
+/* Loading State */
+.statistics-card-value:empty::after {
+  content: '...';
+  animation: loadingDots 1.5s infinite;
+}
+
+/* ============================================
+   KEYFRAME ANIMATIONS
+   ============================================ */
+
+/* Fade In Widget */
+@keyframes fadeInWidget {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Slide Up and Fade In for Cards */
+@keyframes slideUpFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+
+/* Floating Animation for Values */
+@keyframes floatValue {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes floatValueFast {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+/* Pulse Animation for Icons */
+@keyframes pulse {
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+
+/* Rotate and Pulse on Hover */
+@keyframes rotatePulse {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+
+  50% {
+    transform: rotate(10deg) scale(1.15);
+  }
+
+  100% {
+    transform: rotate(10deg) scale(1.1);
+  }
+}
+
+/* Loading Dots Animation */
+@keyframes loadingDots {
+
+  0%,
+  20% {
+    content: '.';
+  }
+
+  40% {
+    content: '..';
+  }
+
+  60%,
+  100% {
+    content: '...';
+  }
+}
+
+/* Minimal Border Glow Animation - using theme colors */
+@keyframes borderGlow {
+
+  0%,
+  100% {
+    border-color: var(--border-glow-start, rgba(255, 255, 255, 0.05));
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  50% {
+    border-color: var(--border-glow-end, rgba(255, 255, 255, 0.25));
+    box-shadow: 0 4px 20px var(--border-glow-end, rgba(255, 255, 255, 0.15));
+  }
+}
+
+/* Glow Effect */
+@keyframes glow {
+
+  0%,
+  100% {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  50% {
+    box-shadow: 0 4px 25px rgba(255, 255, 255, 0.3);
+  }
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 1200px) {
+  .statistics-cards-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  :root {
+    --card-padding: 20px;
+    --card-gap: 16px;
+  }
+
+  .statistics-cards-container {
+    grid-template-columns: 1fr;
+  }
+
+  .statistics-card-value {
+    font-size: 36px;
+  }
+
+  .statistics-card-unit {
+    font-size: 26px;
+  }
+
+  .statistics-card-label {
+    font-size: 18px;
+  }
+
+  .statistics-card-icon {
+    width: 50px;
+    height: 50px;
+  }
+
+  .statistics-card-icon svg {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --card-padding: 16px;
+  }
+
+  .statistics-dashboard-widget {
+    padding: 12px;
+  }
+
+  .statistics-card-value {
+    font-size: 32px;
+  }
+
+  .statistics-card-unit {
+    font-size: 20px;
+  }
+
+  .statistics-card-label {
+    font-size: 16px;
+  }
+}
+
+/* ============================================
+   ACCESSIBILITY & PERFORMANCE
+   ============================================ */
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+
+  .statistics-card,
+  .statistics-card-icon,
+  .statistics-card-value-row,
+  .statistics-card::before {
+    animation: slideUpFadeIn 0.6s ease-out forwards !important;
+    transition: none !important;
+  }
+
+  .statistics-card:hover {
+    transform: none;
+  }
+}
+
+/* Focus styles for accessibility */
+.statistics-card:focus {
+  outline: 3px solid rgba(255, 255, 255, 0.5);
+  outline-offset: 3px;
+}
+
+/* Print styles */
+@media print {
+  .statistics-card {
+    break-inside: avoid;
+    box-shadow: none;
+    animation: none;
+  }
+
+  .statistics-card::before {
+    display: none;
+  }
+}
+
+/* =========================================================
+   iPad Pro (portrait) EXACT width = 1024px
+   Keeps 4 cards in one row, compacts typography safely
+========================================================= */
+@media (width: 1024px) {
+  :root {
+    --card-padding: 10px;
+    --card-min-height: 56px;
+    --card-border-radius: 14px;
+  }
+
+  .statistics-cards-container {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+    align-items: stretch;
+  }
+
+  .statistics-card {
+    padding: var(--card-padding);
+    min-height: var(--card-min-height);
+  }
+
+  .statistics-card-value {
+    font-size: 22px;
+    line-height: 1.05;
+  }
+
+  .statistics-card-unit {
+    font-size: 18px;
+    line-height: 1.05;
+  }
+
+  /* Allow label to wrap to 2 lines (prevents overflow on 4-col layout) */
+  .statistics-card-label {
+    font-size: 13px;
+    line-height: 1.15;
+    white-space: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .statistics-card-icon {
+    width: 32px;
+    height: 32px;
+    margin-right: 4px;
+    border-radius: 10px;
+  }
+
+  .statistics-card-icon svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  /* Optional: reduce hover lift a bit (tablet-friendly) */
+  .statistics-card:hover {
+    transform: translateY(-4px) scale(1.01);
+  }
+}
+
+/* =========================================================
+   Statistics Dashboard — 4 cards ALWAYS, container responsive
+   No stacking. Shrinks/stretches based on widget size.
+========================================================= */
+
+/* Root widget becomes a container for container queries */
+.statistics-dashboard-widget {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+
+  /* container queries */
+  container-type: inline-size;
+  container-name: statsdash;
+
+  opacity: 0;
+  animation: fadeInWidget 0.8s ease-out forwards;
+  border-radius: 20px;
+  -webkit-backdrop-filter: blur(10px);
+  font-family: 'Geologica', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+
+  /* critical in ExB so grid can actually shrink */
+  min-width: 0;
+  min-height: 0;
+}
+
+.statistics-dashboard-widget.visible {
+  opacity: 1;
+}
+
+/* Use fluid design tokens driven by container width */
+.statistics-dashboard-widget {
+  --gap: clamp(6px, 1.2cqi, 10px);
+  --card-pad: clamp(8px, 1.6cqi, 12px);
+  --radius: clamp(12px, 2.0cqi, 16px);
+
+  --value: clamp(16px, 2.4cqi, 28px);
+  --unit: clamp(14px, 2.0cqi, 22px);
+  --label: clamp(10px, 1.5cqi, 16px);
+
+  --icon-box: clamp(28px, 3.0cqi, 34px);
+  --icon: clamp(18px, 2.4cqi, 28px);
+  --icon-mr: clamp(4px, 1.2cqi, 8px);
+}
+
+/* Cards container: ALWAYS 4 columns */
+.statistics-cards-container {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  /* never wrap into 2 or 1 */
+  gap: var(--gap);
+  width: 100%;
+  height: 100%;
+  align-items: stretch;
+
+  /* remove flex leftovers */
+  flex-wrap: unset;
+
+  /* critical shrink behavior inside panels */
+  min-width: 0;
+  min-height: 0;
+}
+
+/* Card */
+.statistics-card {
+  background: #101C324D;
+  border-radius: var(--radius);
+  padding: var(--card-pad);
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  position: relative;
+  overflow: hidden;
+
+  min-width: 0;
+  /* allow text ellipsis to work */
+  height: 100%;
+  width: 100%;
+
+  border: 1px solid #FFFFFF0D;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+
+  transform: translateY(30px);
+  opacity: 0;
+
+  animation: slideUpFadeIn 0.6s ease-out forwards, borderGlow 3s ease-in-out infinite;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 0.4s ease;
+}
+
+/* Left column should be shrinkable */
+.statistics-card-left {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* Value row */
+.statistics-card-value-row {
+  display: flex;
+  align-items: baseline;
+  gap: clamp(3px, 0.6cqi, 6px);
+  margin-bottom: 1px;
+  animation: floatValue 3s ease-in-out infinite;
+}
+
+/* Value */
+.statistics-card-value {
+  font-size: var(--value);
+  font-weight: 700;
+  color: white;
+  line-height: 1.05;
+  font-family: 'Geologica', sans-serif;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Unit */
+.statistics-card-unit {
+  font-size: var(--unit);
+  font-weight: 500;
+  color: white;
+  opacity: 0.9;
+  font-family: 'Geologica', sans-serif;
+
+  white-space: nowrap;
+}
+
+/* Label: default single line with ellipsis to protect 4-col layout */
+.statistics-card-label {
+  font-size: var(--label);
+  font-weight: 300;
+  color: white;
+  line-height: 1.15;
+  font-family: 'Geologica', sans-serif;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Icon box */
+.statistics-card-icon {
+  width: var(--icon-box);
+  height: var(--icon-box);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: transparent;
+  border-radius: clamp(10px, 1.6cqi, 12px);
+
+  z-index: 1;
+  margin-right: var(--icon-mr);
+
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.statistics-card-icon svg {
+  width: var(--icon);
+  height: var(--icon);
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+  transition: transform 0.3s ease, filter 0.3s ease;
+  transform-origin: center;
+}
+
+.statistics-card-icon svg path {
+  fill: #ffffff !important;
+  transition: fill 0.3s ease;
+}
+
+.statistics-card:hover .statistics-card-icon svg path {
+  fill: var(--theme-icon-color, #4eccf2) !important;
+}
+
+.statistics-card:hover .statistics-card-icon svg {
+  transform: rotate(10deg) scale(1.1);
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+}
+
+/* =========================================================
+   Container tightening rules (still 4 columns, never stack)
+========================================================= */
+
+/* When widget is tighter: reduce lift and allow 2-line label (optional) */
+@container statsdash (max-width: 900px) {
+  .statistics-card:hover {
+    transform: translateY(-4px) scale(1.01);
+  }
+
+  /* labels can take 2 lines to avoid cutting too aggressively */
+  .statistics-card-label {
+    white-space: normal;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+}
+
+/* When very tight: keep values readable, labels stay clamped */
+@container statsdash (max-width: 720px) {
+  .statistics-dashboard-widget {
+    --gap: clamp(6px, 1.0cqi, 8px);
+    --card-pad: clamp(7px, 1.4cqi, 10px);
+    --value: clamp(14px, 2.8cqi, 20px);
+    --unit: clamp(12px, 2.2cqi, 16px);
+    --label: clamp(9px, 2.0cqi, 12px);
+    --icon-box: clamp(26px, 3.2cqi, 30px);
+    --icon: clamp(16px, 2.6cqi, 20px);
+  }
+}
+
+/* Ultra narrow: keep 4 columns, but make labels single-line again */
+@container statsdash (max-width: 560px) {
+  .statistics-card-label {
+    white-space: nowrap;
+    -webkit-line-clamp: unset;
+    display: block;
+  }
+}
+
+/* =========================================================
+   Keep your existing reduced-motion + keyframes as-is
+   BUT remove the old viewport @media that changed columns.
+========================================================= */

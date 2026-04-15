@@ -1,0 +1,353 @@
+/* =========================================================
+   RESPONSIVE (iPad and <= 1440) — container-query driven
+   Works best inside ExB because the widget width changes by layout.
+========================================================= */
+
+.status-statistics-widget {
+  /* container-query sizing based on the widget itself */
+  container-type: inline-size;
+  container-name: statusstat;
+
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  /* Fluid tokens driven by container width — larger fonts, text stays above bars */
+  --pad-y: clamp(10px, 1.8cqi, 20px);
+  --pad-x: clamp(10px, 2.0cqi, 18px);
+  --radius: clamp(14px, 2.2cqi, 20px);
+  --title: clamp(14px, 2cqi, 22px);
+  --value: clamp(20px, 3cqi, 30px);
+  --label: clamp(13px, 1.9cqi, 17px);
+  --col-pad-y: clamp(8px, 1.5cqi, 14px);
+  --col-pad-x: clamp(6px, 1.3cqi, 10px);
+  --top-gap: clamp(8px, 1.5cqi, 14px);
+  --bar-radius: clamp(14px, 2.4cqi, 22px);
+
+  padding: var(--pad-y) var(--pad-x);
+  border-radius: var(--radius);
+
+  background: rgba(16, 28, 50, 0.3);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-sizing: border-box;
+
+  position: relative;
+  z-index: 10000;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.3s ease, transform 0.3s ease, border-color 0.4s ease;
+  animation: borderGlow 3s ease-in-out infinite;
+}
+
+.status-statistics-widget.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.status-statistics-header {
+  display: flex;
+  justify-content: center;
+  margin-bottom: clamp(4px, 0.9cqi, 8px);
+  flex: 0 0 auto;
+}
+
+.status-statistics-title {
+  font-family: "Geologica", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-weight: 400;
+  font-size: var(--title);
+  line-height: 1.25;
+  color: #ffffff;
+  text-align: center;
+
+  /* Keep header stable on small widths */
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.status-statistics-columns {
+  flex: 1 1 auto;
+  min-height: 0;
+
+  display: flex;
+  /* ALWAYS 4 columns in one row */
+  gap: 0;
+  /* keep your divider style */
+  padding-top: clamp(4px, 0.9cqi, 8px);
+}
+
+/* 4-up columns always */
+.status-statistics-column {
+  flex: 1 1 0;
+  min-width: 0;
+  /* critical: allows shrinking inside flex */
+  min-height: 0;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  padding: var(--col-pad-y) var(--col-pad-x) clamp(6px, 1.1cqi, 10px);
+  box-sizing: border-box;
+  position: relative;
+
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Disable the old vertical separators (they look odd with grid gaps) */
+.status-statistics-column::before,
+.status-statistics-column:first-child::before {
+  display: none;
+}
+
+.status-statistics-column:hover {
+  transform: translateY(-2px);
+}
+
+.status-selected {
+  box-shadow: 0 0 0 1px rgba(78, 204, 242, 0.3), 0 14px 30px rgba(78, 204, 242, 0.1);
+}
+
+/* Top text — above bars, never overlapped (z-index + flex-shrink) */
+.status-statistics-top {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin-bottom: clamp(10px, 2cqi, 16px);
+  min-height: 0;
+  position: relative;
+  z-index: 2;
+  flex-shrink: 0;
+}
+
+.status-statistics-value {
+  font-family: "Geologica", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-weight: 400;
+  font-size: var(--value);
+  line-height: 1.15;
+  color: #ffffff;
+
+  /* keep big numbers stable */
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.status-statistics-label {
+  margin-top: clamp(2px, 0.8cqi, 4px);
+  font-family: "Geologica", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-weight: 300;
+  font-size: var(--label);
+  line-height: 1.2;
+  color: #ffffff;
+  text-align: center;
+
+  /* allow longer translations without blowing up layout */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  text-wrap: balance;
+  max-width: 100%;
+}
+
+/* Bars — stay behind text */
+.status-statistics-bar {
+  width: 100%;
+  align-self: flex-end;
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+
+  /* responsive radius */
+  border-radius: clamp(16px, 3.2cqi, 22px) clamp(16px, 3.2cqi, 22px) 0 0;
+
+  /* keep "0%" bars still visible (works with your inline height) */
+  min-height: 10px;
+
+  clip-path: polygon(0 0, 100% 12%, 100% 100%, 0 100%);
+}
+
+/* keep your gradients as-is */
+.status-checked-bar {
+  background: linear-gradient(180deg, #1a7fff 0%, #0050ff 100%);
+}
+
+.status-approved-bar {
+  background:
+    repeating-linear-gradient(-60deg, rgba(0, 255, 255, 0.15) 0 8px, transparent 8px 16px),
+    linear-gradient(180deg, #00e5e8 0%, #00b8bb 100%);
+}
+
+.status-rejected-bar {
+  background:
+    repeating-linear-gradient(-60deg, rgba(255, 0, 102, 0.15) 0 8px, transparent 8px 16px),
+    linear-gradient(180deg, #ff0066 0%, #cc004d 100%);
+}
+
+.status-in-progress-bar {
+  background:
+    repeating-linear-gradient(-60deg, rgba(81, 116, 146, 0.14) 0 8px, transparent 8px 16px),
+    linear-gradient(180deg, #517492 0%, #33485b 100%);
+}
+
+/* =========================================================
+   Container breakpoints (this is the key for iPad panels)
+========================================================= */
+
+/* Common iPad-ish panels: switch to 2x2 when container is narrow */
+@container statusstat (max-width: 760px) {
+  .status-statistics-columns {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .status-statistics-title {
+    white-space: normal;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+}
+
+/* Very narrow (small cards / side panels): stack */
+@container statusstat (max-width: 420px) {
+  .status-statistics-columns {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Motion safety */
+@media (prefers-reduced-motion: reduce) {
+
+  .status-statistics-widget,
+  .status-statistics-column {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* Keep your vertical divider lines */
+.status-statistics-column::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.1);
+  opacity: 0.10;
+}
+
+.status-statistics-column:first-child::before {
+  display: none;
+}
+
+.status-statistics-column:hover {
+  transform: translateY(-2px);
+}
+
+.status-selected {
+  box-shadow: 0 0 0 1px rgba(78, 204, 242, 0.3), 0 14px 30px rgba(78, 204, 242, 0.1);
+  border-radius: clamp(12px, 2.0cqi, 14px);
+}
+
+/* Top block */
+.status-statistics-top {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin-bottom: var(--top-gap);
+  min-height: 0;
+  position: relative;
+  z-index: 2;
+  flex-shrink: 0;
+}
+
+.status-statistics-value {
+  font-family: "Geologica", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-weight: 400;
+  font-size: var(--value);
+  line-height: 1.15;
+  color: #ffffff;
+
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.status-statistics-label {
+  margin-top: clamp(2px, 0.6cqi, 4px);
+  font-family: "Geologica", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-weight: 300;
+  font-size: var(--label);
+  line-height: 1.2;
+  color: #ffffff;
+  text-align: center;
+
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  /* IMPORTANT: prevents layout shift; stays 1-line */
+}
+
+/* Bar */
+.status-statistics-bar {
+  width: 100%;
+  border-radius: var(--bar-radius) var(--bar-radius) 0 0;
+  align-self: flex-end;
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+
+  /* preserve visibility even if inline height is tiny */
+  min-height: clamp(8px, 1.2cqi, 12px);
+
+  clip-path: polygon(0 0, 100% 12%, 100% 100%, 0 100%);
+}
+
+/* =========================================================
+   Container-only “tightening” (still NO stacking)
+========================================================= */
+
+/* When widget becomes narrow, reduce paddings/gaps and clamp text harder */
+@container statusstat (max-width: 700px) {
+  .status-statistics-widget {
+    --pad-y: clamp(8px, 1.4cqi, 14px);
+    --pad-x: clamp(8px, 1.6cqi, 14px);
+    --title: clamp(14px, 1.9cqi, 18px);
+    --value: clamp(18px, 3.0cqi, 24px);
+    --label: clamp(11px, 2.2cqi, 14px);
+    --col-pad-y: clamp(6px, 1.2cqi, 10px);
+    --col-pad-x: clamp(5px, 1.1cqi, 8px);
+    --top-gap: clamp(6px, 1.1cqi, 10px);
+  }
+
+  /* keep header single-line but smaller */
+  .status-statistics-title {
+    white-space: nowrap;
+  }
+}
+
+/* Ultra-narrow: keep 4 columns, but prioritize numbers */
+@container statusstat (max-width: 520px) {
+  .status-statistics-label {
+    /* still 1-line; shorten via ellipsis */
+    letter-spacing: -0.1px;
+  }
+
+  .status-statistics-column:hover {
+    transform: none;
+    /* avoid jitter in tight spaces */
+  }
+}

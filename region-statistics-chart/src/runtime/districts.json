@@ -1,0 +1,1444 @@
+{
+  "1703202": {
+    "ru": "Алтинкуль",
+    "uz-Cyrl": "Олтинкўл",
+    "uz": "Oltinko'l",
+    "en": "Oltinkul",
+    "qqr": "Oltinko'l"
+  },
+  "1703203": {
+    "ru": "Андижан р.",
+    "uz-Cyrl": "Андижон р.",
+    "uz": "Andijon t.",
+    "en": "Andijan district",
+    "qqr": "Andijon t."
+  },
+  "1703206": {
+    "ru": "Балыкчи",
+    "uz-Cyrl": "Балиқчи",
+    "uz": "Baliqchi",
+    "en": "Balykchi",
+    "qqr": "Baliqshi"
+  },
+  "1703209": {
+    "ru": "Бустон",
+    "uz-Cyrl": "Бўстон",
+    "uz": "Bo'ston",
+    "en": "Boston",
+    "qqr": "Bo'ston"
+  },
+  "1703210": {
+    "ru": "Булокбаши",
+    "uz-Cyrl": "Булоқбоши",
+    "uz": "Buloqboshi",
+    "en": "Buloqbashi",
+    "qqr": "Bulaqboshi"
+  },
+  "1703211": {
+    "ru": "Джалакудук",
+    "uz-Cyrl": "Жалақудуқ",
+    "uz": "Jalaquduq",
+    "en": "Jalaquduk",
+    "qqr": "Jalaquduq"
+  },
+  "1703214": {
+    "ru": "Избоскан",
+    "uz-Cyrl": "Избоскан",
+    "uz": "Izboskan",
+    "en": "Izboskan",
+    "qqr": "Izboskan"
+  },
+  "1703217": {
+    "ru": "Улугнор",
+    "uz-Cyrl": "Улуғнор",
+    "uz": "Ulug'nor",
+    "en": "Ulug'nor",
+    "qqr": "Ulug'nor"
+  },
+  "1703220": {
+    "ru": "Кургантепа",
+    "uz-Cyrl": "Қўрғонтепа",
+    "uz": "Qo'rg'ontepa",
+    "en": "Kurgan-tepa",
+    "qqr": "Qo'rg'ontepa"
+  },
+  "1703224": {
+    "ru": "Асака",
+    "uz-Cyrl": "Асака",
+    "uz": "Asaka",
+    "en": "Asaka",
+    "qqr": "Asaka"
+  },
+  "1703227": {
+    "ru": "Мархамат",
+    "uz-Cyrl": "Мархамат",
+    "uz": "Marxamat",
+    "en": "Markhamat",
+    "qqr": "Marxamat"
+  },
+  "1703230": {
+    "ru": "Шахрихан",
+    "uz-Cyrl": "Шахрихон",
+    "uz": "Shaxrixon",
+    "en": "Shakhrikhan",
+    "qqr": "Shaxrixon"
+  },
+  "1703232": {
+    "ru": "Пахтаабад",
+    "uz-Cyrl": "Пахтаобод",
+    "uz": "Paxtaobod",
+    "en": "Pakhtaobod",
+    "qqr": "Paxtaobod"
+  },
+  "1703236": {
+    "ru": "Ходжаабад",
+    "uz-Cyrl": "Хўжаобод",
+    "uz": "Xo'jaobod",
+    "en": "Khojaobod",
+    "qqr": "Xo'jaobod"
+  },
+  "1703401": {
+    "ru": "Андижан г.",
+    "uz-Cyrl": "Андижон ш.",
+    "uz": "Andijon sh.",
+    "en": "Andijan city",
+    "qqr": "Andijon sh."
+  },
+  "1703408": {
+    "ru": "Хонобад",
+    "uz-Cyrl": "Хонобод",
+    "uz": "Xonobod",
+    "en": "Khonobod",
+    "qqr": "Xonobod"
+  },
+  "1706204": {
+    "ru": "Олот",
+    "uz-Cyrl": "Олот",
+    "uz": "Olot",
+    "en": "Olot",
+    "qqr": "Olot"
+  },
+  "1706207": {
+    "ru": "Бухара р.",
+    "uz-Cyrl": "Бухоро р.",
+    "uz": "Buxoro t.",
+    "en": "Bukhara district",
+    "qqr": "Buxoro t."
+  },
+  "1706212": {
+    "ru": "Вобкент",
+    "uz-Cyrl": "Вобкент",
+    "uz": "Vobkent",
+    "en": "Vobkent",
+    "qqr": "Vobkent"
+  },
+  "1706215": {
+    "ru": "Гиждуван",
+    "uz-Cyrl": "Ғиждувон",
+    "uz": "G'ijduvon",
+    "en": "Gijduvan",
+    "qqr": "G'ijduvon"
+  },
+  "1706219": {
+    "ru": "г.Когон",
+    "uz-Cyrl": "Когон ш.",
+    "uz": "Kogon sh.",
+    "en": "Kogon sh.",
+    "qqr": "Kogon city"
+  },
+  "1706230": {
+    "ru": "Қараколь",
+    "uz-Cyrl": "Қоракўл",
+    "uz": "Qorako'l",
+    "en": "Qarakul",
+    "qqr": "Qorako'l"
+  },
+  "1706232": {
+    "ru": "Қоровулбазар",
+    "uz-Cyrl": "Қоровулбозор",
+    "uz": "Qorovulbozor",
+    "en": "Qarovulbazar",
+    "qqr": "Qorovulbozor"
+  },
+  "1706240": {
+    "ru": "Пешку",
+    "uz-Cyrl": "Пешкў",
+    "uz": "Peshku",
+    "en": "Peshku",
+    "qqr": "Peshku"
+  },
+  "1706242": {
+    "ru": "Ромитан",
+    "uz-Cyrl": "Ромитан",
+    "uz": "Romitan",
+    "en": "Romitan",
+    "qqr": "Romitan"
+  },
+  "1706246": {
+    "ru": "Джондор",
+    "uz-Cyrl": "Жондор",
+    "uz": "Jondor",
+    "en": "Jondor",
+    "qqr": "Jondor"
+  },
+  "1706258": {
+    "ru": "Шафиркон",
+    "uz-Cyrl": "Шофиркон",
+    "uz": "Shofirkon",
+    "en": "Shofirkon",
+    "qqr": "Shofirkon"
+  },
+  "1706401": {
+    "ru": "Бухара г.",
+    "uz-Cyrl": "Бухоро ш.",
+    "uz": "Buxoro sh.",
+    "en": "Bukhara city",
+    "qqr": "Buxoro sh."
+  },
+  "1706403": {
+    "ru": "Когон",
+    "uz-Cyrl": "Когон",
+    "uz": "Kogon",
+    "en": "Kogon",
+    "qqr": "Kogon"
+  },
+  "1708201": {
+    "ru": "Арнасай",
+    "uz-Cyrl": "Арнасой",
+    "uz": "Arnasoy",
+    "en": "Arnasay",
+    "qqr": "Arnasoy"
+  },
+  "1708204": {
+    "ru": "Бахмаль",
+    "uz-Cyrl": "Бахмал",
+    "uz": "Baxmal",
+    "en": "Bakhmal",
+    "qqr": "Baxmal"
+  },
+  "1708209": {
+    "ru": "Галлаороль",
+    "uz-Cyrl": "Ғаллаорол",
+    "uz": "G'allaorol",
+    "en": "Gallaorol",
+    "qqr": "G'allaorol"
+  },
+  "1708212": {
+    "ru": "Шароф Рашидов",
+    "uz-Cyrl": "Шароф Рашидов",
+    "uz": "Sharof Rashidov",
+    "en": "Sharof Rashidov",
+    "qqr": "Sharof Rashidov"
+  },
+  "1708215": {
+    "ru": "Дустлик",
+    "uz-Cyrl": "Дўстлик",
+    "uz": "Do'stlik",
+    "en": "Dostlik",
+    "qqr": "Do'stlik"
+  },
+  "1708218": {
+    "ru": "Заамин",
+    "uz-Cyrl": "Зомин",
+    "uz": "Zomin",
+    "en": "Zomin",
+    "qqr": "Zomin"
+  },
+  "1708220": {
+    "ru": "Зарбдор",
+    "uz-Cyrl": "Зарбдор",
+    "uz": "Zarbdor",
+    "en": "Zarbdor",
+    "qqr": "Zarbdor"
+  },
+  "1708223": {
+    "ru": "Мирзачуль",
+    "uz-Cyrl": "Мирзачўл",
+    "uz": "Mirzacho'l",
+    "en": "Mirzacho'l",
+    "qqr": "Mirzacho'l"
+  },
+  "1708225": {
+    "ru": "Зафарабад",
+    "uz-Cyrl": "Зафаробод",
+    "uz": "Zafarobod",
+    "en": "Zafarobod",
+    "qqr": "Zafarobod"
+  },
+  "1708228": {
+    "ru": "Пахтакор",
+    "uz-Cyrl": "Пахтакор",
+    "uz": "Paxtakor",
+    "en": "Pakhtakor",
+    "qqr": "Paxtakor"
+  },
+  "1708235": {
+    "ru": "Фориш",
+    "uz-Cyrl": "Фориш",
+    "uz": "Forish",
+    "en": "Forish",
+    "qqr": "Forish"
+  },
+  "1708237": {
+    "ru": "Янгиабад",
+    "uz-Cyrl": "Янгиобод",
+    "uz": "Yangiobod",
+    "en": "Yangiobod",
+    "qqr": "Yangiobod"
+  },
+  "1708401": {
+    "ru": "Джизак",
+    "uz-Cyrl": "Жиззах",
+    "uz": "Jizzax",
+    "en": "Jizzakh",
+    "qqr": "Jizzax"
+  },
+  "1710207": {
+    "ru": "Гузор",
+    "uz-Cyrl": "Ғузор",
+    "uz": "G'uzor",
+    "en": "Guzor",
+    "qqr": "G'uzor"
+  },
+  "1710212": {
+    "ru": "Дехконабад",
+    "uz-Cyrl": "Деҳқонобод",
+    "uz": "Dehqonobod",
+    "en": "Dehqonabad",
+    "qqr": "Dehqonobod"
+  },
+  "1710220": {
+    "ru": "Камаши",
+    "uz-Cyrl": "Қамаши",
+    "uz": "Qamashi",
+    "en": "Qamashi",
+    "qqr": "Qamashi"
+  },
+  "1710224": {
+    "ru": "Карши р.",
+    "uz-Cyrl": "Қарши р.",
+    "uz": "Qarshi t.",
+    "en": "Qarshi district",
+    "qqr": "Qarshi t."
+  },
+  "1710229": {
+    "ru": "Косон",
+    "uz-Cyrl": "Косон",
+    "uz": "Koson",
+    "en": "Koson",
+    "qqr": "Koson"
+  },
+  "1710232": {
+    "ru": "Китоб",
+    "uz-Cyrl": "Китоб",
+    "uz": "Kitob",
+    "en": "Kitob",
+    "qqr": "Kitob"
+  },
+  "1710233": {
+    "ru": "Миришкор",
+    "uz-Cyrl": "Миришкор",
+    "uz": "Mirishkor",
+    "en": "Mirishkor",
+    "qqr": "Mirishkor"
+  },
+  "1710234": {
+    "ru": "Муборак",
+    "uz-Cyrl": "Муборак",
+    "uz": "Muborak",
+    "en": "Muborak",
+    "qqr": "Muborak"
+  },
+  "1710235": {
+    "ru": "Нишон",
+    "uz-Cyrl": "Нишон",
+    "uz": "Nishon",
+    "en": "Nishon",
+    "qqr": "Nishon"
+  },
+  "1710237": {
+    "ru": "Касби",
+    "uz-Cyrl": "Касби",
+    "uz": "Kasbi",
+    "en": "Kasbi",
+    "qqr": "Kasbi"
+  },
+  "1710240": {
+    "ru": "Кокдали",
+    "uz-Cyrl": "Кўкдала",
+    "uz": "Ko`kdala",
+    "en": "Kokdala",
+    "qqr": "Ko`kdala"
+  },
+  "1710242": {
+    "ru": "Чирокчи",
+    "uz-Cyrl": "Чироқчи",
+    "uz": "Chiroqchi",
+    "en": "Chiroqchi",
+    "qqr": "Chiroqchi"
+  },
+  "1710245": {
+    "ru": "Шахрисабз",
+    "uz-Cyrl": "Шаҳрисабз",
+    "uz": "Shahrisabz",
+    "en": "Shahrisabz",
+    "qqr": "Shahrisabz"
+  },
+  "1710250": {
+    "ru": "Яккабог",
+    "uz-Cyrl": "Яккабоғ",
+    "uz": "Yakkabog'",
+    "en": "Yakkabog",
+    "qqr": "Yakkabog'"
+  },
+  "1710401": {
+    "ru": "Карши г.",
+    "uz-Cyrl": "Қарши ш.",
+    "uz": "Qarshi sh.",
+    "en": "Qarshi city",
+    "qqr": "Qarshi sh."
+  },
+  "1710405": {
+    "ru": "Шахрисабз",
+    "uz-Cyrl": "Шаҳрисабз",
+    "uz": "Shahrisabz",
+    "en": "Shahrisabz",
+    "qqr": "Shahrisabz"
+  },
+  "1712211": {
+    "ru": "Конимекс",
+    "uz-Cyrl": "Конимех",
+    "uz": "Konimex",
+    "en": "Konimek",
+    "qqr": "Konimex"
+  },
+  "1712216": {
+    "ru": "Кизилтепа",
+    "uz-Cyrl": "Қизилтепа",
+    "uz": "Qiziltepa",
+    "en": "Kyzyltepa",
+    "qqr": "Qiziltepa"
+  },
+  "1712230": {
+    "ru": "Навбахор",
+    "uz-Cyrl": "Навбаҳор",
+    "uz": "Navbahor",
+    "en": "Navbahor",
+    "qqr": "Navbahor"
+  },
+  "1712234": {
+    "ru": "Кармана",
+    "uz-Cyrl": "Кармана",
+    "uz": "Karmana",
+    "en": "Karmana",
+    "qqr": "Karmana"
+  },
+  "1712238": {
+    "ru": "Нурата",
+    "uz-Cyrl": "Нурота",
+    "uz": "Nurota",
+    "en": "Nurota",
+    "qqr": "Nurota"
+  },
+  "1712244": {
+    "ru": "Томди",
+    "uz-Cyrl": "Томди",
+    "uz": "Tomdi",
+    "en": "Tomdi",
+    "qqr": "Tomdi"
+  },
+  "1712248": {
+    "ru": "Учкудук",
+    "uz-Cyrl": "Учқудуқ",
+    "uz": "Uchquduq",
+    "en": "Uchquduk",
+    "qqr": "Uchquduq"
+  },
+  "1712251": {
+    "ru": "Хатырчи",
+    "uz-Cyrl": "Хатирчи",
+    "uz": "Xatirchi",
+    "en": "Khatirchi",
+    "qqr": "Xatirchi"
+  },
+  "1712401": {
+    "ru": "Навоий",
+    "uz-Cyrl": "Навоий",
+    "uz": "Navoiy",
+    "en": "Navoi",
+    "qqr": "Navoiy"
+  },
+  "1712408": {
+    "ru": "Зарафшан",
+    "uz-Cyrl": "Зарафшон",
+    "uz": "Zarafshon",
+    "en": "Zarafshon",
+    "qqr": "Zarafshon"
+  },
+  "1712412": {
+    "ru": "Гозган",
+    "uz-Cyrl": "Ғозғон",
+    "uz": "G'ozg'on",
+    "en": "Gozgan",
+    "qqr": "G'ozg'on"
+  },
+  "1714204": {
+    "ru": "Мингбулок",
+    "uz-Cyrl": "Мингбулоқ",
+    "uz": "Mingbuloq",
+    "en": "Mingbulok",
+    "qqr": "Mingbuloq"
+  },
+  "1714207": {
+    "ru": "Косонсой",
+    "uz-Cyrl": "Косонсой",
+    "uz": "Kosonsoy",
+    "en": "Kosonsoy",
+    "qqr": "Kosonsoy"
+  },
+  "1714212": {
+    "ru": "Наманган р.",
+    "uz-Cyrl": "Наманган р.",
+    "uz": "Namangan t.",
+    "en": "Namangan district",
+    "qqr": "Namangan t."
+  },
+  "1714216": {
+    "ru": "Норин",
+    "uz-Cyrl": "Норин",
+    "uz": "Norin",
+    "en": "Norin",
+    "qqr": "Norin"
+  },
+  "1714219": {
+    "ru": "Поп",
+    "uz-Cyrl": "Поп",
+    "uz": "Pop",
+    "en": "Pop",
+    "qqr": "Pop"
+  },
+  "1714224": {
+    "ru": "Торакурган",
+    "uz-Cyrl": "Тўрақўрғон",
+    "uz": "To'raqo'rg'on",
+    "en": "Turakurgan",
+    "qqr": "To'raqo'rg'on"
+  },
+  "1714229": {
+    "ru": "Уйчин",
+    "uz-Cyrl": "Уйчи",
+    "uz": "Uychi",
+    "en": "Uychi",
+    "qqr": "Uychi"
+  },
+  "1714234": {
+    "ru": "Учкурган",
+    "uz-Cyrl": "Учқўрғон",
+    "uz": "Uchqo'rg'on",
+    "en": "Uchkurgan",
+    "qqr": "Uchqo'rg'on"
+  },
+  "1714236": {
+    "ru": "Чорток",
+    "uz-Cyrl": "Чортоқ",
+    "uz": "Chortoq",
+    "en": "Chortoq",
+    "qqr": "Chortoq"
+  },
+  "1714237": {
+    "ru": "Чуст",
+    "uz-Cyrl": "Чуст",
+    "uz": "Chust",
+    "en": "Chust",
+    "qqr": "Chust"
+  },
+  "1714242": {
+    "ru": "Янгикурган",
+    "uz-Cyrl": "Янгиқўрғон",
+    "uz": "Yangiqo'rg'on",
+    "en": "Yangikurgan",
+    "qqr": "Yangiqo'rg'on"
+  },
+  "1714401": {
+    "ru": "Наманган г.",
+    "uz-Cyrl": "Наманган ш.",
+    "uz": "Namangan sh.",
+    "en": "Namangan city",
+    "qqr": "Namangan sh."
+  },
+  "1718203": {
+    "ru": "Окдарья",
+    "uz-Cyrl": "Оқдарё",
+    "uz": "Oqdaryo",
+    "en": "Oqdaryo",
+    "qqr": "Oqdaryo"
+  },
+  "1718206": {
+    "ru": "Булунгур",
+    "uz-Cyrl": "Булунғур",
+    "uz": "Bulung'ur",
+    "en": "Bulungur",
+    "qqr": "Bulung'ur"
+  },
+  "1718209": {
+    "ru": "Джомбой",
+    "uz-Cyrl": "Жомбой",
+    "uz": "Jomboy",
+    "en": "Jomboy",
+    "qqr": "Jomboy"
+  },
+  "1718212": {
+    "ru": "Иштихон",
+    "uz-Cyrl": "Иштихон",
+    "uz": "Ishtixon",
+    "en": "Ishtikhon",
+    "qqr": "Ishtixon"
+  },
+  "1718215": {
+    "ru": "Каттакурган",
+    "uz-Cyrl": "Каттақўрғон",
+    "uz": "Kattaqo'rg'on",
+    "en": "Kattakurgan",
+    "qqr": "Kattaqo'rg'on"
+  },
+  "1718216": {
+    "ru": "Кошработ",
+    "uz-Cyrl": "Қўшработ",
+    "uz": "Qo'shrabot",
+    "en": "Qoshrabot",
+    "qqr": "Qo'shrabot"
+  },
+  "1718218": {
+    "ru": "Нарпай",
+    "uz-Cyrl": "Нарпай",
+    "uz": "Narpay",
+    "en": "Narpay",
+    "qqr": "Narpay"
+  },
+  "1718224": {
+    "ru": "Паярик",
+    "uz-Cyrl": "Пайариқ",
+    "uz": "Payariq",
+    "en": "Payariq",
+    "qqr": "Payariq"
+  },
+  "1718227": {
+    "ru": "Пастдаргом",
+    "uz-Cyrl": "Пастдарғом",
+    "uz": "Pastdarg'om",
+    "en": "Pastdargom",
+    "qqr": "Pastdarg'om"
+  },
+  "1718230": {
+    "ru": "Пахтачи",
+    "uz-Cyrl": "Пахтачи",
+    "uz": "Paxtachi",
+    "en": "Pakhtachi",
+    "qqr": "Paxtachi"
+  },
+  "1718233": {
+    "ru": "Самарканд р.",
+    "uz-Cyrl": "Самарқанд р.",
+    "uz": "Samarqand t.",
+    "en": "Samarkand district",
+    "qqr": "Samarqand t."
+  },
+  "1718235": {
+    "ru": "Нуробод",
+    "uz-Cyrl": "Нуробод",
+    "uz": "Nurobod",
+    "en": "Nurobad",
+    "qqr": "Nurobod"
+  },
+  "1718236": {
+    "ru": "Ургут",
+    "uz-Cyrl": "Ургут",
+    "uz": "Urgut",
+    "en": "Urgut",
+    "qqr": "Urgut"
+  },
+  "1718238": {
+    "ru": "Тайлок",
+    "uz-Cyrl": "Тайлоқ",
+    "uz": "Tayloq",
+    "en": "Taylok",
+    "qqr": "Tayloq"
+  },
+  "1718401": {
+    "ru": "Самарканд г.",
+    "uz-Cyrl": "Самарқанд ш.",
+    "uz": "Samarqand sh.",
+    "en": "Samarkand city",
+    "qqr": "Samarqand sh."
+  },
+  "1718406": {
+    "ru": "Каттакурган",
+    "uz-Cyrl": "Каттақўрғон",
+    "uz": "Kattaqo'rg'on",
+    "en": "Kattakurgan",
+    "qqr": "Kattaqo'rg'on"
+  },
+  "1722201": {
+    "ru": "Олтинсой",
+    "uz-Cyrl": "Олтинсой",
+    "uz": "Oltinsoy",
+    "en": "Oltinsoy",
+    "qqr": "Oltinsoy"
+  },
+  "1722202": {
+    "ru": "Ангор",
+    "uz-Cyrl": "Ангор",
+    "uz": "Angor",
+    "en": "Angor",
+    "qqr": "Angor"
+  },
+  "1722203": {
+    "ru": "Бандихон",
+    "uz-Cyrl": "Бандихон",
+    "uz": "Bandixon",
+    "en": "Bandikhon",
+    "qqr": "Bandixon"
+  },
+  "1722204": {
+    "ru": "Байсун",
+    "uz-Cyrl": "Бойсун",
+    "uz": "Boysun",
+    "en": "Boysun",
+    "qqr": "Boysun"
+  },
+  "1722207": {
+    "ru": "Музработ",
+    "uz-Cyrl": "Музработ",
+    "uz": "Muzrabot",
+    "en": "Muzrabot",
+    "qqr": "Muzrabot"
+  },
+  "1722210": {
+    "ru": "Денов",
+    "uz-Cyrl": "Денов",
+    "uz": "Denov",
+    "en": "Denov",
+    "qqr": "Denov"
+  },
+  "1722212": {
+    "ru": "Жаркурган",
+    "uz-Cyrl": "Жарқўрғон",
+    "uz": "Jarqo'rg'on",
+    "en": "Zharkurgan",
+    "qqr": "Jarqo'rg'on"
+  },
+  "1722214": {
+    "ru": "Кумкурган",
+    "uz-Cyrl": "Қумқўрғон",
+    "uz": "Qumqo'rg'on",
+    "en": "Kumkurgan",
+    "qqr": "Qumqo'rg'on"
+  },
+  "1722215": {
+    "ru": "Кизирык",
+    "uz-Cyrl": "Қизириқ",
+    "uz": "Qiziriq",
+    "en": "Kiziriq",
+    "qqr": "Qiziriq"
+  },
+  "1722217": {
+    "ru": "Сариосиё",
+    "uz-Cyrl": "Сариосиё",
+    "uz": "Sariosiyo",
+    "en": "Sariosiyo",
+    "qqr": "Sariosiyo"
+  },
+  "1722220": {
+    "ru": "Термез",
+    "uz-Cyrl": "Термиз",
+    "uz": "Termiz",
+    "en": "Termiz",
+    "qqr": "Termiz"
+  },
+  "1722221": {
+    "ru": "Узун",
+    "uz-Cyrl": "Узун",
+    "uz": "Uzun",
+    "en": "Uzun",
+    "qqr": "Uzun"
+  },
+  "1722223": {
+    "ru": "Шерабад",
+    "uz-Cyrl": "Шеробод",
+    "uz": "Sherobod",
+    "en": "Sherobod",
+    "qqr": "Sherobod"
+  },
+  "1722226": {
+    "ru": "Шурчин",
+    "uz-Cyrl": "Шўрчи",
+    "uz": "Sho'rchi",
+    "en": "Shurchi",
+    "qqr": "Sho'rchi"
+  },
+  "1722401": {
+    "ru": "Термез",
+    "uz-Cyrl": "Термиз",
+    "uz": "Termiz",
+    "en": "Termiz",
+    "qqr": "Termiz"
+  },
+  "1724206": {
+    "ru": "Околтин",
+    "uz-Cyrl": "Оқолтин",
+    "uz": "Oqoltin",
+    "en": "Oqoltin",
+    "qqr": "Oqoltin"
+  },
+  "1724212": {
+    "ru": "Бойовут",
+    "uz-Cyrl": "Боёвут",
+    "uz": "Boyovut",
+    "en": "Boyevut",
+    "qqr": "Boyovut"
+  },
+  "1724216": {
+    "ru": "Сайхунабад",
+    "uz-Cyrl": "Сайхунобод",
+    "uz": "Sayxunobod",
+    "en": "Saykhunobod",
+    "qqr": "Sayxunobod"
+  },
+  "1724220": {
+    "ru": "Гулистон",
+    "uz-Cyrl": "Гулистон",
+    "uz": "Guliston",
+    "en": "Guliston",
+    "qqr": "Guliston"
+  },
+  "1724226": {
+    "ru": "Сардоба",
+    "uz-Cyrl": "Сардоба",
+    "uz": "Sardoba",
+    "en": "Sardoba",
+    "qqr": "Sardoba"
+  },
+  "1724228": {
+    "ru": "Мирзаабад",
+    "uz-Cyrl": "Мирзаобод",
+    "uz": "Mirzaobod",
+    "en": "Mirzaobod",
+    "qqr": "Mirzaobod"
+  },
+  "1724231": {
+    "ru": "Сырдарья",
+    "uz-Cyrl": "Сирдарё",
+    "uz": "Sirdaryo",
+    "en": "Syrdaryo",
+    "qqr": "Sirdaryo"
+  },
+  "1724235": {
+    "ru": "Ховос",
+    "uz-Cyrl": "Ховос",
+    "uz": "Xovos",
+    "en": "Xovos",
+    "qqr": "Xovos"
+  },
+  "1724401": {
+    "ru": "Гулистон",
+    "uz-Cyrl": "Гулистон",
+    "uz": "Guliston",
+    "en": "Guliston",
+    "qqr": "Guliston"
+  },
+  "1724410": {
+    "ru": "Ширин",
+    "uz-Cyrl": "Ширин",
+    "uz": "Shirin",
+    "en": "Shirin",
+    "qqr": "Shirin"
+  },
+  "1724413": {
+    "ru": "Янгиер",
+    "uz-Cyrl": "Янгиер",
+    "uz": "Yangiyer",
+    "en": "Yangiyer",
+    "qqr": "Yangiyer"
+  },
+  "1726262": {
+    "ru": "Учтепа",
+    "uz-Cyrl": "Учтепа",
+    "uz": "Uchtepa",
+    "en": "Uchtepa",
+    "qqr": "Uchtepa"
+  },
+  "1726264": {
+    "ru": "Бектемир",
+    "uz-Cyrl": "Бектемир",
+    "uz": "Bektemir",
+    "en": "Bektemir",
+    "qqr": "Bektemir"
+  },
+  "1726266": {
+    "ru": "Юнусабад",
+    "uz-Cyrl": "Юнусобод",
+    "uz": "Yunusobod",
+    "en": "Yunusobod",
+    "qqr": "Yunusobod"
+  },
+  "1726269": {
+    "ru": "Мирзо-Улугбек",
+    "uz-Cyrl": "Мирзо Улуғбек",
+    "uz": "Mirzo Ulugʻbek",
+    "en": "Mirzo Ulugbek",
+    "qqr": "Mirzo Ulug'bek"
+  },
+  "1726273": {
+    "ru": "Мирабад",
+    "uz-Cyrl": "Миробод",
+    "uz": "Mirobod",
+    "en": "Mirobod",
+    "qqr": "Mirobod"
+  },
+  "1726277": {
+    "ru": "Шайхонтохур",
+    "uz-Cyrl": "Шайхонтохур",
+    "uz": "Shayxontohur",
+    "en": "Shaykhantohur",
+    "qqr": "Shayxontohur"
+  },
+  "1726280": {
+    "ru": "Олмазар",
+    "uz-Cyrl": "Олмазор",
+    "uz": "Olmazor",
+    "en": "Olmazar",
+    "qqr": "Olmazor"
+  },
+  "1726283": {
+    "ru": "Сергели",
+    "uz-Cyrl": "Сирғали",
+    "uz": "Sirg'ali",
+    "en": "Sirgali",
+    "qqr": "Sirg'ali"
+  },
+  "1726287": {
+    "ru": "Яккасарай",
+    "uz-Cyrl": "Яккасарой",
+    "uz": "Yakkasaroy",
+    "en": "Yakkasaroy",
+    "qqr": "Yakkasaroy"
+  },
+  "1726290": {
+    "ru": "Яшнабад",
+    "uz-Cyrl": "Яшнобод",
+    "uz": "Yashnobod",
+    "en": "Yashnobod",
+    "qqr": "Yashnobod"
+  },
+  "1726292": {
+    "ru": "Янгихайот",
+    "uz-Cyrl": "Янгиҳаёт",
+    "uz": "Yangihayot",
+    "en": "Yangihayot",
+    "qqr": "Yangihayot"
+  },
+  "1726294": {
+    "ru": "Чиланзар",
+    "uz-Cyrl": "Чилонзор",
+    "uz": "Chilonzor",
+    "en": "Chilonzor",
+    "qqr": "Chilonzor"
+  },
+  "1727206": {
+    "ru": "Оккорган",
+    "uz-Cyrl": "Оққўрғон",
+    "uz": "Oqqo'rg'on",
+    "en": "Oqqurgan",
+    "qqr": "Oqqo'rg'on"
+  },
+  "1727212": {
+    "ru": "Ахангаран",
+    "uz-Cyrl": "Оҳангарон",
+    "uz": "Ohangaron",
+    "en": "Ahangaron",
+    "qqr": "Ohangaron"
+  },
+  "1727220": {
+    "ru": "Бекабад",
+    "uz-Cyrl": "Бекобод",
+    "uz": "Bekobod",
+    "en": "Bekobod",
+    "qqr": "Bekobod"
+  },
+  "1727224": {
+    "ru": "Бостанлык",
+    "uz-Cyrl": "Бўстонлиқ",
+    "uz": "Bo'stonliq",
+    "en": "Bostonlyk",
+    "qqr": "Bo'stonliq"
+  },
+  "1727228": {
+    "ru": "Бука",
+    "uz-Cyrl": "Бўка",
+    "uz": "Bo'ka",
+    "en": "Buka",
+    "qqr": "Bo'ka"
+  },
+  "1727233": {
+    "ru": "Куйичирчик",
+    "uz-Cyrl": "Қуйичирчиқ",
+    "uz": "Quyichirchiq",
+    "en": "Kuyichirchik",
+    "qqr": "Quyichirchiq"
+  },
+  "1727237": {
+    "ru": "Зангиата",
+    "uz-Cyrl": "Зангиота",
+    "uz": "Zangiota",
+    "en": "Zangiota",
+    "qqr": "Zangiota"
+  },
+  "1727239": {
+    "ru": "Юкоричирчик",
+    "uz-Cyrl": "Юқоричирчиқ",
+    "uz": "Yuqorichirchiq",
+    "en": "Yukorychirchik",
+    "qqr": "Yuqorichirchiq"
+  },
+  "1727248": {
+    "ru": "Кибрай",
+    "uz-Cyrl": "Қибрай",
+    "uz": "Qibray",
+    "en": "Kibray",
+    "qqr": "Qibray"
+  },
+  "1727249": {
+    "ru": "Паркент",
+    "uz-Cyrl": "Паркент",
+    "uz": "Parkent",
+    "en": "Parkent",
+    "qqr": "Parkent"
+  },
+  "1727250": {
+    "ru": "Пскент",
+    "uz-Cyrl": "Пскент",
+    "uz": "Pskent",
+    "en": "Pskent",
+    "qqr": "Pskent"
+  },
+  "1727253": {
+    "ru": "Ортачирчик",
+    "uz-Cyrl": "Ўртачирчиқ",
+    "uz": "O'rtachirchiq",
+    "en": "Ortachirchik",
+    "qqr": "O'rtachirchiq"
+  },
+  "1727256": {
+    "ru": "Чиноз",
+    "uz-Cyrl": "Чиноз",
+    "uz": "Chinoz",
+    "en": "Chinoz",
+    "qqr": "Chinoz"
+  },
+  "1727259": {
+    "ru": "Янгиёль",
+    "uz-Cyrl": "Янгийўл",
+    "uz": "Yangiyo'l",
+    "en": "Yangiyol",
+    "qqr": "Yangiyo'l"
+  },
+  "1727265": {
+    "ru": "Ташкент",
+    "uz-Cyrl": "Тошкент",
+    "uz": "Toshkent",
+    "en": "Tashkent",
+    "qqr": "Toshkent"
+  },
+  "1727401": {
+    "ru": "Нурафшан",
+    "uz-Cyrl": "Нурафшон",
+    "uz": "Nurafshon",
+    "en": "Nurafshon",
+    "qqr": "Nurafshon"
+  },
+  "1727404": {
+    "ru": "Олмалык",
+    "uz-Cyrl": "Олмалиқ",
+    "uz": "Olmaliq",
+    "en": "Almalyk",
+    "qqr": "Olmaliq"
+  },
+  "1727407": {
+    "ru": "Ангрен",
+    "uz-Cyrl": "Ангрен",
+    "uz": "Angren",
+    "en": "Angren",
+    "qqr": "Angren"
+  },
+  "1727413": {
+    "ru": "Бекабад",
+    "uz-Cyrl": "Бекобод",
+    "uz": "Bekobod",
+    "en": "Bekobod",
+    "qqr": "Bekobod"
+  },
+  "1727415": {
+    "ru": "Ахангаран",
+    "uz-Cyrl": "Оҳангарон",
+    "uz": "Ohangaron",
+    "en": "Ahangaron",
+    "qqr": "Ohangaron"
+  },
+  "1727419": {
+    "ru": "Чирчик",
+    "uz-Cyrl": "Чирчиқ",
+    "uz": "Chirchiq",
+    "en": "Chirchik",
+    "qqr": "Chirchiq"
+  },
+  "1727424": {
+    "ru": "Янгиёл",
+    "uz-Cyrl": "Янгийўл",
+    "uz": "Yangiyo'l",
+    "en": "Yangiyol",
+    "qqr": "Yangiyo'l"
+  },
+  "1730203": {
+    "ru": "Олтиарик",
+    "uz-Cyrl": "Олтиариқ",
+    "uz": "Oltiariq",
+    "en": "Oltiarik",
+    "qqr": "Oltiariq"
+  },
+  "1730206": {
+    "ru": "Куштепа",
+    "uz-Cyrl": "Қўштепа",
+    "uz": "Qo'shtepa",
+    "en": "Qoshtepa",
+    "qqr": "Qo'shtepa"
+  },
+  "1730209": {
+    "ru": "Багдад",
+    "uz-Cyrl": "Боғдод",
+    "uz": "Bog'dod",
+    "en": "Bogdod",
+    "qqr": "Bog'dod"
+  },
+  "1730212": {
+    "ru": "Бувайда",
+    "uz-Cyrl": "Бувайда",
+    "uz": "Buvayda",
+    "en": "Buvayda",
+    "qqr": "Buvayda"
+  },
+  "1730215": {
+    "ru": "Бешарик",
+    "uz-Cyrl": "Бешариқ",
+    "uz": "Beshariq",
+    "en": "Beshariq",
+    "qqr": "Beshariq"
+  },
+  "1730218": {
+    "ru": "Кува",
+    "uz-Cyrl": "Қува",
+    "uz": "Quva",
+    "en": "Kuva",
+    "qqr": "Quva"
+  },
+  "1730221": {
+    "ru": "Учкоприк",
+    "uz-Cyrl": "Учкўприк",
+    "uz": "Uchko'prik",
+    "en": "Uchkoprik",
+    "qqr": "Uchko'prik"
+  },
+  "1730224": {
+    "ru": "Риштон",
+    "uz-Cyrl": "Риштон",
+    "uz": "Rishton",
+    "en": "Rishton",
+    "qqr": "Rishton"
+  },
+  "1730226": {
+    "ru": "Сох",
+    "uz-Cyrl": "Сўх",
+    "uz": "So'x",
+    "en": "Sokh",
+    "qqr": "So'x"
+  },
+  "1730227": {
+    "ru": "Ташлок",
+    "uz-Cyrl": "Тошлоқ",
+    "uz": "Toshloq",
+    "en": "Tashloq",
+    "qqr": "Toshloq"
+  },
+  "1730230": {
+    "ru": "Узбекистан",
+    "uz-Cyrl": "Ўзбекистон",
+    "uz": "O'zbekiston",
+    "en": "Uzbekistan",
+    "qqr": "O'zbekiston"
+  },
+  "1730233": {
+    "ru": "Фергана р.",
+    "uz-Cyrl": "Фарғона р.",
+    "uz": "Farg'ona t.",
+    "en": "Fergana district",
+    "qqr": "Farg'ona t."
+  },
+  "1730236": {
+    "ru": "Дангара",
+    "uz-Cyrl": "Данғара",
+    "uz": "Dang'ara",
+    "en": "Dang'ara",
+    "qqr": "Dang'ara"
+  },
+  "1730238": {
+    "ru": "Фуркат",
+    "uz-Cyrl": "Фурқат",
+    "uz": "Furqat",
+    "en": "Furqat",
+    "qqr": "Furqat"
+  },
+  "1730242": {
+    "ru": "Езёван",
+    "uz-Cyrl": "Ёзёвон",
+    "uz": "Yozyovon",
+    "en": "Yozyovan",
+    "qqr": "Yozyovon"
+  },
+  "1730401": {
+    "ru": "Фергана г.",
+    "uz-Cyrl": "Фарғона ш.",
+    "uz": "Farg'ona sh.",
+    "en": "Fergana city",
+    "qqr": "Farg'ona sh."
+  },
+  "1730405": {
+    "ru": "Коканд",
+    "uz-Cyrl": "Қўқон",
+    "uz": "Qo'qon",
+    "en": "Kokand",
+    "qqr": "Qo'qon"
+  },
+  "1730408": {
+    "ru": "Кувасой",
+    "uz-Cyrl": "Қувасой",
+    "uz": "Quvasoy",
+    "en": "Quvasoy",
+    "qqr": "Quvasoy"
+  },
+  "1730412": {
+    "ru": "Маргилан",
+    "uz-Cyrl": "Марғилон",
+    "uz": "Marg'ilon",
+    "en": "Margilan",
+    "qqr": "Marg'ilon"
+  },
+  "1733204": {
+    "ru": "Богот",
+    "uz-Cyrl": "Боғот",
+    "uz": "Bog'ot",
+    "en": "Bogot",
+    "qqr": "Bog'ot"
+  },
+  "1733208": {
+    "ru": "Гурлан",
+    "uz-Cyrl": "Гурлан",
+    "uz": "Gurlan",
+    "en": "Gurlan",
+    "qqr": "Gurlan"
+  },
+  "1733212": {
+    "ru": "Кошкопир",
+    "uz-Cyrl": "Қўшкўпир",
+    "uz": "Qo'shko'pir",
+    "en": "Qoshkopir",
+    "qqr": "Qo'shko'pir"
+  },
+  "1733217": {
+    "ru": "Ургенч",
+    "uz-Cyrl": "Урганч",
+    "uz": "Urganch",
+    "en": "Urgench",
+    "qqr": "Urganch"
+  },
+  "1733220": {
+    "ru": "Хазорасп",
+    "uz-Cyrl": "Хазорасп",
+    "uz": "Xazorasp",
+    "en": "Khazorasp",
+    "qqr": "Xazorasp"
+  },
+  "1733221": {
+    "ru": "Тупроккала",
+    "uz-Cyrl": "Тупроққалъа",
+    "uz": "Tuproqqal`a",
+    "en": "Tuproqqal`a",
+    "qqr": "Tuproqqal'a"
+  },
+  "1733223": {
+    "ru": "Ханкай",
+    "uz-Cyrl": "Хонқа",
+    "uz": "Xonqa",
+    "en": "Khonka",
+    "qqr": "Xonqa"
+  },
+  "1733226": {
+    "ru": "Хива",
+    "uz-Cyrl": "Хива",
+    "uz": "Xiva",
+    "en": "Khiva",
+    "qqr": "Xiva"
+  },
+  "1733230": {
+    "ru": "Шовот",
+    "uz-Cyrl": "Шовот",
+    "uz": "Shovot",
+    "en": "Shovot",
+    "qqr": "Shovot"
+  },
+  "1733233": {
+    "ru": "Янгиарик",
+    "uz-Cyrl": "Янгиариқ",
+    "uz": "Yangiariq",
+    "en": "Yangiariq",
+    "qqr": "Yangiariq"
+  },
+  "1733236": {
+    "ru": "Янгибазар",
+    "uz-Cyrl": "Янгибозор",
+    "uz": "Yangibozor",
+    "en": "Yangibozor",
+    "qqr": "Yangibozor"
+  },
+  "1733401": {
+    "ru": "Ургенч",
+    "uz-Cyrl": "Урганч",
+    "uz": "Urganch",
+    "en": "Urgench",
+    "qqr": "Urganch"
+  },
+  "1733406": {
+    "ru": "Хива",
+    "uz-Cyrl": "Хива",
+    "uz": "Xiva",
+    "en": "Khiva",
+    "qqr": "Xiva"
+  },
+  "1735204": {
+    "ru": "Амударья",
+    "uz-Cyrl": "Амударё",
+    "uz": "Amudaryo",
+    "en": "Amu Darya",
+    "qqr": "Amudaryo"
+  },
+  "1735207": {
+    "ru": "Беруний",
+    "uz-Cyrl": "Беруний",
+    "uz": "Beruniy",
+    "en": "Beruni",
+    "qqr": "Beruniy"
+  },
+  "1735209": {
+    "ru": "Бузатов",
+    "uz-Cyrl": "Бўзатов",
+    "uz": "Bo'zatov",
+    "en": "Bozatov",
+    "qqr": "Bo'zatov"
+  },
+  "1735211": {
+    "ru": "Караозак",
+    "uz-Cyrl": "Қораузак",
+    "uz": "Qorao'zak",
+    "en": "Qaraozak",
+    "qqr": "Qorao'zak"
+  },
+  "1735212": {
+    "ru": "Кегейли",
+    "uz-Cyrl": "Кегейли",
+    "uz": "Kegeyli",
+    "en": "Kegeyli",
+    "qqr": "Kegeyli"
+  },
+  "1735215": {
+    "ru": "Кунгорот",
+    "uz-Cyrl": "Қўнғирот",
+    "uz": "Qo'ng'irot",
+    "en": "Kongirot",
+    "qqr": "Qo'ng'irot"
+  },
+  "1735218": {
+    "ru": "Канлыколь",
+    "uz-Cyrl": "Қанликўл",
+    "uz": "Qanliko'l",
+    "en": "Qanlikol",
+    "qqr": "Qanliko'l"
+  },
+  "1735222": {
+    "ru": "Мойнак",
+    "uz-Cyrl": "Мўйноқ",
+    "uz": "Mo'ynoq",
+    "en": "Muynaq",
+    "qqr": "Mo'ynoq"
+  },
+  "1735225": {
+    "ru": "Нукус р.",
+    "uz-Cyrl": "Нукус р.",
+    "uz": "Nukus t.",
+    "en": "Nukus district",
+    "qqr": "Nukus t."
+  },
+  "1735228": {
+    "ru": "Таксиатош",
+    "uz-Cyrl": "Тахиатош",
+    "uz": "Taxiatosh",
+    "en": "Taxiatash",
+    "qqr": "Taxiatosh"
+  },
+  "1735230": {
+    "ru": "Тахткопир",
+    "uz-Cyrl": "Тахтакўпир",
+    "uz": "Taxtako'pir",
+    "en": "Takhtkopir",
+    "qqr": "Taxtako'pir"
+  },
+  "1735233": {
+    "ru": "Торткуль",
+    "uz-Cyrl": "Тўрткўл",
+    "uz": "To'rtko'l",
+    "en": "Tortkul",
+    "qqr": "To'rtko'l"
+  },
+  "1735236": {
+    "ru": "Ходжайли",
+    "uz-Cyrl": "Хўжайли",
+    "uz": "Xo'jayli",
+    "en": "Khojaly",
+    "qqr": "Xo'jayli"
+  },
+  "1735240": {
+    "ru": "Чимбой",
+    "uz-Cyrl": "Чимбой",
+    "uz": "Chimboy",
+    "en": "Chimboy",
+    "qqr": "Chimboy"
+  },
+  "1735243": {
+    "ru": "Шуманай",
+    "uz-Cyrl": "Шуманай",
+    "uz": "Shumanay",
+    "en": "Shumanay",
+    "qqr": "Shumanay"
+  },
+  "1735250": {
+    "ru": "Элликкала",
+    "uz-Cyrl": "Элликкала",
+    "uz": "Ellikkala",
+    "en": "Ellikkala",
+    "qqr": "Ellikkala"
+  },
+  "1735401": {
+    "ru": "Нукус г.",
+    "uz-Cyrl": "Нукус ш.",
+    "uz": "Nukus sh.",
+    "en": "Nukus city",
+    "qqr": "Nukus sh."
+  }
+}

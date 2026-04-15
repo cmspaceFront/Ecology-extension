@@ -1,0 +1,13 @@
+{
+  "name": "statistics-dashboard",
+  "label": "Statistics Dashboard",
+  "description": "Display statistics cards with key metrics",
+  "version": "1.0.0",
+  "exbVersion": "1.11.0",
+  "author": "ArcGIS Experience Builder",
+  "icon": "icon.svg",
+  "properties": {
+    "hasSettingPage": true,
+    "hasStyle": true
+  }
+}

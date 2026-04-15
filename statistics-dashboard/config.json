@@ -1,0 +1,65 @@
+{
+  "rootId": "statistics-dashboard",
+  "name": "statistics-dashboard",
+  "label": "Statistics Dashboard Widget",
+  "version": "1.0.0",
+  "type": "widget",
+  "exbVersion": "1.11.0",
+  "author": "you",
+  "description": "Display statistics cards with key metrics",
+  "properties": {
+    "hasSettingPage": true,
+    "hasStyle": true
+  },
+  "style": {
+    "styleConfig": {
+      "useCustom": {
+        "type": "boolean"
+      }
+    }
+  },
+  "propertiesConfig": {
+    "apiBaseUrl": {
+      "type": "string",
+      "title": "API Base URL",
+      "description": "Base URL for the statistics API",
+      "default": "https://geomodul.cmspace.uz/api"
+    },
+    "apiToken": {
+      "type": "string",
+      "title": "API Token",
+      "description": "JWT token for API authentication",
+      "default": ""
+    },
+    "useApiData": {
+      "type": "boolean",
+      "title": "Use API Data",
+      "description": "Fetch data from API instead of using static values",
+      "default": false
+    },
+    "detectedCount": {
+      "type": "number",
+      "title": "Detected Objects Count",
+      "description": "Number of detected objects",
+      "default": 2226
+    },
+    "detectedArea": {
+      "type": "number",
+      "title": "Detected Objects Area",
+      "description": "Area of detected objects (hectares)",
+      "default": 400.33
+    },
+    "checkedCount": {
+      "type": "number",
+      "title": "Checked Objects Count",
+      "description": "Number of checked/verified objects",
+      "default": 1800
+    },
+    "inProgressCount": {
+      "type": "number",
+      "title": "In Progress Count",
+      "description": "Number of objects in progress",
+      "default": 426
+    }
+  }
+}

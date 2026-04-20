@@ -191,8 +191,11 @@ const Widget = (props: AllWidgetProps<IMConfig>) => {
   const [loadingMore, setLoadingMore] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | null>(null);
   const [hasMore, setHasMore] = React.useState<boolean>(true);
-  const nextOffsetRef = React.useRef<number>(0);
+  const nextLastIdRef = React.useRef<number | null>(null);
+  const loadedApiCountRef = React.useRef<number>(0);
   const loadDataRef = React.useRef<((mode: "reset" | "append") => Promise<void>) | null>(null);
+  const seenIdsRef = React.useRef<Set<string>>(new Set());
+  const loadSeqRef = React.useRef<number>(0);
   const [themeColors, setThemeColors] = React.useState(getThemeColors());
   const [introAnimationsActive, setIntroAnimationsActive] = React.useState(true);
 
@@ -310,11 +313,14 @@ const Widget = (props: AllWidgetProps<IMConfig>) => {
   // Fetch data from API
   React.useEffect(() => {
     const loadData = async (mode: "reset" | "append") => {
+      const seq = ++loadSeqRef.current;
       if (mode === "reset") {
         setLoading(true);
         setError(null);
         setHasMore(true);
-        nextOffsetRef.current = 0;
+        nextLastIdRef.current = null;
+        loadedApiCountRef.current = 0;
+        seenIdsRef.current = new Set();
       } else {
         setLoadingMore(true);
         setError(null);
@@ -322,50 +328,21 @@ const Widget = (props: AllWidgetProps<IMConfig>) => {
 
       try {
         // Get filters from localStorage
-        const selectedYear = localStorage.getItem('selectedYear');
+        const selectedYearRaw = localStorage.getItem('selectedYear');
+        const selectedYearNorm = selectedYearRaw ? selectedYearRaw.trim() : "";
+        const selectedYear =
+          !selectedYearNorm ||
+          selectedYearNorm.toLowerCase() === "all" ||
+          selectedYearNorm.toLowerCase() === "null" ||
+          selectedYearNorm.toLowerCase() === "undefined"
+            ? null
+            : selectedYearNorm;
         const selectedSoato = localStorage.getItem('selectedSoato');
         const selectedDistrict = localStorage.getItem('selectedDistrict');
-        const status = localStorage.getItem('status');
+        const statusRaw = localStorage.getItem('status');
+        const status = statusRaw && statusRaw.trim() !== "" ? statusRaw.trim() : null;
 
         const selectedIdTurs = selectedTypeIdStorageToIdTurValues(localStorage.getItem('selectedTypeId'));
-
-        const offset = mode === "reset" ? 0 : nextOffsetRef.current;
-
-        // Build API URL.
-        // IMPORTANT: Always use the known working backend base URL.
-        // We intentionally ignore portal-relative values (like "/AdminAI/api")
-        // to avoid requests going to the portal host instead of the API host.
-        const apiBaseUrl = getApiBaseUrl(); // e.g. https://api-test.spacemc.uz/api
-        const url = new URL('ecology/', `${apiBaseUrl}/`);
-
-        // Add year filter if exists
-        if (selectedYear) {
-          url.searchParams.append('year', selectedYear);
-        }
-
-        // Determine if selectedSoato is region or district
-        // District codes are typically 7 digits (e.g., 1727220)
-        // Region codes are typically 4 digits (e.g., 1727)
-        if (selectedSoato && selectedSoato !== 'all') {
-          const soatoLength = selectedSoato.length;
-          // If selectedDistrict exists, or SOATO code is 7 digits or longer, it's a district
-          // If SOATO code is 4 digits, it's a region
-          if (selectedDistrict || soatoLength >= 7) {
-            // selectedSoato is a district
-            url.searchParams.append('district', selectedSoato);
-          } else if (soatoLength === 4) {
-            // selectedSoato is a region
-            url.searchParams.append('region', selectedSoato);
-          }
-        }
-
-        for (const v of selectedIdTurs) {
-          url.searchParams.append('id_tur', v);
-        }
-
-        // Backend pagination
-        url.searchParams.append('limit', String(API_PAGE_LIMIT));
-        url.searchParams.append('offset', offset.toString());
 
         const headers: HeadersInit = {
           'Content-Type': 'application/json',
@@ -376,72 +353,80 @@ const Widget = (props: AllWidgetProps<IMConfig>) => {
           headers['Authorization'] = `Bearer ${token}`;
         }
 
-        const response = await fetch(url.toString(), {
-          headers
-        });
+        // IMPORTANT: Always use the known working backend base URL.
+        // We intentionally ignore portal-relative values (like "/AdminAI/api")
+        // to avoid requests going to the portal host instead of the API host.
+        const apiBaseUrl = getApiBaseUrl(); // e.g. https://api-test.spacemc.uz/api
 
-        if (!response.ok) {
-          const errorText = await response.text();
-          throw new Error(`API request failed: ${response.status} ${response.statusText}: ${errorText}`);
-        }
+        const resolveApiTekshirishParam = (): string | null => {
+          if (!status) return null;
+          if (status === "tasdiqlangan") return "1";
+          if (status === "tasdiqlanmagan") return "2";
+          return null;
+        };
+        const apiTekshirishParam = resolveApiTekshirishParam();
 
-        const apiResponse = await response.json();
-        const pageItems: any[] = Array.isArray(apiResponse?.data) ? apiResponse.data : [];
-        const receivedPageCount = pageItems.length;
+        // If API returns an aggregated structure (array by years) when no filters are set,
+        // we infer a year and refetch the listing endpoint (which returns {total,count,data}).
+        const inferYearFromAggregate = (payload: unknown): string | null => {
+          if (!Array.isArray(payload)) return null;
+          const years = payload
+            .map((x) => (x && typeof x === "object" ? (x as any).year : undefined))
+            .filter((y) => typeof y === "number" && Number.isFinite(y)) as number[];
+          if (years.length === 0) return null;
+          return String(Math.max(...years));
+        };
 
-        // Filter data based on status from localStorage
-        // jarayonda → tekshirish: null
-        // tasdiqlanmagan → tekshirish: 2
-        // tasdiqlangan → tekshirish: 1
-        // tekshirilgan → tekshirish: 1 or 2
-        let filteredData = pageItems;
+        const applyClientFilters = (items: any[]): any[] => {
+          // Filter data based on status from localStorage
+          // jarayonda → tekshirish: null
+          // tasdiqlanmagan → tekshirish: 2
+          // tasdiqlangan → tekshirish: 1
+          // tekshirilgan → tekshirish: 1 or 2
+          let out = items;
 
-          if (status) {
-          filteredData = filteredData.filter((item: any) => {
-            const tek = item.tekshirish;
-
-            switch (status) {
-              case 'jarayonda':
-                // Only items with tekshirish: null (in progress)
-                return tek === null;
-              case 'tasdiqlanmagan':
-                // Only items with tekshirish: 2 (rejected)
-                return tek === 2 || tek === "2";
-              case 'tasdiqlangan':
-                // Only items with tekshirish: 1 (approved)
-                return tek === 1 || tek === "1";
-              case 'tekshirilgan':
-                // Items with tekshirish: 1 or 2 (checked - both approved and rejected)
-                return tek === 1 || tek === "1" || tek === 2 || tek === "2";
-              default:
-                return true;
-            }
-          });
-        }
-
-        // Мультивыбор типов: если API вернул лишние записи, оставляем только выбранные id_tur
-        if (selectedIdTurs.length > 0) {
-          const allow = new Set(selectedIdTurs.map((s) => s.trim().toUpperCase()).filter(Boolean));
-          if (allow.size > 0) {
-            filteredData = filteredData.filter((item: any) => {
-              const idTurRaw = item?.id_tur;
-              if (typeof idTurRaw === 'string' && idTurRaw.trim()) {
-                return allow.has(idTurRaw.trim().toUpperCase());
+          // If backend already filtered (tekshirish=1/2), don't re-filter by status here.
+          if (status && apiTekshirishParam == null) {
+            out = out.filter((item: any) => {
+              const tek = item?.tekshirish;
+              switch (status) {
+                case 'jarayonda':
+                  return tek === null;
+                case 'tasdiqlanmagan':
+                  return tek === 2 || tek === "2";
+                case 'tasdiqlangan':
+                  return tek === 1 || tek === "1";
+                case 'tekshirilgan':
+                  return tek === 1 || tek === "1" || tek === 2 || tek === "2";
+                default:
+                  return true;
               }
-              const turNum = item?.tur;
-              if (typeof turNum === 'number' && turNum >= 0 && turNum <= 4) {
-                return allow.has(`ETID-${turNum + 1}`.toUpperCase());
-              }
-              return false;
             });
           }
-        }
 
-        // Debug: Check what statuses are in the filtered response
-        const totalFilteredCount = filteredData.length;
+          // Мультивыбор типов: если API вернул лишние записи, оставляем только выбранные id_tur
+          if (selectedIdTurs.length > 0) {
+            const allow = new Set(selectedIdTurs.map((s) => s.trim().toUpperCase()).filter(Boolean));
+            if (allow.size > 0) {
+              out = out.filter((item: any) => {
+                const idTurRaw = item?.id_tur;
+                if (typeof idTurRaw === 'string' && idTurRaw.trim()) {
+                  return allow.has(idTurRaw.trim().toUpperCase());
+                }
+                const turNum = item?.tur;
+                if (typeof turNum === 'number' && turNum >= 0 && turNum <= 4) {
+                  return allow.has(`ETID-${turNum + 1}`.toUpperCase());
+                }
+                return false;
+              });
+            }
+          }
 
-        // Transform API response to MonitoringResultItem format
-        const transformedData: MonitoringResultItem[] = filteredData.map((item: any) => {
+          return out;
+        };
+
+        const transformItems = (items: any[]): MonitoringResultItem[] =>
+          items.map((item: any) => {
           // Helper function to convert 2 to false, 1 to true, null stays null
           // Handles both string "1" and number 1
           const convertToBooleanOrNull = (value: any): boolean | null => {
@@ -505,19 +490,138 @@ const Widget = (props: AllWidgetProps<IMConfig>) => {
           };
         });
 
-        // Update pagination state: if backend returned less than limit, no more pages.
-        const nextOffset = offset + receivedPageCount;
-        nextOffsetRef.current = nextOffset;
-        setHasMore(receivedPageCount === API_PAGE_LIMIT);
+        const startLastId = mode === "reset" ? null : nextLastIdRef.current;
+        let lastId: number | null = startLastId;
+        let total: number | undefined = undefined;
+        let hasMoreLocal = true;
+        let inferredYear: string | null = null;
+
+        // When client-side status filter is active, pages can be "empty" after filtering.
+        // We transparently skip such pages on initial load (until we fill one page)
+        // and on "load more" (until we find at least one new row), so the button reflects reality.
+        const wantPrefill =
+          status != null && mode === "reset";
+        const wantSkipEmptyAppend =
+          status != null && mode === "append";
+
+        const collected: MonitoringResultItem[] = [];
+        const maxFetches = 50;
+        for (let i = 0; i < maxFetches; i++) {
+          if (seq !== loadSeqRef.current) return;
+          const url = new URL('ecology/', `${apiBaseUrl}/`);
+
+          const yearToUse = selectedYear ?? inferredYear;
+          if (yearToUse) url.searchParams.append('year', yearToUse);
+
+          if (selectedSoato && selectedSoato !== 'all') {
+            const soatoLength = selectedSoato.length;
+            if (selectedDistrict || soatoLength >= 7) {
+              url.searchParams.append('district', selectedSoato);
+            } else if (soatoLength === 4) {
+              url.searchParams.append('region', selectedSoato);
+            }
+          }
+
+          for (const v of selectedIdTurs) url.searchParams.append('id_tur', v);
+
+          if (apiTekshirishParam != null) {
+            url.searchParams.append('tekshirish', apiTekshirishParam);
+          }
+
+          url.searchParams.append('limit', String(API_PAGE_LIMIT));
+          if (lastId != null) {
+            url.searchParams.append('last_id', String(lastId));
+          }
+
+          const response = await fetch(url.toString(), { headers });
+          if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`API request failed: ${response.status} ${response.statusText}: ${errorText}`);
+          }
+
+          const apiResponse = await response.json();
+          if (seq !== loadSeqRef.current) return;
+
+          // Expected shape (list): { total, count, last_id, data: [] }
+          // Sometimes API may return aggregate arrays when region/district not provided.
+          if (lastId === startLastId && (selectedYear == null) && inferredYear == null) {
+            const y = inferYearFromAggregate(apiResponse);
+            if (y) {
+              inferredYear = y;
+              // Retry same page with inferred year (listing response).
+              continue;
+            }
+          }
+          const pageItems: any[] = Array.isArray(apiResponse?.data) ? apiResponse.data : [];
+          const receivedPageCount = pageItems.length;
+          const reportedTotal =
+            typeof apiResponse?.total === "number" && Number.isFinite(apiResponse.total)
+              ? apiResponse.total
+              : undefined;
+          if (reportedTotal !== undefined) total = reportedTotal;
+
+          loadedApiCountRef.current += receivedPageCount;
+          const nextLastId =
+            typeof apiResponse?.last_id === "number" && Number.isFinite(apiResponse.last_id)
+              ? apiResponse.last_id
+              : null;
+          lastId = nextLastId;
+
+          if (total !== undefined) {
+            hasMoreLocal = loadedApiCountRef.current < total;
+          } else {
+            hasMoreLocal = receivedPageCount === API_PAGE_LIMIT && lastId != null;
+          }
+
+          const filtered = applyClientFilters(pageItems);
+          const transformed = transformItems(filtered);
+
+          // Deduplicate by normalized id (prevents overlap/unstable ordering duplicates)
+          const uniqueNew: MonitoringResultItem[] = [];
+          for (const row of transformed) {
+            const key = String(row.id ?? "").trim().toLowerCase();
+            if (!key) continue;
+            if (seenIdsRef.current.has(key)) continue;
+            seenIdsRef.current.add(key);
+            uniqueNew.push(row);
+          }
+          collected.push(...uniqueNew);
+
+          const shouldContinuePrefill =
+            wantPrefill && collected.length < API_PAGE_LIMIT && hasMoreLocal;
+          const shouldContinueSkipEmptyAppend =
+            wantSkipEmptyAppend && collected.length === 0 && hasMoreLocal;
+
+          if (shouldContinuePrefill || shouldContinueSkipEmptyAppend) {
+            continue;
+          }
+
+          // Stop when there are no more pages.
+          if (!hasMoreLocal) break;
+
+          // ✅ Stop as soon as we have enough rows for the first view.
+          if (wantPrefill && collected.length >= API_PAGE_LIMIT) break;
+          // ✅ For "load more" with client-side status filter: stop after we found at least 1 new row.
+          if (wantSkipEmptyAppend && collected.length > 0) break;
+
+          // In normal mode, one fetch per action is enough.
+          if (!wantPrefill && !wantSkipEmptyAppend) break;
+        }
+
+        if (seq !== loadSeqRef.current) return;
+        nextLastIdRef.current = lastId;
+        setHasMore(hasMoreLocal);
 
         if (mode === "reset") {
-          setData(transformedData);
+          setData(collected);
         } else {
-          setData((prev) => [...prev, ...transformedData]);
+          setData((prev) => [...prev, ...collected]);
         }
       } catch (err) {
+        if (seq !== loadSeqRef.current) return;
         setError(err instanceof Error ? err.message : 'Failed to load data');
       } finally {
+        if (seq !== loadSeqRef.current) return;
         if (mode === "reset") setLoading(false);
         setLoadingMore(false);
       }

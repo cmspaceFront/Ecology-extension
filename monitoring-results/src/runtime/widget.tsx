@@ -70,6 +70,7 @@ function getSpaceApiAccessTokenFromStorage(): string | null {
 }
 /** After this many ms from mount, continuous CSS animations (glow, pulses, row fades) are turned off. Reload starts them again. */
 const INTRO_ANIMATIONS_DURATION_MS = 10_000;
+const API_PAGE_LIMIT = 200;
 
 function isFullPageReload(): boolean {
   try {
@@ -122,12 +123,26 @@ function formatDateOnly(isoString: string | null | undefined): string | undefine
   return `${day}.${month}.${year}`;
 }
 
-/** ID в таблице / поиске: без фигурных скобок, в верхнем регистре (UUID и fallback по gid). */
+/** ID в таблице: без `{}`, CAPS только для отображения. */
 function formatMonitoringDisplayId(raw: string | null | undefined): string {
   if (raw == null) return "";
   const s = String(raw).trim();
   if (!s) return "";
-  return s.replace(/^\{/, "").replace(/\}$/, "").toUpperCase();
+  return s.replace(/^\{/, "").replace(/\}$/, "").replace(/[{}]/g, "").toUpperCase();
+}
+
+/** selectedId / searchValue: как в API — без скобок, без смены регистра. */
+function stripMonitoringIdForStorage(raw: string | null | undefined): string {
+  if (raw == null) return "";
+  const s = String(raw).trim();
+  if (!s) return "";
+  return s.replace(/[{}]/g, "");
+}
+
+function monitoringRowIdsEqual(a: string | undefined | null, b: string | undefined | null): boolean {
+  const ca = stripMonitoringIdForStorage(a).toLowerCase();
+  const cb = stripMonitoringIdForStorage(b).toLowerCase();
+  return ca !== "" && ca === cb;
 }
 
 // Normalize locale from storage format (uz-Latn, uz-Cyrl, ru, en, qqr) to internal format
@@ -173,7 +188,11 @@ const Widget = (props: AllWidgetProps<IMConfig>) => {
   const lastUserSelectionRef = React.useRef<number>(0);
   const [data, setData] = React.useState<MonitoringResultItem[]>([]);
   const [loading, setLoading] = React.useState<boolean>(true);
+  const [loadingMore, setLoadingMore] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | null>(null);
+  const [hasMore, setHasMore] = React.useState<boolean>(true);
+  const nextOffsetRef = React.useRef<number>(0);
+  const loadDataRef = React.useRef<((mode: "reset" | "append") => Promise<void>) | null>(null);
   const [themeColors, setThemeColors] = React.useState(getThemeColors());
   const [introAnimationsActive, setIntroAnimationsActive] = React.useState(true);
 
@@ -290,9 +309,16 @@ const Widget = (props: AllWidgetProps<IMConfig>) => {
 
   // Fetch data from API
   React.useEffect(() => {
-    const loadData = async () => {
-      setLoading(true);
-      setError(null);
+    const loadData = async (mode: "reset" | "append") => {
+      if (mode === "reset") {
+        setLoading(true);
+        setError(null);
+        setHasMore(true);
+        nextOffsetRef.current = 0;
+      } else {
+        setLoadingMore(true);
+        setError(null);
+      }
 
       try {
         // Get filters from localStorage
@@ -303,7 +329,7 @@ const Widget = (props: AllWidgetProps<IMConfig>) => {
 
         const selectedIdTurs = selectedTypeIdStorageToIdTurValues(localStorage.getItem('selectedTypeId'));
 
-        const offset = 0;
+        const offset = mode === "reset" ? 0 : nextOffsetRef.current;
 
         // Build API URL.
         // IMPORTANT: Always use the known working backend base URL.
@@ -337,8 +363,8 @@ const Widget = (props: AllWidgetProps<IMConfig>) => {
           url.searchParams.append('id_tur', v);
         }
 
-        // Add limit - fetch enough data for frontend filtering but not too much
-        // url.searchParams.append('limit', '5000');
+        // Backend pagination
+        url.searchParams.append('limit', String(API_PAGE_LIMIT));
         url.searchParams.append('offset', offset.toString());
 
         const headers: HeadersInit = {
@@ -360,13 +386,15 @@ const Widget = (props: AllWidgetProps<IMConfig>) => {
         }
 
         const apiResponse = await response.json();
+        const pageItems: any[] = Array.isArray(apiResponse?.data) ? apiResponse.data : [];
+        const receivedPageCount = pageItems.length;
 
         // Filter data based on status from localStorage
         // jarayonda → tekshirish: null
         // tasdiqlanmagan → tekshirish: 2
         // tasdiqlangan → tekshirish: 1
         // tekshirilgan → tekshirish: 1 or 2
-        let filteredData = apiResponse.data || [];
+        let filteredData = pageItems;
 
           if (status) {
           filteredData = filteredData.filter((item: any) => {
@@ -452,12 +480,14 @@ const Widget = (props: AllWidgetProps<IMConfig>) => {
           const prokuraturaValue = convertToBoolean(item.prokuratura);
 
           const rowId = item.unique_id || `{${item.gid}}`;
-          const idCaps =
-            formatMonitoringDisplayId(rowId) || String(rowId).trim();
+          const idForStorage =
+            stripMonitoringIdForStorage(rowId) || String(rowId).trim();
+          const displayId =
+            formatMonitoringDisplayId(rowId) || idForStorage;
           return {
-            // Зум / selectedId / таблица — один формат: CAPS, без {} вокруг gid
-            id: idCaps,
-            displayId: idCaps,
+            // localStorage / карта — оригинальный регистр unique_id; в таблице — displayId (CAPS)
+            id: idForStorage,
+            displayId,
             lastEditedDate: formatDateOnly(item.last_edited_date),
             lastEditedAt: parseApiDateToMs(item.last_edited_date),
             uzcosmos: {
@@ -475,11 +505,21 @@ const Widget = (props: AllWidgetProps<IMConfig>) => {
           };
         });
 
-        setData(transformedData);
+        // Update pagination state: if backend returned less than limit, no more pages.
+        const nextOffset = offset + receivedPageCount;
+        nextOffsetRef.current = nextOffset;
+        setHasMore(receivedPageCount === API_PAGE_LIMIT);
+
+        if (mode === "reset") {
+          setData(transformedData);
+        } else {
+          setData((prev) => [...prev, ...transformedData]);
+        }
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load data');
       } finally {
-        setLoading(false);
+        if (mode === "reset") setLoading(false);
+        setLoadingMore(false);
       }
     };
 
@@ -495,7 +535,8 @@ const Widget = (props: AllWidgetProps<IMConfig>) => {
     let previousStatus = localStorage.getItem('status');
     let previousIdTur = getSelectedIdTur();
 
-    loadData();
+    loadDataRef.current = loadData;
+    loadData("reset");
 
     // Listen for localStorage changes to refetch data (only works across tabs/windows)
     const handleStorageChange = (e: StorageEvent) => {
@@ -513,7 +554,7 @@ const Widget = (props: AllWidgetProps<IMConfig>) => {
           previousDistrict = currentDistrict;
           previousStatus = currentStatus;
           previousIdTur = currentIdTur;
-          loadData();
+          loadData("reset");
         }
       }
     };
@@ -524,7 +565,7 @@ const Widget = (props: AllWidgetProps<IMConfig>) => {
       const currentSoato = detail || localStorage.getItem('selectedSoato');
       if (currentSoato !== previousSoato) {
         previousSoato = currentSoato;
-        loadData();
+        loadData("reset");
       }
     };
 
@@ -533,7 +574,7 @@ const Widget = (props: AllWidgetProps<IMConfig>) => {
       const currentDistrict = detail || localStorage.getItem('selectedDistrict');
       if (currentDistrict !== previousDistrict) {
         previousDistrict = currentDistrict;
-        loadData();
+        loadData("reset");
       }
     };
 
@@ -551,7 +592,7 @@ const Widget = (props: AllWidgetProps<IMConfig>) => {
         previousDistrict = currentDistrict;
         previousStatus = currentStatus;
         previousIdTur = currentIdTur;
-        loadData();
+        loadData("reset");
       }
     };
 
@@ -566,8 +607,14 @@ const Widget = (props: AllWidgetProps<IMConfig>) => {
       window.removeEventListener('custom-map-region-change', handleRegionChange);
       window.removeEventListener('custom-map-district-change', handleDistrictChange);
       clearInterval(intervalId);
+      loadDataRef.current = null;
     };
   }, [token, props.config.apiBaseUrl]);
+
+  const handleLoadMore = React.useCallback(() => {
+    if (loading || loadingMore || !hasMore) return;
+    void loadDataRef.current?.("append");
+  }, [loading, loadingMore, hasMore]);
 
   React.useEffect(() => {
     const applySelectionFromStorage = () => {
@@ -635,7 +682,7 @@ const Widget = (props: AllWidgetProps<IMConfig>) => {
   const handleRowClick = (item: MonitoringResultItem) => {
     lastUserSelectionRef.current = Date.now();
 
-    if (selectedRowId === item.id) {
+    if (monitoringRowIdsEqual(selectedRowId, item.id)) {
       setSelectedRowId(undefined);
       try {
         localStorage.removeItem(SELECTED_ID_STORAGE_KEY);
@@ -655,10 +702,7 @@ const Widget = (props: AllWidgetProps<IMConfig>) => {
     try {
       localStorage.setItem(SELECTED_ID_STORAGE_KEY, item.id);
       // Для отображения в верхнем поиске (header) — displayId (unique_id или fallback)
-      localStorage.setItem(
-        SEARCH_VALUE_STORAGE_KEY,
-        formatMonitoringDisplayId(item.displayId || item.id)
-      );
+      localStorage.setItem(SEARCH_VALUE_STORAGE_KEY, item.id);
       window.dispatchEvent(
         new CustomEvent("localStorageChange", {
           detail: { key: SELECTED_ID_STORAGE_KEY, value: item.id }
@@ -723,6 +767,9 @@ const Widget = (props: AllWidgetProps<IMConfig>) => {
             error={error}
             selectedRowId={selectedRowId}
             onRowClick={handleRowClick}
+            hasMore={hasMore}
+            loadingMore={loadingMore}
+            onLoadMore={handleLoadMore}
           />
         </div>
       </div>

@@ -15,12 +15,26 @@ const normalizeLocale = (locale: string | null): "uz" | "uzcryl" | "ru" | "en" |
   return "ru";
 };
 
+function monitoringRowIdKey(s: string | undefined | null): string {
+  const t = String(s ?? "").trim().replace(/[{}]/g, "").toLowerCase();
+  return t;
+}
+
+function monitoringRowIdsEqual(a: string | undefined, b: string | undefined): boolean {
+  const ka = monitoringRowIdKey(a);
+  const kb = monitoringRowIdKey(b);
+  return ka !== "" && ka === kb;
+}
+
 interface MonitoringResultsTableProps {
   data: MonitoringResultItem[];
   loading: boolean;
   error: string | null;
   selectedRowId?: string;
   onRowClick?: (item: MonitoringResultItem) => void;
+  hasMore?: boolean;
+  loadingMore?: boolean;
+  onLoadMore?: () => void;
 }
 
 type IdTooltipState = {
@@ -48,7 +62,10 @@ const MonitoringResultsTable: React.FC<MonitoringResultsTableProps> = ({
   loading,
   error,
   selectedRowId,
-  onRowClick
+  onRowClick,
+  hasMore,
+  loadingMore,
+  onLoadMore
 }) => {
   const [locale, setLocale] = React.useState<"uz" | "uzcryl" | "ru" | "en" | "qqr">(() => {
     try {
@@ -125,10 +142,6 @@ const MonitoringResultsTable: React.FC<MonitoringResultsTableProps> = ({
     showIdTip(text, r.left + r.width / 2, r.bottom);
   };
 
-  // Pagination state - show items in batches of 200
-  const ITEMS_PER_PAGE = 200;
-  const [displayLimit, setDisplayLimit] = React.useState<number>(ITEMS_PER_PAGE);
-
   type DateSortOrder = "asc" | "desc";
   const [dateSortOrder, setDateSortOrder] = React.useState<DateSortOrder>("desc");
 
@@ -146,16 +159,7 @@ const MonitoringResultsTable: React.FC<MonitoringResultsTableProps> = ({
     return rows;
   }, [data, dateSortOrder]);
 
-  React.useEffect(() => {
-    setDisplayLimit(ITEMS_PER_PAGE);
-  }, [data.length, dateSortOrder]);
-
-  const displayedData = sortedData.slice(0, displayLimit);
-  const hasMoreData = sortedData.length > displayLimit;
-
-  const handleLoadMore = () => {
-    setDisplayLimit(prev => prev + ITEMS_PER_PAGE);
-  };
+  const hasMoreData = !!hasMore;
 
   React.useEffect(() => {
     const checkLocale = () => {
@@ -184,8 +188,9 @@ const MonitoringResultsTable: React.FC<MonitoringResultsTableProps> = ({
   React.useEffect(() => {
     if (!selectedRowId || !tbodyContainerRef.current) return;
 
-    const row = tbodyContainerRef.current.querySelector(
-      `tr[data-row-id="${selectedRowId}"]`
+    const rows = tbodyContainerRef.current.querySelectorAll("tr[data-row-id]");
+    const row = Array.from(rows).find((r) =>
+      monitoringRowIdsEqual(r.getAttribute("data-row-id") ?? undefined, selectedRowId)
     );
 
     if (row instanceof HTMLElement) {
@@ -206,7 +211,7 @@ const MonitoringResultsTable: React.FC<MonitoringResultsTableProps> = ({
     onUpdate();
     window.addEventListener("resize", onUpdate);
     return () => window.removeEventListener("resize", onUpdate);
-  }, [displayedData.length]);
+  }, [sortedData.length]);
 
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
     const target = e.currentTarget;
@@ -326,8 +331,8 @@ const MonitoringResultsTable: React.FC<MonitoringResultsTableProps> = ({
             <col className="monitoring-results-col-status" />
           </colgroup>
           <tbody className="monitoring-results-table-body">
-            {displayedData.map((item) => {
-              const isSelected = selectedRowId === item.id;
+            {sortedData.map((item) => {
+              const isSelected = monitoringRowIdsEqual(selectedRowId, item.id);
               const shownId = (item as any).displayId ?? item.id;
 
               return (
@@ -374,13 +379,12 @@ const MonitoringResultsTable: React.FC<MonitoringResultsTableProps> = ({
                 <td colSpan={5}>
                   <button
                     className="monitoring-results-load-more-button"
-                    onClick={handleLoadMore}
+                    type="button"
+                    onClick={() => onLoadMore && onLoadMore()}
+                    disabled={!!loadingMore}
                   >
-                    <span className="load-more-text">{t.loadMore}</span>
-                    <span className="load-more-count">
-                      ({(t.showingOf || "{shown} / {total}")
-                        .replace("{shown}", String(displayLimit))
-                        .replace("{total}", String(sortedData.length))})
+                    <span className="load-more-text">
+                      {loadingMore ? t.loading : t.loadMore}
                     </span>
                   </button>
                 </td>

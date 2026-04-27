@@ -17,7 +17,7 @@
 
   min-width: 0;
 
-  /* ✅ Responsive tokens (used across header/body) – ID larger, date, status smaller */
+  /* ✅ Responsive tokens (default = OLD styles) */
   --id-col: clamp(220px, 40cqi, 520px);
   --date-col: clamp(90px, 12cqi, 120px);
   --id-font: clamp(12px, 1.6cqi, 14px);
@@ -30,6 +30,39 @@
 
   --status-pad-x: clamp(6px, 1.2cqi, 14px);
   --status-pad-right: clamp(8px, 2cqi, 20px);
+}
+
+/* Only for 1920×1080 and 1366×1024: tighter spacing */
+@media (width: 1920px) and (height: 1080px) {
+  .monitoring-results-table-wrapper {
+    /* Give more room to status titles: shrink ID/date/padding */
+    --id-col: clamp(140px, 20cqi, 280px);
+    --date-col: clamp(70px, 8cqi, 92px);
+    --th-pad-x: clamp(6px, 1.1cqi, 14px);
+    --status-pad-x: clamp(4px, 0.8cqi, 8px);
+    --status-pad-right: clamp(6px, 1.4cqi, 12px);
+  }
+  .monitoring-results-header-columns {
+    gap: clamp(2px, 0.6cqi, 8px);
+  }
+  /* For this resolution we expect titles to fit without truncation */
+  .monitoring-results-column-label {
+    overflow: visible;
+    text-overflow: clip;
+  }
+}
+
+@media (width: 1366px) and (height: 1024px) {
+  .monitoring-results-table-wrapper {
+    --id-col: clamp(140px, 30cqi, 300px);
+    --date-col: clamp(72px, 12cqi, 96px);
+    --th-pad-x: clamp(6px, 1.4cqi, 12px);
+    --status-pad-x: clamp(3px, 0.7cqi, 6px);
+    --status-pad-right: clamp(4px, 1.2cqi, 10px);
+  }
+  .monitoring-results-header-columns {
+    gap: clamp(2px, 0.6cqi, 8px);
+  }
 }
 
 /* =========================================================
@@ -720,7 +753,7 @@
 
 @media (max-width: 1440px) {
   .monitoring-results-column-label {
-    font-size: 8px;
+    font-size: 9px;
   }
 }
 

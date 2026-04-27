@@ -59,7 +59,18 @@
   max-width: 100%;
   text-wrap: balance;
 
-  color: #ffffff;
+  background: linear-gradient(135deg,
+      #ffffff 0%,
+      #ffffff 45%,
+      #969696 48%,
+      #616161 52%,
+      #ffffff 55%,
+      #ffffff 100%);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradientFlow 9s linear infinite;
 
   transform: perspective(500px) rotateX(2deg);
   transform-style: preserve-3d;
@@ -74,6 +85,35 @@
   letter-spacing: clamp(0.2px, 0.28vw, 4px);
 }
 
+.typewriter-cursor {
+  display: inline-block;
+  margin-left: 4px;
+  animation: blinkCursor 1s infinite;
+  font-weight: 400;
+}
+
+@keyframes blinkCursor {
+
+  0%,
+  50% {
+    opacity: 1;
+  }
+
+  51%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes gradientFlow {
+  0% {
+    background-position: 200% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
 
 /* =========================================================
    HEADER
@@ -452,11 +492,11 @@
 }
 
 .carousel-arrow-left {
-  left: clamp(12px, 10vw, 120px);
+  left: clamp(2px, 1vw, 10px);
 }
 
 .carousel-arrow-right {
-  right: clamp(12px, 10vw, 120px);
+  right: clamp(2px, 1vw, 10px);
 }
 
 .carousel-empty {
@@ -486,7 +526,7 @@
 /* image */
 .carousel-card-image {
   flex: 0 0 auto;
-  height: clamp(200px, 44vh, 440px);
+  height: clamp(160px, 34vh, 360px);
   width: 100%;
   overflow: hidden;
 }
@@ -546,7 +586,7 @@
   }
 
   .carousel-card-image {
-    height: clamp(165px, 35vh, 310px);
+    height: clamp(140px, 30vh, 280px);
   }
 
   .carousel-card-description {
@@ -601,11 +641,11 @@
   }
 
   .carousel-arrow-left {
-    left: 20px;
+    left: 6px;
   }
 
   .carousel-arrow-right {
-    right: 20px;
+    right: 6px;
   }
 
   .carousel-arrow {
@@ -645,7 +685,7 @@
   }
 
   .carousel-card-image {
-    height: clamp(165px, 33vh, 275px);
+    height: clamp(140px, 28vh, 240px);
   }
 
   .carousel-card-description {
@@ -671,11 +711,11 @@
   }
 
   .carousel-arrow-left {
-    left: 12px;
+    left: 4px;
   }
 
   .carousel-arrow-right {
-    right: 12px;
+    right: 4px;
   }
 
   .carousel-arrow {
@@ -686,43 +726,6 @@
   .carousel-arrow svg {
     width: 20px;
     height: 20px;
-  }
-}
-
-@media (max-width: 1400px) {
-  .ecological-title-line1,
-  .ecological-title-line2 {
-    font-size: clamp(20px, min(4.5vw, 4.7vh), 50px) !important;
-  }
-}
-
-/* 1195px and less - smaller title, buttons, and add top spacing */
-@media (max-width: 1195px) {
-  .ecological-title-container {
-    top: clamp(80px, 12vh, 180px) !important; /* Add more space at top */
-    padding-top: clamp(20px, 3vh, 40px) !important;
-  }
-
-  .ecological-title-line1,
-  .ecological-title-line2 {
-    font-size: clamp(18px, min(4vw, 4.2vh), 42px) !important;
-    letter-spacing: clamp(0.2px, 0.25vw, 3px) !important;
-  }
-
-  /* Smaller language and quit buttons */
-  .ecological-language-toggle,
-  .ecological-profile-toggle {
-    width: clamp(36px, 5vw, 48px) !important;
-    height: clamp(36px, 5vw, 48px) !important;
-    min-width: clamp(36px, 5vw, 48px) !important;
-    min-height: clamp(36px, 5vw, 48px) !important;
-  }
-
-  .ecological-language-toggle img,
-  .ecological-profile-toggle img,
-  .ecological-icon {
-    width: clamp(18px, 3vw, 24px) !important;
-    height: clamp(18px, 3vw, 24px) !important;
   }
 }
 
@@ -750,13 +753,13 @@
   max-width: 90% !important;
 }
 
-/* 4) Стрелки ближе к карточкам */
+/* 4) Стрелки закрепляем не "по центру карты", а по краям карусели */
 .carousel-arrow-left {
-  left: clamp(12px, 10vw, 120px) !important;
+  left: clamp(-6px, 1vw, 12px) !important;
 }
 
 .carousel-arrow-right {
-  right: clamp(12px, 10vw, 120px) !important;
+  right: clamp(-6px, 1vw, 12px) !important;
 }
 
 /* 5) Чтобы стрелки были над боковыми кусочками (и не давили на центр) */
@@ -775,13 +778,13 @@
     max-width: 360px !important;
   }
 
-  /* ✅ стрелки ближе к карточкам */
+  /* ✅ стрелки ближе к краям */
   .carousel-arrow-left {
-    left: 20px !important;
+    left: 6px !important;
   }
 
   .carousel-arrow-right {
-    right: 20px !important;
+    right: 6px !important;
   }
 }
 
@@ -804,10 +807,10 @@
   }
 
   .carousel-arrow-left {
-    left: 12px !important;
+    left: 4px !important;
   }
 
   .carousel-arrow-right {
-    right: 12px !important;
+    right: 4px !important;
   }
 }

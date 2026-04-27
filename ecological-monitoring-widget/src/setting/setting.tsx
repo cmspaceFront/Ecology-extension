@@ -102,17 +102,17 @@ const Setting = (props: AllWidgetSettingProps<IMConfig>) => {
             Скорость вращения Земли (по умолчанию: 0.5). Увеличьте для более быстрого вращения.
           </div>
         </SettingRow>
-        <SettingRow label="Позиция модели (GLB) по оси Y">
+        <SettingRow label="Earth Vertical Position">
           <NumericInput
             min={-10}
             max={10}
-            step={0.1}
-            value={config.glbPositionY ?? config.earthVerticalPosition ?? config.earthPositionY ?? -2}
-            onChange={(value) => handleConfigChange("glbPositionY", value !== null && value !== undefined ? value : -2)}
+            step={0.5}
+            value={config.earthPositionY || -2}
+            onChange={(value) => handleConfigChange("earthPositionY", value !== null ? value : -2)}
             placeholder="-2"
           />
           <div style={{ fontSize: '12px', color: '#666', marginTop: '4px' }}>
-            Смещение только 3D-модели (GLB) по вертикали (ось Y). По умолчанию: -2. Отрицательные — ниже, положительные — выше.
+            Вертикальная позиция Земли (по умолчанию: -2). Отрицательные значения - ниже, положительные - выше.
           </div>
         </SettingRow>
       </SettingSection>

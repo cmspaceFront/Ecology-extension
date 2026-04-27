@@ -1,0 +1,770 @@
+.map-popup-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2147483646;
+  background: transparent;
+}
+
+.map-popup {
+  position: absolute;
+  width: 420px;
+  max-width: 90vw;
+  max-height: 350px;
+  padding: 10px 12px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(16, 28, 50, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: #e2e8f0;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  font-family: 'Geologica', Inter, -apple-system, sans-serif;
+  display: flex;
+  flex-direction: column;
+  z-index: 2147483647 !important;
+  animation: popupFadeIn 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+  transition: left 0.3s ease, right 0.3s ease, top 0.3s ease, width 0.3s ease, height 0.3s ease, border-radius 0.3s ease;
+  isolation: isolate;
+}
+
+.map-popup--sidebar {
+  right: 2px !important;
+  left: auto !important;
+  top: 2px !important;
+  width: 420px !important;
+  height: calc(100% - 4px) !important;
+  max-height: none !important;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+@keyframes popupFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(-5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Header */
+.map-popup__header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  margin-bottom: 16px;
+  flex-shrink: 0;
+}
+
+.map-popup__title {
+  font-size: 18px;
+  font-weight: 500;
+  color: #ffffff;
+  text-align: center;
+}
+
+.map-popup__header-buttons {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.map-popup__toggle-sidebar,
+.map-popup__close {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  line-height: 1;
+  padding: 4px;
+  transition: opacity 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.map-popup__toggle-sidebar:hover,
+.map-popup__close:hover {
+  opacity: 0.8;
+}
+
+.map-popup__toggle-sidebar svg,
+.map-popup__close svg {
+  display: block;
+}
+
+/* Body with custom scrollbar */
+.map-popup__body {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  flex: 1;
+  padding-right: 12px;
+}
+
+/* Custom Scrollbar */
+.map-popup__body::-webkit-scrollbar {
+  width: 4px;
+}
+
+.map-popup__body::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 2px;
+}
+
+.map-popup__body::-webkit-scrollbar-thumb {
+  background: var(--theme-primary-rgba, rgba(78, 204, 242, 0.6));
+  border-radius: 2px;
+}
+
+.map-popup__body::-webkit-scrollbar-thumb:hover {
+  background: var(--theme-primary-rgba-hover, rgba(78, 204, 242, 0.8));
+}
+
+/* Убираем кнопки вверх/вниз */
+.map-popup__body::-webkit-scrollbar-button {
+  display: none;
+}
+
+/* Firefox scrollbar */
+.map-popup__body {
+  scrollbar-width: thin;
+  scrollbar-color: var(--theme-primary-rgba, rgba(78, 204, 242, 0.6)) rgba(0, 0, 0, 0.3);
+}
+
+/* Section */
+.map-popup__section {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.map-popup__section-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(148, 163, 184, 0.8);
+  margin-bottom: 8px;
+  margin-top: 12px;
+}
+
+/* Field row */
+.map-popup__field {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.map-popup__field:last-child {
+  border-bottom: none;
+}
+
+.map-popup__label {
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 400;
+  flex-shrink: 0;
+}
+
+.map-popup__value {
+  font-size: 15px;
+  color: #ffffff;
+  font-weight: 400;
+  text-align: right;
+  flex: 1;
+  line-height: 1.5;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Files section */
+.map-popup__files {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.map-popup__file-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  background: rgba(53, 69, 98, 0.3);
+  border-radius: 8px;
+  transition: background 0.2s;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.map-popup__file-item:hover {
+  background: rgba(53, 69, 98, 0.5);
+}
+
+.map-popup__file-item--clickable {
+  cursor: pointer;
+}
+
+.map-popup__file-item--clickable:hover {
+  background: rgba(59, 130, 246, 0.2);
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+.map-popup__file-icon {
+  color: rgba(59, 130, 246, 0.7);
+  flex-shrink: 0;
+}
+
+.map-popup__file-details {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.map-popup__file-name {
+  font-size: 13px;
+  color: #e2e8f0;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.map-popup__file-size {
+  font-size: 11px;
+  color: rgba(148, 163, 184, 0.6);
+}
+
+.map-popup__edit-button {
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: 'Geologica', Inter, -apple-system, sans-serif;
+  background: linear-gradient(90deg, #1487C5 0%, #011AFE 100%);
+  transition: filter 0.2s, transform 0.1s, opacity 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  justify-content: center;
+  margin-top: 12px;
+}
+
+.map-popup__edit-icon {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+}
+
+.map-popup__edit-button:hover:not(:disabled) {
+  filter: brightness(1.1);
+}
+
+.map-popup__edit-button:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.map-popup__edit-button--disabled,
+.map-popup__edit-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: rgba(148, 163, 184, 0.3);
+  background-image: none;
+}
+
+.map-popup__edit-button--disabled:hover,
+.map-popup__edit-button:disabled:hover {
+  filter: none;
+  transform: none;
+}
+
+/* Photos section */
+.map-popup__photos-section {
+  margin-top: 12px;
+}
+
+.map-popup__photos {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.map-popup__photo-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.map-popup__photo-image {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  object-fit: cover;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.map-popup__photo-timestamp {
+  font-size: 11px;
+  color: rgba(148, 163, 184, 0.7);
+  text-align: left;
+}
+
+/* Files list section */
+.map-popup__files-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.map-popup__section-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 8px;
+}
+
+.map-popup__file-item--clickable {
+  cursor: pointer;
+}
+
+.map-popup__file-item--clickable:hover {
+  background: rgba(59, 130, 246, 0.2);
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+/* File viewer modal */
+.map-popup__file-viewer-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
+  z-index: 2147483648;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: fadeIn 0.2s ease;
+}
+
+.map-container {
+  position: relative;
+}
+
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.map-popup__file-viewer {
+  background: rgba(16, 28, 50, 0.95);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  max-width: 90vw;
+  max-height: 90vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.map-popup__file-viewer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.map-popup__file-viewer-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+  margin-right: 16px;
+}
+
+.map-popup__file-viewer-close {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  font-size: 32px;
+  font-weight: 100;
+  cursor: pointer;
+  line-height: 1;
+  padding: 4px;
+  transition: color 0.2s;
+  flex-shrink: 0;
+}
+
+.map-popup__file-viewer-close:hover {
+  color: #ffffff;
+}
+
+.map-popup__file-viewer-content {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  max-height: calc(90vh - 100px);
+  overflow: auto;
+}
+
+.map-popup__file-viewer-video {
+  width: 100%;
+  max-width: 100%;
+  max-height: calc(90vh - 100px);
+  border-radius: 12px;
+  background: #000;
+}
+
+.map-popup__file-viewer-image {
+  max-width: 100%;
+  max-height: calc(90vh - 100px);
+  border-radius: 12px;
+  object-fit: contain;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.map-popup__file-viewer-document {
+  width: 100%;
+  height: calc(90vh - 150px);
+  min-height: 500px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.map-popup__file-viewer-iframe {
+  width: 100%;
+  flex: 1;
+  border: none;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.map-popup__file-download-button {
+  padding: 12px 24px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: 'Geologica', Inter, -apple-system, sans-serif;
+  background: linear-gradient(90deg, #1487C5 0%, #011AFE 100%);
+  transition: filter 0.2s, transform 0.1s;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+}
+
+.map-popup__file-download-button:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+
+.map-popup__file-download-button:active {
+  transform: translateY(0);
+}
+
+.map-popup__loading-files {
+  padding: 16px;
+  text-align: center;
+  color: rgba(148, 163, 184, 0.7);
+  font-size: 13px;
+}
+
+/* Critical: make flex sizing predictable */
+.map-popup {
+  box-sizing: border-box;
+}
+
+/* Critical: allow the scrollable flex child to shrink */
+.map-popup__body {
+  min-height: 0;
+  /* <-- THIS unlocks scrolling in a flex column */
+  flex: 1 1 auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  /* prevents “scroll chaining” into the map */
+}
+
+/* Optional but often helps with long values */
+.map-popup__value {
+  min-width: 0;
+}
+
+.map-popup {
+  box-sizing: border-box;
+
+  /* hard safety: never exceed parent map container */
+  max-width: calc(100% - 4px);
+  max-height: calc(100% - 4px);
+}
+
+/* KEY: allow the scroll area to shrink inside a flex column */
+.map-popup__body {
+  min-height: 0;
+  flex: 1 1 auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+/* prevents long strings from forcing layout overflow */
+.map-popup__value {
+  min-width: 0;
+  word-break: break-word;
+}
+
+.map-popup {
+  box-sizing: border-box;
+  max-width: calc(100% - 4px);
+  max-height: calc(100% - 4px);
+}
+
+/* critical for flex scroll */
+.map-popup__body {
+  min-height: 0;
+  flex: 1 1 auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  touch-action: pan-y;
+  /* important on trackpads/touch */
+}
+
+/* =========================
+   RESPONSIVE + SCROLL FIX
+========================= */
+
+.map-popup {
+  box-sizing: border-box;
+
+  /* Никогда не выходим за рамки контейнера карты */
+  max-width: calc(100% - 4px);
+  max-height: calc(100% - 4px);
+}
+
+/* ВАЖНО: flex-child должен уметь сжиматься, иначе скролл ломается */
+.map-popup__body {
+  min-height: 0;
+  flex: 1 1 auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  touch-action: pan-y;
+}
+
+/* Длинные значения (GlobalID) не расширяют попап */
+.map-popup__value {
+  min-width: 0;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+/* Небольшой фикс для sidebar */
+.map-popup--sidebar {
+  max-width: calc(100% - 4px) !important;
+  max-height: calc(100% - 4px) !important;
+}
+
+/* когда по высоте тесно, делаем скроллбар более “ухватистым” */
+.map-popup[data-compact-y="1"] .map-popup__body::-webkit-scrollbar {
+  width: 8px;
+}
+
+.map-popup[data-compact-y="1"] .map-popup__body::-webkit-scrollbar-thumb {
+  min-height: 64px;
+  /* ползунок не становится слишком мелким */
+  background: rgba(78, 204, 242, 0.85);
+}
+
+.map-popup[data-compact-y="1"] .map-popup__body {
+  padding-right: 8px;
+  /* чтобы контент не прилипал к более широкому скроллу */
+}
+
+/* обязательно: чтобы внутренний скролл в flex работал */
+.map-popup__body {
+  min-height: 0;
+  flex: 1 1 auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  touch-action: pan-y;
+}
+
+/* когда по высоте тесно — уменьшаем вертикальные отступы (контента меньше → thumb больше) */
+.map-popup[data-compact-y="1"] {
+  padding: 8px 10px;
+}
+
+.map-popup[data-compact-y="1"] .map-popup__header {
+  margin-bottom: 10px;
+}
+
+.map-popup[data-compact-y="1"] .map-popup__field {
+  padding: 10px 0;
+  /* было 14px */
+  gap: 16px;
+  /* было 24px */
+}
+
+.map-popup[data-compact-y="1"] .map-popup__label,
+.map-popup[data-compact-y="1"] .map-popup__value {
+  font-size: 14px;
+  /* было 15px */
+}
+
+/* скроллбар толще + thumb не микроскопический */
+.map-popup[data-compact-y="1"] .map-popup__body::-webkit-scrollbar {
+  width: 10px;
+}
+
+.map-popup[data-compact-y="1"] .map-popup__body::-webkit-scrollbar-thumb {
+  min-height: 72px;
+}
+
+.map-popup[data-compact-y="1"] .map-popup__body {
+  padding-right: 10px;
+  scrollbar-width: auto;
+  /* Firefox */
+}
+
+.map-popup {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  /* оставляем, но скролл будет внутри body */
+}
+
+.map-popup__body {
+  min-height: 0;
+  /* критично для flex-scroll */
+  flex: 1 1 auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  touch-action: pan-y;
+}
+
+/* compactY: уменьшаем вертикальные отступы, чтобы контента помещалось больше
+   и thumb скролла становился "крупнее" */
+.map-popup[data-compact-y="1"] {
+  padding: 8px 10px;
+}
+
+.map-popup[data-compact-y="1"] .map-popup__field {
+  padding: 10px 0;
+  gap: 16px;
+}
+
+.map-popup[data-compact-y="1"] .map-popup__header {
+  margin-bottom: 10px;
+}
+
+.map-popup[data-compact-y="1"] .map-popup__body::-webkit-scrollbar {
+  width: 10px;
+}
+
+.map-popup[data-compact-y="1"] .map-popup__body::-webkit-scrollbar-thumb {
+  min-height: 72px;
+}
+
+.map-popup {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  /* скролл только внутри body */
+  max-width: calc(100% - 4px);
+  max-height: calc(100% - 4px);
+  box-sizing: border-box;
+}
+
+.map-popup__body {
+  min-height: 0;
+  /* ключ: иначе flex не даёт скролл */
+  flex: 1 1 auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  touch-action: pan-y;
+}
+
+.map-popup[data-compact-y="1"] {
+  padding: 8px 10px;
+}
+
+.map-popup[data-compact-y="1"] .map-popup__field {
+  padding: 10px 0;
+  gap: 16px;
+}
+
+.map-popup[data-compact-y="1"] .map-popup__body::-webkit-scrollbar {
+  width: 10px;
+}
+
+.map-popup[data-compact-y="1"] .map-popup__body::-webkit-scrollbar-thumb {
+  min-height: 72px;
+}

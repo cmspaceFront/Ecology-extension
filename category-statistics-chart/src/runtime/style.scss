@@ -385,6 +385,129 @@
   pointer-events: none;
 }
 
+/* ─── Skeleton: iPad and smaller viewports (≤1400px) ───────────────────────── */
+@media (max-width: 1400px) {
+  .cs-skeleton__content {
+    padding: 8px 8px 10px 8px;
+    gap: 8px;
+  }
+
+  .cs-skeleton__left {
+    flex: 0 0 40%;
+    padding: 4px 0;
+  }
+
+  .cs-skeleton__disc {
+    width: min(80%, 100px);
+  }
+
+  .cs-skeleton__rows {
+    padding: 8px 26px 8px 0;
+    gap: 12px;
+  }
+
+  .cs-skeleton__row {
+    gap: 10px;
+  }
+
+  .cs-skeleton__line {
+    height: 11px;
+  }
+
+  .cs-skeleton__chip {
+    width: 50px;
+    height: 24px;
+    border-radius: 6px;
+  }
+
+  .cs-skeleton__scrollbar {
+    right: 4px;
+    width: 10px;
+    top: 10px;
+    bottom: 10px;
+    gap: 4px;
+  }
+
+  .cs-skeleton__scrollbtn {
+    width: 10px;
+    height: 10px;
+  }
+}
+
+/* ─── Responsive: iPad and smaller viewports (≤1400px) ─────────────────────── */
+@media (max-width: 1400px) {
+  .category-chart {
+    border-radius: 16px;
+    padding: 6px 0 0 0;
+  }
+
+  .category-chart__title-wrapper {
+    margin-top: 4px;
+    margin-bottom: 4px;
+    min-height: 18px;
+  }
+
+  .category-chart__title {
+    font-size: 12px;
+    line-height: 18px;
+    padding: 0 24px;
+  }
+
+  .category-chart__sort-button {
+    right: 6px;
+
+    svg {
+      width: 12px;
+      height: 12px;
+    }
+  }
+
+  .category-chart__content {
+    gap: 0;
+    margin-top: 2px;
+  }
+
+  .category-chart__legend-wrapper {
+    padding: 6px 6px 6px 0;
+    gap: 4px;
+  }
+
+  .category-chart__legend {
+    padding: 4px 6px;
+  }
+
+  .category-chart__legend-item {
+    padding: 7px 10px;
+    margin-bottom: 7px;
+    border-radius: 10px;
+    min-height: 32px;
+    max-height: 42px;
+
+    &:hover {
+      padding: 9px 12px;
+      max-height: 180px;
+    }
+  }
+
+  .category-chart__legend-text {
+    font-size: 10px;
+    line-height: 18px;
+    margin-right: 6px;
+  }
+
+  .category-chart__legend-badge {
+    min-width: 40px;
+    height: 24px;
+    border-radius: 6px;
+    padding: 0 8px;
+    font-size: 12px;
+  }
+
+  .category-chart__bottom-gradient {
+    height: 40px;
+  }
+}
+
 /* Медиа-запросы для адаптивности */
 @media (max-width: 768px) {
   .category-chart__content {
@@ -410,8 +533,8 @@
   }
 
   .category-chart__legend-text {
-    font-size: 15.5px;
-    line-height: 21px;
+    font-size: 12px;
+    line-height: 18px;
   }
 }
 
@@ -830,15 +953,13 @@
 }
 
 .cs-skeleton__disc {
-  /* ✅ основной принцип: квадрат + круг */
   aspect-ratio: 1 / 1;
   border-radius: 50%;
 
-  /* ✅ размер: не больше колонки и не больше высоты */
-  height: 85%;
-  width: auto;
-  max-width: 85%;
-  max-height: 85%;
+  /* width-based sizing — надёжный круг без конфликтов */
+  /* height: 85% + max-width: 85% + aspect-ratio конфликтуют и дают овал */
+  width: min(82%, 160px);
+  height: auto;
 
   position: relative;
   transform: rotate(-18deg);
@@ -909,7 +1030,8 @@
   flex: 1;
   min-width: 0;
   min-height: 0;
-  padding: 12px 10px 12px 0;
+  padding: 12px 26px 12px 0;
+  /* 26px справа = scrollbar(12) + right(6) + gap(8) */
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -927,9 +1049,9 @@
   border-radius: 10px;
   flex: 1;
   background: linear-gradient(90deg,
-      rgba(255, 255, 255, 0.05) 0%,
-      rgba(255, 255, 255, 0.10) 50%,
-      rgba(255, 255, 255, 0.05) 100%);
+      rgba(255, 255, 255, 0.10) 0%,
+      rgba(255, 255, 255, 0.22) 50%,
+      rgba(255, 255, 255, 0.10) 100%);
   background-size: 200% 100%;
   animation: csShimmer 1.6s ease-in-out infinite;
 }

@@ -1,0 +1,20 @@
+[
+  {
+    "from": "src/runtime/assets",
+    "to": "dist/runtime/assets"
+  },
+  {
+    "from": "src/runtime/Tuman.json",
+    "to": "dist/runtime/Tuman.json"
+  },
+  {
+    "from": "src/runtime/Viloyat.json",
+    "to": "dist/runtime/Viloyat.json"
+  },
+  {
+    "from": "src/runtime/uzbekistan_regions_backup.json",
+    "to": "dist/runtime/uzbekistan_regions_backup.json"
+  }
+]
+
+ 

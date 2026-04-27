@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { React, jsx } from "jimu-core";
 import ReactECharts from "echarts-for-react";
-import { useRef, useEffect, useMemo } from "react";
+import { useRef, useEffect, useMemo, useState } from "react";
 import { ThemeColors, hexToRgb, rgbToHex } from "../themeUtils";
 import YearFilter from "./YearFilter";
 
@@ -45,8 +45,21 @@ const RegionCard: React.FC<RegionCardProps> = ({
   onYearChange,
 }) => {
   const chartRef = useRef<any>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [containerWidth, setContainerWidth] = useState(300);
   const textColor = "#e8e8e8";
   const resolvedBackLabel = backLabel || "Orqaga";
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver((entries) => {
+      const w = entries[0]?.contentRect.width;
+      if (w && w > 0) setContainerWidth(w);
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
 
   const dataMaxValue = Math.max(...data.map((item) => item.value), 0);
   const dataMinValue = Math.min(...data.map((item) => item.value), 0);
@@ -110,22 +123,24 @@ const RegionCard: React.FC<RegionCardProps> = ({
     }
   }
 
+  // Адаптивные размеры на основе ширины контейнера
+  const gridLeft   = containerWidth > 520 ? 170 : containerWidth > 400 ? 152 : containerWidth > 300 ? 145 : containerWidth > 220 ? 118 : 100;
+  const gridRight  = containerWidth > 300 ? 18 : 12;
+  const fontSize   = containerWidth > 520 ? 14  : containerWidth > 400 ? 13  : containerWidth > 300 ? 12  : 11;
+  const calculatedBarHeight = containerWidth > 520 ? 38 : containerWidth > 400 ? 32 : containerWidth > 300 ? 28 : 24;
+  const yAxisWidth = gridLeft - 10;
+
   // Ограничиваем видимую область до 9 элементов по умолчанию
   const maxVisibleItems = 9;
   const dataCount = data.length;
   const shouldShowScroll = dataCount > maxVisibleItems;
-  
-  // Фиксированные размеры для линий
-  const calculatedBarHeight = 38; // Толщина горизонтального бара
-  const barCategoryGap = 1; // Зазор между категориями (уже + плотнее)
-  
+
+  const barCategoryGap = 1;
+
   // Высота контейнера для видимой области (9 элементов)
   const containerHeight = maxVisibleItems * (calculatedBarHeight + barCategoryGap) + 150;
   // Высота всего чарта (все элементы)
   const fullChartHeight = dataCount * (calculatedBarHeight + barCategoryGap) + 150;
-
-  // Фиксированный размер шрифта (увеличен для лучшей читаемости)
-  const fontSize = 14; // Увеличено с 12px
 
   // Функция для удаления пробелов между буквами и символами
   const normalizeName = (name: string): string => {
@@ -280,12 +295,11 @@ const RegionCard: React.FC<RegionCardProps> = ({
     animationEasingUpdate: 'cubicOut',
 
     grid: {
-      left: 170, // Увеличено для полного отображения названий (было 150)
-      right: 20,
-      top: 22, // запас сверху, чтобы первый горизонтальный бар не срезался
-      bottom: 40, // место для нижних подписей оси X
+      left: gridLeft,
+      right: gridRight,
+      top: 22,
+      bottom: 40,
       containLabel: false,
-      // Для большого количества элементов увеличиваем верхний и нижний отступы
       ...(dataCount > 20 && {
         top: 28,
         bottom: 50,
@@ -325,8 +339,8 @@ const RegionCard: React.FC<RegionCardProps> = ({
         fontSize: fontSize,
         fontWeight: 400,
         fontFamily: "'Geologica', sans-serif",
-        margin: 10,
-        width: 160,
+        margin: containerWidth > 260 ? 10 : 8,
+        width: yAxisWidth,
         overflow: "none",
         formatter: (value: string, index: number) => {
           const normalized = normalizeName(value);
@@ -597,8 +611,8 @@ const RegionCard: React.FC<RegionCardProps> = ({
         </div>
       </div>
 
-      <div className="region-card__chart-host">
-        <div 
+      <div className="region-card__chart-host" ref={containerRef}>
+        <div
           className={`region-card__chart ${shouldShowScroll ? 'region-card__chart--scrollable' : ''} ${selectedDistrict ? 'region-card__chart--level-3' : ''}`}
           style={{
             overflowY: shouldShowScroll ? "auto" : "hidden",

@@ -6,21 +6,13 @@
   --lg-hover-glow: rgba(255, 255, 255, 0.4);
   --lg-red: #fb4268;
   --lg-grey: #5b5b5b;
-  /* iOS Liquid Glass — центральная карточка */
-  --liquid-glass-blur: 24px;
-  --liquid-glass-saturate: 180%;
-  --liquid-glass-bg: rgba(255, 255, 255, 0.12);
-  --liquid-glass-border: rgba(255, 255, 255, 0.22);
-  --liquid-glass-shine: rgba(255, 255, 255, 0.35);
-  --liquid-glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
-  --liquid-glass-inset: inset 0 4px 24px rgba(255, 255, 255, 0.15);
 }
 
 /* Card Styles - iOS 26 Dark Liquid Glass */
 .carousel-card {
   position: absolute;
-  width: min(320px, 75vw);
-  max-width: 65%;
+  width: min(680px, 92vw);
+  max-width: 80%;
   height: min(78svh, 720px);
   left: 50%;
   transform: translateX(-50%);
@@ -44,25 +36,7 @@
   contain: layout style paint;
 }
 
-/* Уменьшение размера карточек на 1440px и меньше */
-@media (max-width: 1440px) {
-  .carousel-card {
-    width: min(340px, 60vw) !important;
-    max-width: min(340px, 60vw) !important;
-    height: min(70svh, 600px) !important;
-  }
-}
-
-/* Уменьшение размера карточек на 1400px и меньше */
-@media (max-width: 1400px) {
-
-}
-
 /* Darker liquid glass card */
-  .carousel-card-button svg {
-    width: 14px;
-    height: 14px;
-  }
 .carousel-card.glass-card {
   background: transparent;
   box-shadow:
@@ -72,25 +46,9 @@
   overflow: hidden;
 }
 
-/* Liquid Glass: дополнительный «жидкий» блик только у центральной карточки (iOS-стиль) */
+/* Remove old pseudo-elements только для активных карточек */
+.carousel-card.glass-card.active::before,
 .carousel-card.glass-card.active::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border-radius: inherit;
-  pointer-events: none;
-  z-index: 1;
-  background: transparent;
-  box-shadow:
-    inset -12px -10px 0 -10px rgba(255, 255, 255, 0.5),
-    inset 0 -10px 20px -8px rgba(255, 255, 255, 0.15);
-  opacity: 0.7;
-}
-
-.carousel-card.glass-card.active::before {
   display: none;
 }
 
@@ -160,34 +118,18 @@
 }
 
 /* ========== GLASS LAYERS ========== */
-/* Базовый слой стекла для неактивных карточек */
+/* Применяется ко ВСЕМ карточкам одинаково - активным и неактивным */
 .carousel-card.glass-card .glass-filter {
   position: absolute;
   inset: 0;
   z-index: 0;
-  /* убираем тяжёлый SVG-фильтр, оставляем только лёгкий фон */
   backdrop-filter: blur(0px);
+  filter: url(#lg-dist);
   isolation: isolate;
   pointer-events: none;
   border-radius: inherit;
   will-change: filter, backdrop-filter;
   transform: translateZ(0);
-}
-
-/* ---------- Центральная карточка: iOS Liquid Glass ---------- */
-.carousel-card.glass-card.active .glass-filter {
-  filter: none;
-  /* убрали blur, оставили только лёгкую насыщенность для эффекта стекла */
-  backdrop-filter: saturate(var(--liquid-glass-saturate));
-  -webkit-backdrop-filter: saturate(var(--liquid-glass-saturate));
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.18) 0%,
-    rgba(255, 255, 255, 0.08) 50%,
-    rgba(255, 255, 255, 0.05) 100%
-  );
-  border: 1px solid var(--liquid-glass-border);
-  box-shadow: var(--liquid-glass-shadow), var(--liquid-glass-inset);
 }
 
 .carousel-card.glass-card .glass-overlay {
@@ -199,16 +141,6 @@
   border-radius: inherit;
   will-change: background;
   transform: translateZ(0);
-}
-
-/* Liquid Glass: полупрозрачный слой «стекла» */
-.carousel-card.glass-card.active .glass-overlay {
-  background: linear-gradient(
-    165deg,
-    rgba(255, 255, 255, 0.12) 0%,
-    rgba(255, 255, 255, 0.04) 40%,
-    rgba(255, 255, 255, 0.06) 100%
-  );
 }
 
 .carousel-card.glass-card .glass-specular {
@@ -224,46 +156,26 @@
   transform: translateZ(0);
 }
 
-/* Liquid Glass: блик как у iOS — верхний левый свет, «жидкий» перелив */
-.carousel-card.glass-card.active .glass-specular {
-  box-shadow:
-    inset 1px 1px 0 rgba(255, 255, 255, 0.85),
-    inset -2px -4px 0 -3px var(--liquid-glass-shine),
-    inset 0 -6px 12px -4px rgba(255, 255, 255, 0.12),
-    inset 0 0 20px rgba(255, 255, 255, 0.08);
-}
-
-/* Неактивные карточки — базовый фильтр без размытия фона */
+/* Гарантируем, что эффект применяется одинаково для всех карточек */
+.carousel-card.glass-card.active .glass-filter,
 .carousel-card.glass-card:not(.active) .glass-filter {
   backdrop-filter: blur(0px) !important;
+  filter: url(#lg-dist) !important;
   opacity: 1 !important;
   visibility: visible !important;
 }
 
-.carousel-card.glass-card.active .glass-filter {
-  opacity: 1 !important;
-  visibility: visible !important;
-}
-
+.carousel-card.glass-card.active .glass-overlay,
 .carousel-card.glass-card:not(.active) .glass-overlay {
   background: rgba(255, 255, 255, 0.1) !important;
   opacity: 1 !important;
   visibility: visible !important;
 }
 
-.carousel-card.glass-card.active .glass-overlay {
-  opacity: 1 !important;
-  visibility: visible !important;
-}
-
+.carousel-card.glass-card.active .glass-specular,
 .carousel-card.glass-card:not(.active) .glass-specular {
   box-shadow: inset 1px 1px 0 var(--lg-highlight),
     inset 0 0 5px var(--lg-highlight) !important;
-  opacity: 1 !important;
-  visibility: visible !important;
-}
-
-.carousel-card.glass-card.active .glass-specular {
   opacity: 1 !important;
   visibility: visible !important;
 }
@@ -371,7 +283,7 @@
 .carousel-card-image {
   position: relative;
   width: 100%;
-  height: 74%;
+  height: 65%;
   overflow: hidden;
   border-radius: 30px 30px 0 0;
   box-sizing: border-box;
@@ -425,9 +337,9 @@
   position: relative;
   background: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(0px);
-  padding: 18px 26px 22px;
+  padding: 26px;
   border-radius: 0 0 30px 30px;
-  height: 26%;
+  height: 35%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -436,7 +348,6 @@
   color: rgba(255, 255, 255, 0.95);
 }
 
-/* убрали бесконечную анимацию свечения для снижения нагрузки */
 .carousel-card-content::before {
   content: "";
   position: absolute;
@@ -451,6 +362,19 @@
   border-radius: inherit;
   pointer-events: none;
   opacity: 0.6;
+  animation: contentGlow 6s ease-in-out infinite;
+}
+
+@keyframes contentGlow {
+
+  0%,
+  100% {
+    opacity: 0.6;
+  }
+
+  50% {
+    opacity: 0.9;
+  }
 }
 
 /* Title & Description */
@@ -495,7 +419,43 @@
   /* will-change: opacity, transform; */
 }
 
-/* убрали дополнительные blur'ы для задних карточек — меньше тяжёлых перерисовок */
+/* Depth-based blur for background cards */
+.carousel-card.depth-1:not(.active) {
+  filter: blur(2px) saturate(0.9);
+  transition: filter var(--carousel-transition-duration, 1.2s) var(--carousel-transition-ease, cubic-bezier(0.22, 1, 0.36, 1));
+}
+
+.carousel-card.depth-2:not(.active) {
+  filter: blur(4px) saturate(0.85);
+  transition: filter var(--carousel-transition-duration, 1.2s) var(--carousel-transition-ease, cubic-bezier(0.22, 1, 0.36, 1));
+}
+
+.carousel-card.depth-1:not(.active) .carousel-card-image img {
+  filter: blur(2px) brightness(0.8);
+  transition: filter var(--carousel-transition-duration, 1.2s) ease;
+}
+
+.carousel-card.depth-2:not(.active) .carousel-card-image img {
+  filter: blur(4px) brightness(0.7);
+  transition: filter var(--carousel-transition-duration, 1.2s) ease;
+}
+
+.carousel-card.depth-1:not(.active) .carousel-card-content {
+  backdrop-filter: blur(8px);
+}
+
+.carousel-card.depth-2:not(.active) .carousel-card-content {
+  backdrop-filter: blur(12px);
+}
+
+/* Blur the whole glass layer for back rows (not just image) */
+.carousel-card.depth-1:not(.active) .glass-filter {
+  backdrop-filter: blur(6px) !important;
+}
+
+.carousel-card.depth-2:not(.active) .glass-filter {
+  backdrop-filter: blur(10px) !important;
+}
 
 /* Button - полностью прозрачная, эффект увеличения при hover */
 .carousel-card-button {
@@ -623,17 +583,29 @@
 /* Additional responsive sizing overrides for cards */
 @media (max-width: 1280px) {
   .carousel-card {
-    width: min(300px, 55vw) !important;
-    max-width: min(300px, 55vw) !important;
-    margin-left: -50%;
-    height: min(65svh, 550px) !important;
+    width: 90vw;
+    margin-left: -45vw;
+    height: 80vh;
   }
 }
 
 /* Fade-in on mount/render */
-/* отключаем тяжёлую анимацию появления карточек */
 .carousel-card.with-enter {
-  opacity: 1;
+  opacity: 0;
+  animation: cardFadeIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: var(--card-transition-delay, 0s);
+}
+
+@keyframes cardFadeIn {
+  0% {
+    opacity: 0;
+    filter: blur(10px);
+  }
+
+  100% {
+    opacity: 1;
+    filter: blur(0px);
+  }
 }
 
 @media (max-width: 1024px) {
@@ -659,43 +631,3 @@
     height: min(70svh, 580px);
   }
 }
-
-/* 1440px и меньше — делаем немного уже */
-@media (max-width: 1440px) {
-  :root {
-    --cardW: clamp(160px, 24vw, 300px);
-  }
-
-  .carousel-card {
-    width: var(--cardW) !important;
-    max-width: var(--cardW) !important;
-  }
-}
-
-@media (max-width: 1400px) {
-  :root {
-    --cardW: clamp(150px, 22vw, 260px);
-  }
-
-  .carousel-card {
-    width: var(--cardW) !important;
-    max-width: var(--cardW) !important;
-  }
-
-  .carousel-card {
-    width: min(320px, 58vw) !important;
-    max-width: min(320px, 58vw) !important;
-    height: min(68svh, 580px) !important;
-  }
-
-  .carousel-card-description {
-    font-size: 16px;
-  }
-  .carousel-card-title {
-    font-size: 30px;
-  }
-}
-
-
-
-

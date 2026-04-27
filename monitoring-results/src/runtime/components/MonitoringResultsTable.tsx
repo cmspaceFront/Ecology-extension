@@ -26,6 +26,22 @@ function monitoringRowIdsEqual(a: string | undefined, b: string | undefined): bo
   return ka !== "" && ka === kb;
 }
 
+function formatTrailingEllipsisId(raw: string, keepHeadChars = 12): string {
+  const s = String(raw ?? "").trim();
+  if (!s) return "";
+  const head = Math.max(0, Math.floor(keepHeadChars));
+  if (head === 0) return s;
+  if (s.length <= head + 3) return s;
+  return `${s.slice(0, head)}...`;
+}
+
+function isTargetResolution(): boolean {
+  if (typeof window === "undefined") return false;
+  const w = window.innerWidth;
+  const h = window.innerHeight;
+  return (w === 1920 && h === 1080) || (w === 1366 && h === 1024);
+}
+
 interface MonitoringResultsTableProps {
   data: MonitoringResultItem[];
   loading: boolean;
@@ -79,6 +95,13 @@ const MonitoringResultsTable: React.FC<MonitoringResultsTableProps> = ({
 
   const tbodyContainerRef = React.useRef<HTMLDivElement | null>(null);
   const [showBottomFade, setShowBottomFade] = React.useState<boolean>(false);
+  const [useCompactId, setUseCompactId] = React.useState<boolean>(() => isTargetResolution());
+
+  React.useEffect(() => {
+    const onResize = () => setUseCompactId(isTargetResolution());
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
 
   // ✅ ID tooltip (custom popup)
   const [idTip, setIdTip] = React.useState<IdTooltipState>({
@@ -334,6 +357,7 @@ const MonitoringResultsTable: React.FC<MonitoringResultsTableProps> = ({
             {sortedData.map((item) => {
               const isSelected = monitoringRowIdsEqual(selectedRowId, item.id);
               const shownId = (item as any).displayId ?? item.id;
+              const shownIdCell = useCompactId ? formatTrailingEllipsisId(shownId, 12) : shownId;
 
               return (
                 <tr
@@ -353,7 +377,7 @@ const MonitoringResultsTable: React.FC<MonitoringResultsTableProps> = ({
                     onFocus={(e) => showIdTipFromEl(shownId, e.currentTarget)}
                     onBlur={hideIdTip}
                   >
-                    {shownId}
+                    {shownIdCell}
                   </td>
 
                   <td className="monitoring-results-date">

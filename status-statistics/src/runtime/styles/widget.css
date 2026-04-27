@@ -296,9 +296,10 @@
 
   max-width: 100%;
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  /* IMPORTANT: prevents layout shift; stays 1-line */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  /* white-space: normal — позволяет переносить длинные слова на 2 строки */
 }
 
 /* Bar */
@@ -349,5 +350,31 @@
   .status-statistics-column:hover {
     transform: none;
     /* avoid jitter in tight spaces */
+  }
+}
+
+/* =========================================================
+   Viewport ≤ 1400px — iPad / smaller monitors
+========================================================= */
+@media (max-width: 1400px) {
+  .status-statistics-widget {
+    --label: clamp(9px, 1.9cqi, 17px);
+    --value: clamp(16px, 2.6cqi, 24px);
+    --pad-y: clamp(6px, 1.2cqi, 10px);
+  }
+
+  .status-statistics-header {
+    margin-top: 0;
+    margin-bottom: 4px;
+    min-height: 24px;
+    align-items: center;
+  }
+
+  .status-statistics-title {
+    font-size: 12px;
+    line-height: 18px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }

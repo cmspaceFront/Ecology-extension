@@ -666,6 +666,106 @@
   transform: translateY(0) scale(0.98);
 }
 
+/* ≤ 1400px — iPad / smaller monitors */
+@media (max-width: 1400px) {
+  .export-modal {
+    width: min(560px, 95vw);
+    padding: 18px 22px 22px;
+    border-radius: 16px;
+  }
+
+  .export-modal--large {
+    width: min(600px, 95vw);
+  }
+
+  .export-modal--result {
+    width: min(340px, 95vw);
+    padding: 22px;
+  }
+
+  .export-modal__header {
+    margin-bottom: 14px;
+    padding-bottom: 12px;
+  }
+
+  .export-modal__title {
+    font-size: 16px;
+  }
+
+  .export-modal__close {
+    width: 32px;
+    height: 32px;
+    font-size: 22px;
+  }
+
+  .export-modal__body {
+    gap: 12px;
+  }
+
+  .export-modal__label {
+    font-size: 12px;
+  }
+
+  .export-modal__input {
+    height: 36px;
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+
+  .export-modal__dropdown-trigger {
+    min-height: 38px;
+    padding: 10px 14px;
+    padding-right: 40px;
+    font-size: 13px;
+  }
+
+  .export-modal__dropdown-item {
+    padding: 9px 12px;
+    font-size: 13px;
+  }
+
+  .export-modal__format-btn {
+    padding: 10px 12px;
+    font-size: 13px;
+    gap: 8px;
+  }
+
+  .export-modal__footer {
+    margin-top: 16px;
+    padding-top: 14px;
+    gap: 12px;
+  }
+
+  .export-modal__cancel,
+  .export-modal__submit {
+    padding: 11px 18px;
+    font-size: 13px;
+  }
+
+  .export-modal__result-content {
+    gap: 16px;
+  }
+
+  .export-modal__result-icon {
+    width: 60px;
+    height: 60px;
+  }
+
+  .export-modal__result-icon svg {
+    width: 48px;
+    height: 48px;
+  }
+
+  .export-modal__result-message {
+    font-size: 14px;
+  }
+
+  .export-modal__result-button {
+    padding: 11px 28px;
+    font-size: 13px;
+  }
+}
+
 /* Responsive styles */
 @media (max-width: 640px) {
   .export-modal--large {

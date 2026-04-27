@@ -1740,3 +1740,63 @@
   }
 }
 
+/* =========================================================
+   Viewport ≤ 1400px — iPad / smaller monitors
+========================================================= */
+@media (max-width: 1400px) {
+  .basemap-gallery {
+    width: 260px;
+  }
+
+  .legend-panel {
+    width: 270px;
+  }
+
+  .basemap-gallery__header,
+  .legend-panel__header {
+    padding: 12px 14px;
+  }
+
+  .basemap-gallery__title,
+  .legend-panel__title {
+    font-size: 14px;
+  }
+
+  .basemap-gallery__content {
+    max-height: 290px;
+    padding: 10px;
+  }
+
+  .legend-panel__content {
+    padding: 12px;
+  }
+
+  .basemap-option {
+    padding: 10px 12px;
+    min-height: 50px;
+  }
+
+  .basemap-option__thumbnail {
+    width: 44px;
+    height: 44px;
+  }
+
+  .basemap-option__title {
+    font-size: 13px;
+  }
+
+  .legend-item {
+    padding: 10px;
+    gap: 10px;
+  }
+
+  .legend-item__label {
+    font-size: 12px;
+  }
+
+  .legend-item__color-box {
+    width: 20px;
+    height: 20px;
+  }
+}
+

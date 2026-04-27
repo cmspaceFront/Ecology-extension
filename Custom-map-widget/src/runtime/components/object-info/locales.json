@@ -1,0 +1,403 @@
+{
+  "modal": {
+    "title": {
+      "uz-Cyrl": "Маълумот киритиш панели",
+      "uz-Latn": "Ma'lumot kiritish paneli",
+      "ru": "Панель ввода данных"
+    },
+    "close": {
+      "uz-Cyrl": "Ёпиш",
+      "uz-Latn": "Yopish",
+      "ru": "Закрыть"
+    },
+    "fields": {
+      "objectId": {
+        "label": {
+          "uz-Cyrl": "Объект ID рақами",
+          "uz-Latn": "Obyekt ID raqami",
+          "ru": "Номер объекта ID"
+        },
+        "options": {
+          "default": {
+            "uz-Cyrl": "Объект ID",
+            "uz-Latn": "Obyekt ID",
+            "ru": "Объект ID"
+          },
+          "id001": {
+            "uz-Cyrl": "ID-001",
+            "uz-Latn": "ID-001",
+            "ru": "ID-001"
+          },
+          "id002": {
+            "uz-Cyrl": "ID-002",
+            "uz-Latn": "ID-002",
+            "ru": "ID-002"
+          },
+          "id003": {
+            "uz-Cyrl": "ID-003",
+            "uz-Latn": "ID-003",
+            "ru": "ID-003"
+          }
+        }
+      },
+      "year": {
+        "label": {
+          "uz-Cyrl": "Мониторинг йили",
+          "uz-Latn": "Monitoring yili",
+          "ru": "Год мониторинга"
+        },
+        "options": {
+          "2025": {
+            "uz-Cyrl": "2025 йил",
+            "uz-Latn": "2025 yil",
+            "ru": "2025 год"
+          },
+          "2024": {
+            "uz-Cyrl": "2024 йил",
+            "uz-Latn": "2024 yil",
+            "ru": "2024 год"
+          },
+          "2023": {
+            "uz-Cyrl": "2023 йил",
+            "uz-Latn": "2023 yil",
+            "ru": "2023 год"
+          },
+          "2022": {
+            "uz-Cyrl": "2022 йил",
+            "uz-Latn": "2022 yil",
+            "ru": "2022 год"
+          }
+        }
+      },
+      "area": {
+        "label": {
+          "uz-Cyrl": "Ҳудуд майдони, м²",
+          "uz-Latn": "Hudud maydoni, m²",
+          "ru": "Площадь территории, м²"
+        },
+        "placeholder": {
+          "uz-Cyrl": "Ҳудуд майдони, м2",
+          "uz-Latn": "Hudud maydoni, m2",
+          "ru": "Площадь территории, м2"
+        }
+      },
+      "inspector": {
+        "label": {
+          "uz-Cyrl": "Инспектор (ФИО)",
+          "uz-Latn": "Inspektor (FIO)",
+          "ru": "Инспектор (ФИО)"
+        },
+        "placeholder": {
+          "uz-Cyrl": "ФИО киритинг",
+          "uz-Latn": "FIO kiriting",
+          "ru": "Введите ФИО"
+        }
+      },
+      "damage": {
+        "label": {
+          "uz-Cyrl": "Ҳисобланган зарар",
+          "uz-Latn": "Hisoblangan zarar",
+          "ru": "Рассчитанный ущерб"
+        },
+        "placeholder": {
+          "uz-Cyrl": "15 млн сўм",
+          "uz-Latn": "15 mln so'm",
+          "ru": "15 млн сум"
+        }
+      },
+      "fine": {
+        "label": {
+          "uz-Cyrl": "Қўлланилган жарима",
+          "uz-Latn": "Qo'llanilgan jarima",
+          "ru": "Примененный штраф"
+        },
+        "placeholder": {
+          "uz-Cyrl": "10 млн сўм",
+          "uz-Latn": "10 mln so'm",
+          "ru": "10 млн сум"
+        }
+      },
+      "note": {
+        "label": {
+          "uz-Cyrl": "Изоҳ",
+          "uz-Latn": "Izoh",
+          "ru": "Комментарий"
+        },
+        "placeholder": {
+          "uz-Cyrl": "Изоҳ",
+          "uz-Latn": "Izoh",
+          "ru": "Комментарий"
+        }
+      },
+      "result": {
+        "label": {
+          "uz-Cyrl": "Текширув натижаси",
+          "uz-Latn": "Tekshiruv natijasi",
+          "ru": "Результат проверки"
+        },
+        "options": {
+          "approved": {
+            "uz-Cyrl": "Тасдиқланди",
+            "uz-Latn": "Tasdiqlandi",
+            "ru": "Утверждено"
+          },
+          "rejected": {
+            "uz-Cyrl": "Рад этилди",
+            "uz-Latn": "Rad etildi",
+            "ru": "Отклонено"
+          },
+          "review": {
+            "uz-Cyrl": "Кўриб чиқилмоқда",
+            "uz-Latn": "Ko'rib chiqilmoqda",
+            "ru": "На рассмотрении"
+          }
+        }
+      },
+      "fileUpload": {
+        "label": {
+          "uz-Cyrl": "Файлни юклаш",
+          "uz-Latn": "Faylni yuklash",
+          "ru": "Загрузка файла"
+        },
+        "text": {
+          "uz-Cyrl": "Юклаш учун босинг",
+          "uz-Latn": "Yuklash uchun bosing",
+          "ru": "Нажмите для загрузки"
+        },
+        "textSpan": {
+          "uz-Cyrl": "ёки файлни тортиб ташланг.",
+          "uz-Latn": "yoki faylni tortib tashlang.",
+          "ru": "или перетащите файл."
+        },
+        "hint": {
+          "uz-Cyrl": "Расмлар, Word, PDF, видео (видео 25 МБгача, бошқалари 15 МБгача)",
+          "uz-Latn": "Rasmlar, Word, PDF, video (video 25 MBgacha, boshqalari 15 MBgacha)",
+          "ru": "Изображения, Word, PDF, видео (видео до 25 МБ, остальные до 15 МБ)"
+        },
+        "remove": {
+          "uz-Cyrl": "Файлни олиб ташлаш",
+          "uz-Latn": "Faylni olib tashlash",
+          "ru": "Удалить файл"
+        },
+        "errors": {
+          "invalidType": {
+            "uz-Cyrl": "Фақат расмлар, Word, PDF ёки видео файллари рўхсат этилган",
+            "uz-Latn": "Faqat rasmlar, Word, PDF yoki video fayllari ruxsat etilgan",
+            "ru": "Разрешены только изображения, Word, PDF или видео файлы"
+          },
+          "tooLarge": {
+            "uz-Cyrl": "Файл хажми {maxSize} МБдан ошмаслиги керак",
+            "uz-Latn": "Fayl hajmi {maxSize} MBdan oshmasligi kerak",
+            "ru": "Размер файла не должен превышать {maxSize} МБ"
+          }
+        }
+      }
+    },
+    "buttons": {
+      "cancel": {
+        "uz-Cyrl": "Бекор қилиш",
+        "uz-Latn": "Bekor qilish",
+        "ru": "Отменить"
+      },
+      "submit": {
+        "uz-Cyrl": "Юбориш",
+        "uz-Latn": "Yuborish",
+        "ru": "Отправить"
+      }
+    }
+  },
+  "popup": {
+    "title": {
+      "uz-Cyrl": "Полигон маълумотлари",
+      "uz-Latn": "Poligon ma'lumotlari",
+      "ru": "Информация о полигоне"
+    },
+    "fields": {
+      "viloyat": {
+        "uz-Cyrl": "Вилоят номи:",
+        "uz-Latn": "Viloyat nomi:",
+        "ru": "Название области:"
+      },
+      "tuman": {
+        "uz-Cyrl": "Туман номи:",
+        "uz-Latn": "Tuman nomi:",
+        "ru": "Название района:"
+      },
+      "mfy": {
+        "uz-Cyrl": "МФЙ номи:",
+        "uz-Latn": "MFY nomi:",
+        "ru": "Название МФЙ:"
+      },
+      "maydon": {
+        "uz-Cyrl": "Майдон (га):",
+        "uz-Latn": "Maydon (ga):",
+        "ru": "Площадь (га):"
+      },
+      "tur": {
+        "uz-Cyrl": "Тур:",
+        "uz-Latn": "Tur:",
+        "ru": "Тип:"
+      },
+      "typeDescriptions": {
+        "0": {
+          "uz-Cyrl": "Аҳоли яшаш жойларида эҳтимоли юқори бўлган ноқонуний чиқинди полигонлари сони",
+          "uz-Latn": "Aholi yashash joylarida ehtimoli yuqori bo'lgan noqonuniy chiqindi poligonlari soni",
+          "ru": "Количество незаконных свалок с высокой вероятностью образования в жилых районах"
+        },
+        "1": {
+          "uz-Cyrl": "Дарё муҳофаза ҳудудидаги ноқонуний полигонлар сони",
+          "uz-Latn": "Daryo muhofaza hududidagi noqonuniy poligonlar soni",
+          "ru": "Количество незаконных свалок в зоне охраны реки"
+        },
+        "2": {
+          "uz-Cyrl": "Саноат зоналарида эҳтимоли юқори бўлган ноқонуний чиқинди полигонлари сони",
+          "uz-Latn": "Sanoat zonlarida ehtimoli yuqori bo'lgan noqonuniy chiqindi poligonlari soni",
+          "ru": "Вероятное количество незаконных свалок в промышленных зонах"
+        },
+        "3": {
+          "uz-Cyrl": "Қонуний чиқинди полигонлари чегарасидан ташқарига чиқиш ҳолати сони",
+          "uz-Latn": "Qonuniy chiqindi poligonlari chegarasidan tashqariga chiqish holati soni",
+          "ru": "Количество случаев превышения допустимых норм по количеству незаконных свалок"
+        },
+        "4": {
+          "uz-Cyrl": "Қонуний чиқинди полигонларининг умумий сони",
+          "uz-Latn": "Qonuniy chiqindi poligonlarining umumiy soni",
+          "ru": "Общее количество легальных свалок"
+        }
+      },
+      "yil": {
+        "uz-Cyrl": "Мониторинг ўтказалган сана:",
+        "uz-Latn": "Monitoring o'tkazilgan sana:",
+        "ru": "Дата проведения мониторинга:"
+      },
+      "yerToifa": {
+        "uz-Cyrl": "Ер тоифаси:",
+        "uz-Latn": "Yer toifasi:",
+        "ru": "Категория земли:"
+      },
+      "natija": {
+        "uz-Cyrl": "Натижа:",
+        "uz-Latn": "Natija:",
+        "ru": "Результат:"
+      },
+      "inspektor": {
+        "uz-Cyrl": "Инспектор:",
+        "uz-Latn": "Inspektor:",
+        "ru": "Инспектор:"
+      },
+      "jarima": {
+        "uz-Cyrl": "Жарима қўлланилди:",
+        "uz-Latn": "Jarima qo'llanildi:",
+        "ru": "Примененный штраф:"
+      },
+      "zarar": {
+        "uz-Cyrl": "Ҳисобланган зарар:",
+        "uz-Latn": "Hisoblangan zarar:",
+        "ru": "Рассчитанный ущерб:"
+      },
+      "holat": {
+        "uz-Cyrl": "Ҳолат бартараф этилди:",
+        "uz-Latn": "Holat bartaraf etildi:",
+        "ru": "Состояние устранено:"
+      },
+      "buzilish": {
+        "uz-Cyrl": "Бузилиш:",
+        "uz-Latn": "Buzilish:",
+        "ru": "Повреждение:"
+      },
+      "coordinates": {
+        "uz-Cyrl": "Координаталар",
+        "uz-Latn": "Koordinatalar",
+        "ru": "Координаты"
+      },
+      "latitude": {
+        "uz-Cyrl": "Кенглик:",
+        "uz-Latn": "Kenglik:",
+        "ru": "Широта:"
+      },
+      "longitude": {
+        "uz-Cyrl": "Узунлик:",
+        "uz-Latn": "Uzunlik:",
+        "ru": "Долгота:"
+      },
+      "globalId": {
+        "uz-Cyrl": "GlobalID:",
+        "uz-Latn": "GlobalID:",
+        "ru": "GlobalID:"
+      },
+      "tekshiruvNatijasi": {
+        "uz-Cyrl": "Текширув натижаси:",
+        "uz-Latn": "Tekshiruv natijasi:",
+        "ru": "Результат проверки:"
+      },
+      "gid": {
+        "uz-Cyrl": "GID:",
+        "uz-Latn": "GID:",
+        "ru": "GID:"
+      },
+      "district": {
+        "uz-Cyrl": "District:",
+        "uz-Latn": "District:",
+        "ru": "District:"
+      },
+      "region": {
+        "uz-Cyrl": "Region:",
+        "uz-Latn": "Region:",
+        "ru": "Region:"
+      },
+      "mahallaId": {
+        "uz-Cyrl": "Mahalla ID:",
+        "uz-Latn": "Mahalla ID:",
+        "ru": "Mahalla ID:"
+      }
+    },
+    "files": {
+      "title": {
+        "uz-Cyrl": "Юкланган файллар",
+        "uz-Latn": "Yuklangan fayllar",
+        "ru": "Загруженные файлы"
+      }
+    },
+    "buttons": {
+      "edit": {
+        "uz-Cyrl": "Ўзгартириш",
+        "uz-Latn": "O'zgartirish",
+        "ru": "Изменить"
+      },
+      "editInfo": {
+        "uz-Cyrl": "Маълумот таҳрирлаш",
+        "uz-Latn": "Ma'lumot tahrirlash",
+        "ru": "Редактировать информацию"
+      }
+    },
+    "errors": {
+      "noPermission": {
+        "uz-Cyrl": "Сизда етарли ҳуқуқлар йўқ",
+        "uz-Latn": "Sizda etarli huquqlar yo'q",
+        "ru": "У вас недостаточно прав"
+      }
+    }
+  },
+  "loader": {
+    "loading": {
+      "uz-Cyrl": "Харита юкланмоқда",
+      "uz-Latn": "Xarita yuklanmoqda",
+      "ru": "Карта загружается"
+    }
+  },
+  "basemap": {
+    "title": {
+      "uz-Cyrl": "Асосий хариталар",
+      "uz-Latn": "Asosiy xaritalar",
+      "ru": "Основные карты"
+    }
+  },
+  "legend": {
+    "title": {
+      "uz-Cyrl": "Легенда",
+      "uz-Latn": "Legenda",
+      "ru": "Легенда"
+    }
+  }
+}
+

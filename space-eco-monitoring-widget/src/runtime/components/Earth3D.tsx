@@ -3,21 +3,10 @@ import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import type { WidgetContext } from 'jimu-core'
 
-// Intrinsic bounding-sphere radius of earth_high.glb at unit scale. Used so low and high match visually.
-const HIGH_GLB_INTRINSIC_RADIUS = 10.454325219806831
-// Module-level cache for high GLB ArrayBuffer (survives remounts; high can load from memory on re-open).
-const highGlbBufferCache = new Map<string, ArrayBuffer>()
-const GLOBE_RADIUS = 50
-const LOCK_EARTH_CENTER_Y = 0
-const FIXED_CAMERA_FOV = 50
-const FIXED_DPR = 1
-const FIXED_GLOBE_PIXEL_HEIGHT = 520
-const FIXED_DESKTOP_CENTER_RATIO = 0.95
-const FIXED_CAMERA_Z = 75
-
 interface Earth3DProps {
   glbUrl?: string
   autoRotateSpeed?: number
+  atmosphereRotationSpeed?: number
   earthScale?: number
   earthPositionY?: number
   onEarthReady?: () => void
@@ -27,6 +16,7 @@ interface Earth3DProps {
 const Earth3D: React.FC<Earth3DProps> = ({
   glbUrl,
   autoRotateSpeed = 0.5,
+  atmosphereRotationSpeed = 0.11,
   earthScale = 4,
   earthPositionY = 0,
   onEarthReady,
@@ -34,22 +24,26 @@ const Earth3D: React.FC<Earth3DProps> = ({
 }) => {
   const mountRef = useRef<HTMLDivElement>(null)
 
-  const earthSceneRef = useRef<THREE.Scene>()
-  const earthCameraRef = useRef<THREE.PerspectiveCamera>()
-  const rendererRef = useRef<THREE.WebGLRenderer>()
   const backgroundSceneRef = useRef<THREE.Scene>()
+  const backgroundRendererRef = useRef<THREE.WebGLRenderer>()
   const backgroundCameraRef = useRef<THREE.PerspectiveCamera>()
 
+  const earthSceneRef = useRef<THREE.Scene>()
+  const earthRendererRef = useRef<THREE.WebGLRenderer>()
+  const earthCameraRef = useRef<THREE.PerspectiveCamera>()
+
   const earthRef = useRef<THREE.Group>()
+  const atmosphereRef = useRef<THREE.Mesh>()
   const starsRef = useRef<THREE.Points>()
 
   const animationIdRef = useRef<number>()
+  const atmosphereRotationRef = useRef<number>(0)
 
   const earthSpeedRef = useRef<number>(autoRotateSpeed)
+  const atmosphereSpeedRef = useRef<number>(atmosphereRotationSpeed)
 
   const isLoadingRef = useRef<boolean>(true)
-  const pendingHighEarthRef = useRef<THREE.Group | undefined>(undefined)
-  const earthIntrinsicRadiusRef = useRef<number>(1)
+  const placeholderEarthRef = useRef<THREE.Mesh>()
 
   const cameraAnimationStartTimeRef = useRef<number>(0)
   const lastFrameTimeRef = useRef<number>(0)
@@ -61,22 +55,19 @@ const Earth3D: React.FC<Earth3DProps> = ({
   const earthReadyCallbackCalledRef = useRef<boolean>(false)
   const mobileZoomKRef = useRef<number>(0) // 0..1
   // ✅ used to keep Earth fully inside the sliced canvas
-  const earthWorldRadiusRef = useRef<number>(GLOBE_RADIUS * 1.05)
-  const earthScaleRef = useRef<number>(earthScale || 4)
-  const isDesktopRef = useRef<boolean>(false)
+  const earthWorldRadiusRef = useRef<number>((earthScale || 4) * 1.05) // approx, updated after GLB load
+  const earthOffsetXRef = useRef<number>(0) // computed each frame (world X shift)
 
   // =========================
   // ✅ Resize-flash fixes
   // =========================
   const viewportTargetRef = useRef({ w: 1, h: 1, left: 0 })
   const viewportCurrentRef = useRef({ w: 1, h: 1, left: 0 })
-  const fullSizeTargetRef = useRef({ w: 1, h: 1 })
 
   const isResizingRef = useRef(false)
   const resizeIdleTimerRef = useRef<number | null>(null)
   const forceCommitRef = useRef(false)
   const committedSizeRef = useRef({ w: 1, h: 1 })
-  const currentDprRef = useRef<number>(1)
 
   const triggerEarthReady = () => {
     if (!earthReadyCallbackCalledRef.current && onEarthReady) {
@@ -88,16 +79,11 @@ const Earth3D: React.FC<Earth3DProps> = ({
   // Bigger magnitude => globe appears more to the right.
   const getCameraXOffset = () => -(earthScale || 4) * 35 // try 30..55 if you want more/less
 
-  const MIN_CANVAS_SIZE = 100 // гарантия видимости глобуса при первом заходе (Enterprise)
-
   useEffect(() => {
     const mountEl = mountRef.current
     if (!mountEl) return
 
-    let cancelled = false
-
-    earthPositionYRef.current = LOCK_EARTH_CENTER_Y
-    earthScaleRef.current = earthScale || 4
+    earthPositionYRef.current = earthPositionY || 0
     isLoadingRef.current = true
     isModelLoadedRef.current = false
     cameraAnimationStartTimeRef.current = performance.now()
@@ -107,68 +93,34 @@ const Earth3D: React.FC<Earth3DProps> = ({
     isResizingRef.current = false
     forceCommitRef.current = false
 
-    const getValidSize = (): { w: number; h: number } => {
-      const el = mountRef.current
-      if (!el) {
-        const vw = Math.round(window.visualViewport?.width || window.innerWidth || MIN_CANVAS_SIZE)
-        const vh = Math.round(window.visualViewport?.height || window.innerHeight || MIN_CANVAS_SIZE)
-        return { w: Math.max(MIN_CANVAS_SIZE, vw), h: Math.max(MIN_CANVAS_SIZE, vh) }
-      }
-      const rect = el.getBoundingClientRect()
-      const rectW = Math.round(rect.width)
-      const rectH = Math.round(rect.height)
-      const vw = Math.round(window.visualViewport?.width || window.innerWidth || 0)
-      const vh = Math.round(window.visualViewport?.height || window.innerHeight || 0)
-
-      // Keep canvas stable after browser zoom/refresh when parent can report stale smaller rect.
-      const w = Math.max(MIN_CANVAS_SIZE, rectW, vw)
-      const h = Math.max(MIN_CANVAS_SIZE, rectH, vh)
-      return { w, h }
-    }
-
-    const getCurrentDpr = () => FIXED_DPR
-
-    const syncRendererDpr = () => {
-      const nextDpr = getCurrentDpr()
-      if (Math.abs(nextDpr - currentDprRef.current) > 0.01) {
-        renderer.setPixelRatio(nextDpr)
-        currentDprRef.current = nextDpr
-      }
-    }
-
     // =========================
-    // Single WebGL context (critical for Enterprise stability)
+    // Background Scene (FULL)
     // =========================
     const backgroundScene = new THREE.Scene()
     backgroundScene.background = new THREE.Color(0x000011)
     backgroundSceneRef.current = backgroundScene
 
-    const { w: fullW0, h: fullH0 } = getValidSize()
-    fullSizeTargetRef.current = { w: fullW0, h: fullH0 }
+    const rect0 = mountEl.getBoundingClientRect()
+    const bgWidth = Math.max(1, Math.round(rect0.width))
+    const bgHeight = Math.max(1, Math.round(rect0.height))
 
-    const backgroundCamera = new THREE.PerspectiveCamera(50, fullW0 / fullH0, 0.1, 15000)
+    const backgroundCamera = new THREE.PerspectiveCamera(50, bgWidth / bgHeight, 0.1, 15000)
     backgroundCamera.position.set(0, 0, 400)
     backgroundCamera.lookAt(0, 0, 0)
     backgroundCameraRef.current = backgroundCamera
 
-    const renderer = new THREE.WebGLRenderer({
-      antialias: true,
-      alpha: false,
-      powerPreference: 'high-performance'
-    })
-    currentDprRef.current = getCurrentDpr()
-    renderer.setPixelRatio(currentDprRef.current)
-    renderer.setSize(fullW0, fullH0, false)
-    renderer.autoClear = false
-    renderer.domElement.style.position = 'absolute'
-    renderer.domElement.style.top = '0'
-    renderer.domElement.style.left = '0'
-    renderer.domElement.style.width = '100%'
-    renderer.domElement.style.height = '100%'
-    renderer.domElement.style.zIndex = '2'
-    renderer.domElement.style.pointerEvents = 'none'
-    rendererRef.current = renderer
-    mountEl.appendChild(renderer.domElement)
+    const backgroundRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: false })
+    backgroundRenderer.setSize(bgWidth, bgHeight, false)
+    backgroundRenderer.setPixelRatio(window.devicePixelRatio)
+    backgroundRenderer.domElement.style.position = 'absolute'
+    backgroundRenderer.domElement.style.top = '0'
+    backgroundRenderer.domElement.style.left = '0'
+    backgroundRenderer.domElement.style.width = '100%'
+    backgroundRenderer.domElement.style.height = '100%'
+    backgroundRenderer.domElement.style.zIndex = '1'
+    backgroundRenderer.domElement.style.pointerEvents = 'none'
+    backgroundRendererRef.current = backgroundRenderer
+    mountEl.appendChild(backgroundRenderer.domElement)
 
     // Stars in background
     const starsGeometry = new THREE.BufferGeometry()
@@ -191,13 +143,28 @@ const Earth3D: React.FC<Earth3DProps> = ({
     earthSceneRef.current = earthScene
 
     const earthCamera = new THREE.PerspectiveCamera(50, 1, 0.1, 15000)
-    const startCameraDistance = 3000
+    const startCameraDistance = 10000;
+    const finalCameraDistance = 600;
 
+    const camX = getCameraXOffset()
     earthCamera.position.set(0, 0, startCameraDistance);
     earthCamera.lookAt(0, 0, 0);
 
 
     earthCameraRef.current = earthCamera;
+
+
+    const earthRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
+    earthRenderer.setPixelRatio(window.devicePixelRatio)
+    earthRenderer.setClearColor(0x000000, 0) // ✅ stable transparent clear
+    earthRenderer.domElement.style.position = 'absolute'
+    earthRenderer.domElement.style.top = '0'
+    earthRenderer.domElement.style.pointerEvents = 'none'
+    earthRenderer.domElement.style.zIndex = '2'
+    earthRenderer.domElement.style.willChange = 'left, width'
+    // ✅ NO CSS transitions here (prevents resize flashing + edge cuts)
+    earthRendererRef.current = earthRenderer
+    mountEl.appendChild(earthRenderer.domElement)
 
     // Lighting
     earthScene.add(new THREE.AmbientLight(0x606060, 1.8))
@@ -217,29 +184,63 @@ const Earth3D: React.FC<Earth3DProps> = ({
       const el = mountRef.current
       if (!el) return
 
-      const { w, h } = getValidSize()
+      const rect = el.getBoundingClientRect()
+      const w = Math.max(1, Math.round(rect.width))
+      const h = Math.max(1, Math.round(rect.height))
+      const start = 1024
+      const end = 768
 
-      isDesktopRef.current = w > 1024
+      const tRaw = clamp01((start - w) / (start - end))
+      const t = smoothstep01(tRaw)
+      // ✅ Desktop like original: right half (anchored right). <=1024: full width centered.
+      const isCenterBand = w <= 1024
 
-      viewportTargetRef.current = { w, h, left: 0 }
+      let consumptionW = w
+      let leftPx = 0
 
+      if (!isCenterBand) {
+        consumptionW = Math.max(1, Math.round(w * 0.5))
+        leftPx = Math.round(w - consumptionW) // right anchored
+      } else {
+        consumptionW = w
+        leftPx = 0 // full canvas
+      }
+
+      viewportTargetRef.current = { w: consumptionW, h, left: leftPx }
+
+      // ✅ Mobile zoom factor: 0..1 (0 on >=768)
       const mobileStart = 768
       const mobileEnd = 360
       const mkRaw = clamp01((mobileStart - w) / (mobileStart - mobileEnd))
       mobileZoomKRef.current = smoothstep01(mkRaw)
 
+      // FOV tuning
       const baseFov = 50
-      earthCamera.fov = baseFov
+      const extraFov = 14
+      earthCamera.fov = baseFov + extraFov * mobileZoomKRef.current
       earthCamera.updateProjectionMatrix()
+
+      // Earth X desired shift (we will CLAMP it later in animate)
+      const radius = earthWorldRadiusRef.current || (earthScale || 4) * 1.05
+
+      earthOffsetXRef.current = 0
     }
 
-    const updateFullSizeTarget = () => {
-      fullSizeTargetRef.current = getValidSize()
+    const applyBackgroundResize = () => {
+      const el = mountRef.current
+      if (!el) return
+
+      const rect = el.getBoundingClientRect()
+      const width = Math.max(1, Math.round(rect.width))
+      const height = Math.max(1, Math.round(rect.height))
+
+      backgroundCamera.aspect = width / height
+      backgroundCamera.updateProjectionMatrix()
+      backgroundRenderer.setSize(width, height, false)
     }
 
     const handleResize = () => {
-      syncRendererDpr()
-      updateFullSizeTarget()
+      applyBackgroundResize()
       computeEarthViewportTarget()
 
       // ✅ during live browser resize: avoid earthRenderer.setSize() (GPU buffer reallocate flashes)
@@ -260,191 +261,155 @@ const Earth3D: React.FC<Earth3DProps> = ({
 
     // window resize (real browser drag)
     window.addEventListener('resize', handleResize)
-    window.visualViewport?.addEventListener('resize', handleResize)
 
     // init sizes
     handleResize()
     viewportCurrentRef.current = { ...viewportTargetRef.current }
-    committedSizeRef.current = { ...fullSizeTargetRef.current }
-    // initial commit (full canvas)
-    renderer.setSize(fullSizeTargetRef.current.w, fullSizeTargetRef.current.h, false)
-    backgroundCamera.aspect = fullSizeTargetRef.current.w / fullSizeTargetRef.current.h
-    backgroundCamera.updateProjectionMatrix()
+    committedSizeRef.current = { w: viewportTargetRef.current.w, h: viewportTargetRef.current.h }
+    // initial commit
+    earthRenderer.setSize(viewportTargetRef.current.w, viewportTargetRef.current.h, false)
     earthCamera.aspect = viewportTargetRef.current.w / viewportTargetRef.current.h
     earthCamera.updateProjectionMatrix()
 
-    // ===== Load GLB (progressive: сначала low, потом high) =====
-    const getLowGlbPath = (): string => {
+    // ===== Load GLB =====
+    const getDefaultGlbPath = () => {
       if (context?.folderUrl) {
-        const baseUrl = (context.folderUrl as string).replace(/\/experience\/\.\.\//g, '/').replace(/\/$/, '')
-        return `${baseUrl}/dist/runtime/assets/earth_low.glb`
+        const baseUrl = context.folderUrl.replace('/experience/../', '/')
+        return `${baseUrl}dist/runtime/assets/earth_night.glb`
       }
-      return `${window.location.origin}/widgets/space-eco-monitoring-widget/dist/runtime/assets/earth_low.glb`
-    }
-    const getHighGlbPath = (): string => {
-      if (context?.folderUrl) {
-        const baseUrl = (context.folderUrl as string).replace(/\/experience\/\.\.\//g, '/').replace(/\/$/, '')
-        return `${baseUrl}/dist/runtime/assets/earth_high.glb`
-      }
-      return `${window.location.origin}/widgets/space-eco-monitoring-widget/dist/runtime/assets/earth_high.glb`
-    }
-    const lowUrl = glbUrl || getLowGlbPath()
-    const highUrl = getHighGlbPath()
-    const glbLoadStartTime = performance.now()
-
-    const applyEarthMaterials = (earth: THREE.Group) => {
-      earth.traverse((child) => {
-        if (child instanceof THREE.Mesh) {
-          const material = child.material as THREE.MeshStandardMaterial
-          if (material) {
-            material.needsUpdate = true
-            material.roughness = 0.7
-            material.metalness = 0.05
-            if (material.emissive) material.emissiveIntensity = 1.5
-          }
-        }
-      })
+      const baseUrl = window.location.origin
+      return `${baseUrl}/widgets/space-eco-monitoring-widget/dist/runtime/assets/earth_night.glb`
     }
 
-    const normalizeEarthScale = (earth: THREE.Group, targetRadius: number): number => {
-      earth.scale.set(1, 1, 1)
-      earth.position.set(0, 0, 0)
-      earth.updateMatrixWorld(true)
-      let maxDist = 0
-      const bbox = new THREE.Box3().setFromObject(earth)
-      const geomCenter = bbox.getCenter(new THREE.Vector3())
-      earth.traverse((obj) => {
-        if ((obj as any).isMesh) {
-          const mesh = obj as THREE.Mesh
-          const geom = mesh.geometry
-          if (!geom.boundingSphere) geom.computeBoundingSphere()
-          if (geom.boundingSphere) {
-            const center = geom.boundingSphere.center.clone().applyMatrix4(mesh.matrixWorld)
-            const r = geom.boundingSphere.radius * mesh.matrixWorld.getMaxScaleOnAxis()
-            maxDist = Math.max(maxDist, center.length() + r)
-          }
-        }
-      })
-      const intrinsicR = Math.max(0.001, maxDist)
-      const s = targetRadius / intrinsicR
-      earth.scale.set(s, s, s)
-      earth.position.set(-geomCenter.x * s, LOCK_EARTH_CENTER_Y - geomCenter.y * s, -geomCenter.z * s)
-      return intrinsicR
-    }
+    const earthModelUrl = glbUrl || getDefaultGlbPath()
 
-    const disposeGroup = (group: THREE.Group) => {
-      group.traverse((obj) => {
-        if ((obj as any).isMesh) {
-          const mesh = obj as THREE.Mesh
-          mesh.geometry?.dispose?.()
-          const mat = mesh.material as any
-          if (Array.isArray(mat)) mat.forEach((m: any) => m?.dispose?.())
-          else mat?.dispose?.()
-        }
-      })
-    }
+    // placeholder sphere while loading
+    const placeholderGeometry = new THREE.SphereGeometry(1, 64, 64)
+    const placeholderMaterial = new THREE.MeshStandardMaterial({
+      color: 0x1a3a5a,
+      emissive: 0x0a1a2a,
+      emissiveIntensity: 0.3,
+      roughness: 0.8,
+      metalness: 0.1
+    })
 
-    const finalizeHighEarth = (highEarth: THREE.Group) => {
-      if (cameraAnimationProgressRef.current < 1.0) {
-        if (pendingHighEarthRef.current) disposeGroup(pendingHighEarthRef.current)
-        pendingHighEarthRef.current = highEarth
-        return
-      }
-      const highIntrinsicR = normalizeEarthScale(highEarth, GLOBE_RADIUS)
-      earthIntrinsicRadiusRef.current = highIntrinsicR
-      earthWorldRadiusRef.current = GLOBE_RADIUS * 1.03
-      applyEarthMaterials(highEarth)
-      if (earthRef.current) {
-        highEarth.rotation.copy(earthRef.current.rotation)
-        const oldModel = earthRef.current
-        earthScene.remove(oldModel)
-        disposeGroup(oldModel)
-      }
-      earthScene.add(highEarth)
-      earthRef.current = highEarth
-      isModelLoadedRef.current = true
-      isLoadingRef.current = false
-      computeEarthViewportTarget()
-    }
-
-    const fetchAndCacheHigh = (): Promise<ArrayBuffer> => {
-      const cached = highGlbBufferCache.get(highUrl)
-      if (cached) return Promise.resolve(cached)
-      return fetch(highUrl).then((r) => r.arrayBuffer()).then((buf) => {
-        highGlbBufferCache.set(highUrl, buf)
-        return buf
-      })
-    }
+    const placeholderEarth = new THREE.Mesh(placeholderGeometry, placeholderMaterial)
+    placeholderEarth.scale.set(earthScale || 4, earthScale || 4, earthScale || 4)
+    placeholderEarth.position.set(0, earthPositionYRef.current, 0)
+    earthScene.add(placeholderEarth)
+    placeholderEarthRef.current = placeholderEarth
 
     const loader = new GLTFLoader()
-    let shownQuality: 'none' | 'low' | 'high' = 'none'
-    const showModel = (earth: THREE.Group, quality: 'low' | 'high') => {
-      const isUpgradeToHigh = quality === 'high' && shownQuality !== 'high'
-      if (shownQuality === 'high' && quality === 'low') {
-        disposeGroup(earth)
-        return
-      }
-
-      const intrinsicR = normalizeEarthScale(earth, GLOBE_RADIUS)
-      earthIntrinsicRadiusRef.current = intrinsicR
-      earthWorldRadiusRef.current = GLOBE_RADIUS * 1.03
-      applyEarthMaterials(earth)
-
-      if (earthRef.current) {
-        earth.rotation.copy(earthRef.current.rotation)
-        const oldModel = earthRef.current
-        earthScene.remove(oldModel)
-        disposeGroup(oldModel)
-      } else {
-        cameraAnimationStartTimeRef.current = performance.now()
-      }
-
-      earthScene.add(earth)
-      earthRef.current = earth
-      isModelLoadedRef.current = true
-      isLoadingRef.current = false
-      shownQuality = quality
-      computeEarthViewportTarget()
-
-      if (isUpgradeToHigh) {
-        console.log('[Space Eco] Приоритетно переключено на earth_high.glb')
-      }
-    }
-
-    // Parallel loading: low and high start together; high has priority when available.
     loader.load(
-      lowUrl,
+      earthModelUrl,
       (gltf) => {
-        if (cancelled) return
-        const elapsedSec = ((performance.now() - glbLoadStartTime) / 1000).toFixed(2)
-        console.log(`[Space Eco] earth_low.glb загружен за ${elapsedSec} сек`)
-        showModel(gltf.scene, 'low')
+        if (placeholderEarthRef.current) {
+          earthScene.remove(placeholderEarthRef.current)
+          placeholderEarthRef.current.geometry.dispose()
+            ; (placeholderEarthRef.current.material as THREE.Material).dispose()
+          placeholderEarthRef.current = undefined
+        }
+
+        const earth = gltf.scene
+        // ✅ compute real world radius (earth + atmosphere) for correct clamping
+        const sphere = new THREE.Sphere()
+        const box = new THREE.Box3().setFromObject(earth)
+        box.getBoundingSphere(sphere)
+        const earthR = Math.max(0.001, sphere.radius)
+        const atmR = 1.02 * (earthScale || 4) // atmosphere radius in world units
+        earthWorldRadiusRef.current = Math.max(earthR, atmR) * 1.03
+
+        // Atmosphere
+        const atmosphereGeometry = new THREE.SphereGeometry(1.02, 64, 64)
+        const atmosphereMaterial = new THREE.ShaderMaterial({
+          uniforms: {
+            sunDirection: { value: new THREE.Vector3(-0.8, 0.1, -0.6).normalize() },
+            sunIntensity: { value: 1.5 },
+            atmosphereColor: { value: new THREE.Color(0x87ceeb) },
+            glowColor: { value: new THREE.Color(0xffe4b5) }
+          },
+          vertexShader: `
+            varying vec3 vNormal;
+            varying vec3 vViewPosition;
+            void main() {
+              vNormal = normalize(normalMatrix * normal);
+              vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+              vViewPosition = -mvPosition.xyz;
+              gl_Position = projectionMatrix * mvPosition;
+            }
+          `,
+          fragmentShader: `
+            uniform vec3 sunDirection;
+            uniform float sunIntensity;
+            uniform vec3 atmosphereColor;
+            uniform vec3 glowColor;
+            varying vec3 vNormal;
+            varying vec3 vViewPosition;
+
+            void main() {
+              vec3 normal = normalize(vNormal);
+              vec3 viewDir = normalize(vViewPosition);
+
+              float rim = 1.0 - max(dot(viewDir, normal), 0.0);
+              float rimPower = pow(rim, 2.0);
+
+              float sunDot = max(dot(normal, sunDirection), 0.0);
+
+              vec3 color = mix(atmosphereColor, glowColor, rimPower * 0.95);
+              float intensity = rimPower * 2.0 + sunDot * 1.0;
+
+              float terminator = smoothstep(0.2, 0.8, rim);
+              intensity += terminator * 1.2;
+
+              gl_FragColor = vec4(color, intensity * 1.2);
+            }
+          `,
+          side: THREE.BackSide,
+          blending: THREE.AdditiveBlending,
+          transparent: true,
+          depthWrite: false
+        })
+
+        const atmosphere = new THREE.Mesh(atmosphereGeometry, atmosphereMaterial)
+        atmosphere.position.set(0, earthPositionYRef.current, 0)
+        atmosphere.rotation.set(0, 0, 0)
+        atmosphereRotationRef.current = 0
+
+        const currentEarthScale = earthScale || 4
+        atmosphere.scale.set(currentEarthScale, currentEarthScale, currentEarthScale)
+
+        earthScene.add(atmosphere)
+        atmosphereRef.current = atmosphere
+
+        // enhance Earth materials
+        earth.traverse((child) => {
+          if (child instanceof THREE.Mesh) {
+            const material = child.material as THREE.MeshStandardMaterial
+            if (material) {
+              material.needsUpdate = true
+              material.roughness = 0.7
+              material.metalness = 0.05
+              if (material.emissive) material.emissiveIntensity = 1.5
+            }
+          }
+        })
+
+        earth.scale.set(earthScale, earthScale, earthScale)
+        earth.position.set(0, earthPositionYRef.current, 0)
+        earthScene.add(earth)
+        earthRef.current = earth
+
+        isModelLoadedRef.current = true
+        isLoadingRef.current = false
+
+        // recompute after load
+        computeEarthViewportTarget()
       },
       undefined,
       (err) => {
-        if (cancelled) return
-        const elapsedSec = ((performance.now() - glbLoadStartTime) / 1000).toFixed(2)
-        console.error(`[Space Eco] Ошибка загрузки earth_low.glb после ${elapsedSec} сек:`, err)
+        console.error('Error loading Earth GLB:', err)
       }
     )
-
-    fetchAndCacheHigh()
-      .then((buf) => {
-        if (cancelled) return
-        loader.parse(buf, '', (highGltf) => {
-          if (cancelled) return
-          const elapsedSec = ((performance.now() - glbLoadStartTime) / 1000).toFixed(2)
-          console.log(`[Space Eco] earth_high.glb готов за ${elapsedSec} сек`)
-          showModel(highGltf.scene, 'high')
-        }, (err) => {
-          if (cancelled) return
-          console.error('[Space Eco] Ошибка разбора earth_high.glb:', err)
-        })
-      })
-      .catch((err) => {
-        if (cancelled) return
-        console.error('[Space Eco] Ошибка загрузки earth_high.glb:', err)
-      })
 
     // ===== Animation loop =====
     const animate = (currentTime: number) => {
@@ -465,7 +430,11 @@ const Earth3D: React.FC<Earth3DProps> = ({
 
       const cssW = Math.max(1, Math.round(cur.w))
       const cssH = Math.max(1, Math.round(cur.h))
-      const canvas = renderer.domElement
+      const canvas = earthRenderer.domElement
+
+      canvas.style.left = `${Math.round(cur.left)}px`
+      canvas.style.width = `${cssW}px`
+      canvas.style.height = '100%'
 
       // keep camera correct for current CSS viewport
       earthCamera.aspect = cssW / cssH
@@ -476,67 +445,99 @@ const Earth3D: React.FC<Earth3DProps> = ({
       if (shouldCommit) {
         forceCommitRef.current = false
         const last = committedSizeRef.current
-        const full = fullSizeTargetRef.current
-        if (full.w !== last.w || full.h !== last.h) {
-          renderer.setSize(full.w, full.h, false)
-          committedSizeRef.current = { ...full }
+        if (cssW !== last.w || cssH !== last.h) {
+          earthRenderer.setSize(cssW, cssH, false)
+          committedSizeRef.current = { w: cssW, h: cssH }
         }
       }
 
-      // Keep background camera aspect in sync (cheap, avoids stretching)
-      const fullNow = fullSizeTargetRef.current
-      backgroundCamera.aspect = fullNow.w / fullNow.h
-      backgroundCamera.updateProjectionMatrix()
-      const canvasW = Math.round(fullNow.w)
-      const canvasH = Math.round(fullNow.h)
+      // camera distance logic
+      const startCameraDistance = 10000
+      // ✅ iPad 1024: немного дальше (шар меньше и не режется)
+      const radius = earthWorldRadiusRef.current || (earthScale || 4) * 1.05
 
-      const radius = earthWorldRadiusRef.current || GLOBE_RADIUS * 1.05
-      const es = earthScaleRef.current || 4
+      // base target (your artistic choice)
+      const baseFinal = 690
+      const extraFinal = 420
+      const targetByDesign = baseFinal + extraFinal * mobileZoomKRef.current
 
-      const halfFovRad = THREE.MathUtils.degToRad(FIXED_CAMERA_FOV / 2)
-      const desiredPixelHeight = Math.max(280, Math.min(FIXED_GLOBE_PIXEL_HEIGHT, canvasH - 80))
-      let finalCameraDistance = FIXED_CAMERA_Z
-      const approachStartZ = finalCameraDistance * 8
+      // ✅ guarantee the whole sphere fits in current aspect/FOV (prevents any side cuts)
+      const v = THREE.MathUtils.degToRad(earthCamera.fov)
+      const hFov = 2 * Math.atan(Math.tan(v / 2) * earthCamera.aspect)
 
-      const approachDuration = 2.5
+      // distance needed so radius fits vertically AND horizontally
+      const fitDistance =
+        (radius * 1.08) / Math.min(Math.tan(v / 2), Math.tan(hFov / 2))
 
-      if (!isModelLoadedRef.current) {
-        earthCamera.position.z = approachStartZ
-        earthCamera.lookAt(0, earthPositionYRef.current, 0)
-        cameraAnimationProgressRef.current = 0
-      } else {
+      const finalCameraDistance = Math.max(targetByDesign, fitDistance)
+      // ✅ clamp X shift so earth cannot be pushed outside frustum
+      const v2 = THREE.MathUtils.degToRad(earthCamera.fov) / 2
+      const h2 = Math.atan(Math.tan(v2) * earthCamera.aspect)
+
+      const halfWorldW = earthCamera.position.z * Math.tan(h2)
+      const maxX = Math.max(0, halfWorldW - radius * 1.05)
+
+      const desiredX = earthOffsetXRef.current || 0
+      const xShift = Math.max(-maxX, Math.min(maxX, desiredX))
+
+      if (earthRef.current) earthRef.current.position.x = xShift
+      if (placeholderEarthRef.current) placeholderEarthRef.current.position.x = xShift
+      if (atmosphereRef.current) atmosphereRef.current.position.x = xShift
+
+      const animationDuration = 2.5
+
+      if (isLoadingRef.current || !isModelLoadedRef.current) {
         const elapsedTime = (currentTime - cameraAnimationStartTimeRef.current) / 1000
-        const t = Math.min(elapsedTime / approachDuration, 1.0)
-        const eased = 1 - Math.pow(1 - t, 3)
+        const progress = Math.min(elapsedTime / animationDuration, 1.0)
+        const easedProgress = 1 - Math.pow(1 - progress, 3)
 
-        if (t < 1.0) {
-          earthCamera.position.z = approachStartZ + (finalCameraDistance - approachStartZ) * eased
-        } else {
-          earthCamera.position.z += (finalCameraDistance - earthCamera.position.z) * (1 - Math.exp(-4 * clampedDelta))
-        }
+        const currentDistance =
+          startCameraDistance - (startCameraDistance - finalCameraDistance) * easedProgress
+
+        earthCamera.position.z = currentDistance
+        earthCamera.lookAt(0, earthPositionYRef.current, 0);
+        cameraAnimationProgressRef.current = easedProgress;
+
         earthCamera.lookAt(0, earthPositionYRef.current, 0)
-        cameraAnimationProgressRef.current = eased
+        // ✅ keep earth inside sliced-canvas for iPad widths
+        const xShift = earthOffsetXRef.current || 0
 
-        if (t >= 1.0) {
-          triggerEarthReady()
-          if (pendingHighEarthRef.current) {
-            const highEarth = pendingHighEarthRef.current
-            pendingHighEarthRef.current = undefined
-            const highIntrinsicR = normalizeEarthScale(highEarth, GLOBE_RADIUS)
-            earthIntrinsicRadiusRef.current = highIntrinsicR
-            earthWorldRadiusRef.current = GLOBE_RADIUS * 1.03
-            applyEarthMaterials(highEarth)
-            if (earthRef.current) {
-              highEarth.rotation.copy(earthRef.current.rotation)
-              const oldModel = earthRef.current
-              earthScene.remove(oldModel)
-              disposeGroup(oldModel)
-            }
-            earthScene.add(highEarth)
-            earthRef.current = highEarth
-            computeEarthViewportTarget()
-          }
+        if (earthRef.current) {
+          earthRef.current.position.x = xShift
         }
+
+        if (placeholderEarthRef.current) {
+          placeholderEarthRef.current.position.x = xShift
+        }
+
+        if (atmosphereRef.current) {
+          atmosphereRef.current.position.x = xShift
+        }
+
+        cameraAnimationProgressRef.current = easedProgress
+      } else if (isModelLoadedRef.current) {
+        const currentZ = earthCamera.position.z
+        const distanceToTarget = finalCameraDistance - currentZ
+
+        if (Math.abs(distanceToTarget) > 0.5) {
+          const transitionSpeed = 4.0
+          const newZ = currentZ + distanceToTarget * (1 - Math.exp(-transitionSpeed * clampedDelta))
+          earthCamera.position.z = newZ
+          earthCamera.lookAt(0, earthPositionYRef.current, 0)
+
+          const totalDistance = startCameraDistance - finalCameraDistance
+          const traveledDistance = startCameraDistance - currentZ
+          cameraAnimationProgressRef.current = Math.min(traveledDistance / totalDistance, 0.99)
+        } else {
+          earthCamera.position.z = finalCameraDistance
+          earthCamera.lookAt(0, earthPositionYRef.current, 0)
+          cameraAnimationProgressRef.current = 1.0
+          triggerEarthReady()
+        }
+      }
+
+      if (placeholderEarthRef.current && isLoadingRef.current) {
+        placeholderEarthRef.current.rotation.y += 0.002
       }
 
       if (earthRef.current) {
@@ -544,66 +545,25 @@ const Earth3D: React.FC<Earth3DProps> = ({
         earthRef.current.rotation.y += earthSpeedRef.current * (isAnimating ? 0.003 : 0.001)
       }
 
+      if (atmosphereRef.current) {
+        const atmosphereSpeed = atmosphereSpeedRef.current * 0.001
+        atmosphereRotationRef.current += atmosphereSpeed
+        atmosphereRef.current.rotation.y = atmosphereRotationRef.current
+      }
+
       if (starsRef.current) {
         starsRef.current.rotation.y += 0.0001
       }
 
-      // ===== Render (single context) =====
-      renderer.setScissorTest(false)
-      const drawingBufferSize = renderer.getDrawingBufferSize(new THREE.Vector2())
-      renderer.setViewport(0, 0, drawingBufferSize.x, drawingBufferSize.y)
-      renderer.clear(true, true, true)
-      renderer.render(backgroundScene, backgroundCamera)
-
-      const scaleX = drawingBufferSize.x / Math.max(1, committedSizeRef.current.w)
-      const scaleY = drawingBufferSize.y / Math.max(1, committedSizeRef.current.h)
-
-      if (isDesktopRef.current) {
-        const rightHalfW = Math.round(canvasW * 0.5)
-        const centerRatio = FIXED_DESKTOP_CENTER_RATIO
-        const globeCenterCss = Math.round(canvasW * centerRatio)
-
-        // Используем целевую дистанцию камеры, чтобы в конце анимации не было скачка по X.
-        let camZ = finalCameraDistance
-        const vFov = THREE.MathUtils.degToRad(earthCamera.fov / 2)
-        const globePixelH = (radius / (camZ * Math.tan(vFov))) * canvasH
-        const neededHalf = Math.max(rightHalfW / 2, Math.ceil(globePixelH * 0.58))
-
-        const vpLeftCss = Math.max(0, globeCenterCss - neededHalf)
-        const vpRightCss = Math.min(canvasW, globeCenterCss + neededHalf)
-        const vpW = vpRightCss - vpLeftCss
-
-        earthCamera.aspect = vpW / canvasH
-        earthCamera.updateProjectionMatrix()
-
-        const sX = Math.max(0, Math.floor(vpLeftCss * scaleX))
-        const sW = Math.max(1, Math.floor(vpW * scaleX))
-        const sH = Math.max(1, Math.floor(canvasH * scaleY))
-
-        renderer.setScissorTest(true)
-        renderer.setScissor(sX, 0, sW, sH)
-        renderer.setViewport(sX, 0, sW, sH)
-        renderer.clearDepth()
-        renderer.render(earthScene, earthCamera)
-        renderer.setScissorTest(false)
-      } else {
-        earthCamera.aspect = canvasW / canvasH
-        earthCamera.updateProjectionMatrix()
-
-        renderer.setScissorTest(false)
-        renderer.setViewport(0, 0, drawingBufferSize.x, drawingBufferSize.y)
-        renderer.clearDepth()
-        renderer.render(earthScene, earthCamera)
-      }
+      backgroundRenderer.render(backgroundScene, backgroundCamera)
+      earthRenderer.render(earthScene, earthCamera)
     }
 
     animate(performance.now())
 
     return () => {
-      cancelled = true
       ro.disconnect()
       window.removeEventListener('resize', handleResize)
-      window.visualViewport?.removeEventListener('resize', handleResize)
 
       if (resizeIdleTimerRef.current != null) {
         window.clearTimeout(resizeIdleTimerRef.current)
@@ -612,21 +572,21 @@ const Earth3D: React.FC<Earth3DProps> = ({
 
       if (animationIdRef.current) cancelAnimationFrame(animationIdRef.current)
 
-      if (pendingHighEarthRef.current) {
-        disposeGroup(pendingHighEarthRef.current)
-        pendingHighEarthRef.current = undefined
-      }
-
       // remove canvases safely
       if (mountEl) {
-        if (renderer.domElement && mountEl.contains(renderer.domElement)) {
-          mountEl.removeChild(renderer.domElement)
+        if (backgroundRenderer.domElement && mountEl.contains(backgroundRenderer.domElement)) {
+          mountEl.removeChild(backgroundRenderer.domElement)
+        }
+        if (earthRenderer.domElement && mountEl.contains(earthRenderer.domElement)) {
+          mountEl.removeChild(earthRenderer.domElement)
         }
       }
 
       // dispose resources
       starsGeometry.dispose()
       starsMaterial.dispose()
+      placeholderGeometry.dispose()
+      placeholderMaterial.dispose()
 
       if (earthRef.current) {
         earthScene.remove(earthRef.current)
@@ -642,20 +602,44 @@ const Earth3D: React.FC<Earth3DProps> = ({
         earthRef.current = undefined
       }
 
-      renderer.dispose()
+      if (atmosphereRef.current) {
+        earthScene.remove(atmosphereRef.current)
+        atmosphereRef.current.geometry.dispose()
+          ; (atmosphereRef.current.material as THREE.Material).dispose()
+        atmosphereRef.current = undefined
+      }
+
+      backgroundRenderer.dispose()
+      earthRenderer.dispose()
     }
   }, [glbUrl, context])
 
   useEffect(() => {
     earthSpeedRef.current = autoRotateSpeed
-  }, [autoRotateSpeed])
+    atmosphereSpeedRef.current = atmosphereRotationSpeed
+  }, [autoRotateSpeed, atmosphereRotationSpeed])
 
   useEffect(() => {
-    earthPositionYRef.current = LOCK_EARTH_CENTER_Y
-    earthScaleRef.current = earthScale || 4
+    earthPositionYRef.current = earthPositionY || 0
+    const currentScale = earthScale || 4
+
+    if (earthRef.current) {
+      earthRef.current.scale.set(currentScale, currentScale, currentScale)
+      earthRef.current.position.set(0, earthPositionYRef.current, 0)
+    }
+
+    if (placeholderEarthRef.current) {
+      placeholderEarthRef.current.scale.set(currentScale, currentScale, currentScale)
+      placeholderEarthRef.current.position.set(0, earthPositionYRef.current, 0)
+    }
+
+    if (atmosphereRef.current) {
+      atmosphereRef.current.scale.set(currentScale * 1.02, currentScale * 1.02, currentScale * 1.02)
+      atmosphereRef.current.position.set(0, earthPositionYRef.current, 0)
+    }
 
     if (earthCameraRef.current) {
-      earthCameraRef.current.lookAt(0, LOCK_EARTH_CENTER_Y, 0)
+      earthCameraRef.current.lookAt(0, earthPositionYRef.current, 0)
       earthCameraRef.current.updateProjectionMatrix()
     }
   }, [earthScale, earthPositionY])

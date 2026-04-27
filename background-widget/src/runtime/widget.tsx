@@ -3,21 +3,15 @@ import { React, jsx, type AllWidgetProps } from "jimu-core";
 import "./styles/widget.css";
 
 const type1 = require("./assets/type1.jpg");
-const type0 = require("./assets/default.jpg");
-const type3 = require("./assets/abstract.jpg");
-const type01 = require("./assets/abstract.jpg");
-// const type3 = require("./assets/type3.jpg");
 const type4 = require("./assets/type4.jpg");
 const type6 = require("./assets/type6.jpg");
 
 interface IMConfig {}
 
 const THEME_BACKGROUNDS: Record<string, string> = {
-  type01,
-  type0,
   type1,
   type2: "https://super-admin.avidtemplates.com/2.c59b7c56.jpg",
-  type3,
+  type3: "https://super-admin.avidtemplates.com/3.e41aa4f9.jpg",
   type4,
   type5: "https://super-admin.avidtemplates.com/5.898434bc.jpg",
   type6,
@@ -27,10 +21,10 @@ const THEME_BACKGROUNDS: Record<string, string> = {
 
 const getBackgroundFromLocalStorage = (): string => {
   if (typeof window === "undefined") {
-    return type01;
+    return type1;
   }
-  const themeKey = window.localStorage.getItem("selectedThemeColor") || "type01";
-  return THEME_BACKGROUNDS[themeKey] || type01;
+  const themeKey = window.localStorage.getItem("selectedThemeColor") || "type1";
+  return THEME_BACKGROUNDS[themeKey] || type1;
 };
 
 const TRANSITION_DURATION = 500; // ms
@@ -62,11 +56,11 @@ const Widget = (props: AllWidgetProps<IMConfig>) => {
   React.useEffect(() => {
     if (typeof window === "undefined") return;
 
-    let lastTheme = window.localStorage.getItem("selectedThemeColor") || "type01";
+    let lastTheme = window.localStorage.getItem("selectedThemeColor") || "type1";
     let isAnimating = false;
 
     const handleThemeChange = (newThemeKey: string) => {
-      const newBgUrl = THEME_BACKGROUNDS[newThemeKey] || THEME_BACKGROUNDS.type01;
+      const newBgUrl = THEME_BACKGROUNDS[newThemeKey] || THEME_BACKGROUNDS.type1;
       
       if (newBgUrl === currentBg || isAnimating) return;
       isAnimating = true;
@@ -98,7 +92,7 @@ const Widget = (props: AllWidgetProps<IMConfig>) => {
     };
 
     const checkForThemeChange = () => {
-      const currentTheme = window.localStorage.getItem("selectedThemeColor") || "type01";
+      const currentTheme = window.localStorage.getItem("selectedThemeColor") || "type1";
       if (currentTheme !== lastTheme) {
         lastTheme = currentTheme;
         handleThemeChange(currentTheme);
@@ -109,7 +103,7 @@ const Widget = (props: AllWidgetProps<IMConfig>) => {
 
     const handleStorage = (event: StorageEvent) => {
       if (event.key === "selectedThemeColor") {
-        const newTheme = event.newValue || "type01";
+        const newTheme = event.newValue || "type1";
         lastTheme = newTheme;
         handleThemeChange(newTheme);
       }

@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import { AllWidgetProps, jsx, LinkType, jimuHistory } from 'jimu-core';
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 const FALLING_STAR_IDS = Array.from({ length: 8 }, (_, index) => index + 1);
 const GRADIENT_CYCLE_MS = 9000;
@@ -13,17 +13,7 @@ import './style.css';
 
 const Widget = (props: AllWidgetProps<IMConfig>) => {
   const { config } = props;
-  const [currentLocale, setCurrentLocale] = useState<string>(() => {
-    try {
-      const stored = localStorage.getItem('customLocal');
-      if (stored && (stored === 'uz-Latn' || stored === 'uz-Cyrl' || stored === 'ru')) {
-        return stored;
-      }
-    } catch (e) {
-      console.warn('Error reading locale from localStorage:', e);
-    }
-    return 'ru';
-  });
+  const [currentLocale, setCurrentLocale] = useState<string>('ru');
   const [displayedText1, setDisplayedText1] = useState<string>('');
   const [displayedText2, setDisplayedText2] = useState<string>('');
   const [isTyping, setIsTyping] = useState<boolean>(true);
@@ -33,61 +23,13 @@ const Widget = (props: AllWidgetProps<IMConfig>) => {
   const fullText1 = 'SPACE ECO';
   const fullText2 = 'MONITORING';
   const fallingStars = FALLING_STAR_IDS;
-  
-  // Use ref to track if component is mounted
-  const isMountedRef = useRef(true);
-  const earthReadyTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-
   const handleEarthReady = useCallback(() => {
-    if (isMountedRef.current) {
-      setEarthReady(true);
-    }
-  }, []);
-
-  // Safe localStorage access helper
-  const safeGetLocalStorage = (key: string): string | null => {
-    try {
-      return localStorage.getItem(key);
-    } catch (e) {
-      console.warn(`Error accessing localStorage key "${key}":`, e);
-      return null;
-    }
-  };
-
-  useEffect(() => {
-    isMountedRef.current = true;
-
-    // Force full-viewport rendering regardless of portal container constraints
-    const html = document.documentElement;
-    const body = document.body;
-    const prevHtmlOverflow = html.style.overflow;
-    const prevBodyOverflow = body.style.overflow;
-    const prevBodyMargin = body.style.margin;
-    const prevBodyPadding = body.style.padding;
-    html.style.overflow = 'hidden';
-    body.style.overflow = 'hidden';
-    body.style.margin = '0';
-    body.style.padding = '0';
-
-    return () => {
-      isMountedRef.current = false;
-      html.style.overflow = prevHtmlOverflow;
-      body.style.overflow = prevBodyOverflow;
-      body.style.margin = prevBodyMargin;
-      body.style.padding = prevBodyPadding;
-      // Cleanup Earth3D fallback timeout on unmount
-      if (earthReadyTimeoutRef.current) {
-        clearTimeout(earthReadyTimeoutRef.current);
-        earthReadyTimeoutRef.current = null;
-      }
-    };
+    setEarthReady(true);
   }, []);
 
   useEffect(() => {
     const checkLocale = () => {
-      if (!isMountedRef.current) return;
-      
-      const stored = safeGetLocalStorage('customLocal');
+      const stored = localStorage.getItem('customLocal');
       if (stored && (stored === 'uz-Latn' || stored === 'uz-Cyrl' || stored === 'ru')) {
         setCurrentLocale(stored);
       } else {
@@ -95,64 +37,36 @@ const Widget = (props: AllWidgetProps<IMConfig>) => {
       }
     };
 
-    // Check immediately
     checkLocale();
-    
-    // Listen for storage events (cross-tab)
-    const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === 'customLocal' || e.key === null) {
-        checkLocale();
-      }
-    };
-    
-    window.addEventListener('storage', handleStorageChange);
-    
-    // Poll for changes in same tab (with error handling)
-    const interval = setInterval(() => {
-      try {
-        checkLocale();
-      } catch (e) {
-        console.warn('Error in locale check interval:', e);
-      }
-    }, 500);
+    window.addEventListener('storage', checkLocale);
+    const interval = setInterval(checkLocale, 500);
 
     return () => {
-      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('storage', checkLocale);
       clearInterval(interval);
     };
   }, []);
 
-  // Typewriter animation effect - properly reset on mount
+  // Typewriter animation effect
   useEffect(() => {
-    // Reset state on mount
-    setDisplayedText1('');
-    setDisplayedText2('');
-    setIsTyping(true);
-    
     let currentIndex1 = 0;
     let currentIndex2 = 0;
-    let typingTimeout: NodeJS.Timeout | null = null;
-    let isCancelled = false;
+    let typingTimeout: NodeJS.Timeout;
 
     const typeText = () => {
-      if (isCancelled || !isMountedRef.current) {
-        return;
-      }
-
       // Type first line
       if (currentIndex1 < fullText1.length) {
         setDisplayedText1(fullText1.substring(0, currentIndex1 + 1));
         currentIndex1++;
-        typingTimeout = setTimeout(typeText, 80);
+        typingTimeout = setTimeout(typeText, 80); // 80ms per character for smooth typing
       }
       // Wait a bit before starting second line
       else if (currentIndex1 === fullText1.length && currentIndex2 === 0) {
         typingTimeout = setTimeout(() => {
-          if (isCancelled || !isMountedRef.current) return;
           currentIndex2 = 1;
           setDisplayedText2(fullText2.substring(0, 1));
           typingTimeout = setTimeout(typeText, 80);
-        }, 300);
+        }, 300); // 300ms pause between lines
       }
       // Type second line
       else if (currentIndex2 < fullText2.length) {
@@ -167,20 +81,14 @@ const Widget = (props: AllWidgetProps<IMConfig>) => {
     };
 
     // Start typing after a short delay
-    typingTimeout = setTimeout(() => {
-      if (!isCancelled && isMountedRef.current) {
-        typeText();
-      }
-    }, 500);
+    typingTimeout = setTimeout(typeText, 500);
 
     return () => {
-      isCancelled = true;
       if (typingTimeout) {
         clearTimeout(typingTimeout);
-        typingTimeout = null;
       }
     };
-  }, []); // Empty deps - only run on mount
+  }, []);
 
   const logoUrl = (config.logoImageParam as any)?.originalUrl || (config.logoImageParam as any)?.url || config.logoUrl || '';
   const earthScale = config.earthScale || 4;
@@ -189,126 +97,65 @@ const Widget = (props: AllWidgetProps<IMConfig>) => {
   const earthPositionY =
     typeof config.earthPositionY === 'number' ? config.earthPositionY : 0;
 
-  // Fallback: if Earth3D doesn't call ready callback within reasonable time, enable stars anyway
   useEffect(() => {
-    // Clear any existing timeout if earth becomes ready
-    if (earthReady) {
-      if (earthReadyTimeoutRef.current) {
-        clearTimeout(earthReadyTimeoutRef.current);
-        earthReadyTimeoutRef.current = null;
-      }
-      return;
-    }
+    if (!earthReady) return;
 
-    // Set a fallback timeout (10 seconds) to enable stars even if Earth3D callback doesn't fire
-    earthReadyTimeoutRef.current = setTimeout(() => {
-      if (isMountedRef.current) {
-        // Double-check earthReady state before setting
-        setEarthReady((prevReady) => {
-          if (!prevReady) {
-            console.warn('Earth3D ready callback not received, enabling stars as fallback');
-            return true;
-          }
-          return prevReady;
-        });
-      }
-      earthReadyTimeoutRef.current = null;
-    }, 10000);
-
-    return () => {
-      if (earthReadyTimeoutRef.current) {
-        clearTimeout(earthReadyTimeoutRef.current);
-        earthReadyTimeoutRef.current = null;
-      }
-    };
-  }, [earthReady]);
-
-  useEffect(() => {
-    if (!earthReady || !isMountedRef.current) return;
-
-    let hideTimeout: NodeJS.Timeout | null = null;
-    let intervalId: NodeJS.Timeout | null = null;
-    let initialTimeout: NodeJS.Timeout | null = null;
-    let isCancelled = false;
+    let hideTimeout: NodeJS.Timeout | undefined;
+    let intervalId: NodeJS.Timeout | undefined;
+    let initialTimeout: NodeJS.Timeout | undefined;
 
     const startCycle = () => {
-      if (isCancelled || !isMountedRef.current) return;
-      
       if (hideTimeout) {
         clearTimeout(hideTimeout);
-        hideTimeout = null;
       }
       setAreStarsActive(true);
       hideTimeout = setTimeout(() => {
-        if (!isCancelled && isMountedRef.current) {
-          setAreStarsActive(false);
-        }
-        hideTimeout = null;
+        setAreStarsActive(false);
+        hideTimeout = undefined;
       }, STARS_VISIBLE_MS);
     };
 
     initialTimeout = setTimeout(() => {
-      if (!isCancelled && isMountedRef.current) {
-        startCycle();
-        intervalId = setInterval(() => {
-          if (!isCancelled && isMountedRef.current) {
-            startCycle();
-          } else if (intervalId) {
-            clearInterval(intervalId);
-            intervalId = null;
-          }
-        }, GRADIENT_CYCLE_MS);
-      }
+      startCycle();
+      intervalId = setInterval(startCycle, GRADIENT_CYCLE_MS);
     }, INITIAL_STARS_DELAY_MS);
 
     return () => {
-      isCancelled = true;
       if (initialTimeout) {
         clearTimeout(initialTimeout);
-        initialTimeout = null;
       }
       if (intervalId) {
         clearInterval(intervalId);
-        intervalId = null;
       }
       if (hideTimeout) {
         clearTimeout(hideTimeout);
-        hideTimeout = null;
       }
     };
   }, [earthReady]);
 
-  const handleDashboardClick = useCallback(() => {
-    try {
-      const linkParam = config?.linkParam;
+  const handleDashboardClick = () => {
+    const linkParam = config.linkParam;
 
-      if (!linkParam || !linkParam.linkType || linkParam.linkType === LinkType.None) {
-        return;
-      }
-
-      if (linkParam.linkType === LinkType.Page && linkParam.value) {
-        const targetPage = linkParam.value;
-        const openType = linkParam.openType || "_self";
-
-        if (openType === "_blank") {
-          const currentUrl = window.location.href.split('#')[0];
-          const newUrl = `${currentUrl}page/${targetPage}/`;
-          window.open(newUrl, '_blank');
-        } else if (openType === "_top") {
-          const currentUrl = window.top?.location?.href?.split('#')[0] || window.location.href.split('#')[0];
-          if (window.top) {
-            window.top.location.href = `${currentUrl}page/${targetPage}/`;
-          } else {
-            jimuHistory.changePage(targetPage);
-          }
-        } else {
-          jimuHistory.changePage(targetPage);
-        }
-      }
-    } catch (error) {
-      console.error('Error handling dashboard click:', error);
+    if (!linkParam || !linkParam.linkType || linkParam.linkType === LinkType.None) {
+      return;
     }
-  }, [config]);
+
+    if (linkParam.linkType === LinkType.Page && linkParam.value) {
+      const targetPage = linkParam.value;
+      const openType = linkParam.openType || "_self";
+
+      if (openType === "_blank") {
+        const currentUrl = window.location.href.split('#')[0];
+        const newUrl = `${currentUrl}page/${targetPage}/`;
+        window.open(newUrl, '_blank');
+      } else if (openType === "_top") {
+        const currentUrl = window.top.location.href.split('#')[0];
+        window.top.location.href = `${currentUrl}page/${targetPage}/`;
+      } else {
+        jimuHistory.changePage(targetPage);
+      }
+    }
+  };
 
   return (
     <div className="space-eco-monitoring-widget">
@@ -324,6 +171,7 @@ const Widget = (props: AllWidgetProps<IMConfig>) => {
       <Earth3D
         glbUrl=""
         autoRotateSpeed={earthRotationSpeed}
+        atmosphereRotationSpeed={atmosphereRotationSpeed}
         earthScale={earthScale}
         earthPositionY={earthPositionY}
         onEarthReady={handleEarthReady}
@@ -383,3 +231,4 @@ const Widget = (props: AllWidgetProps<IMConfig>) => {
 };
 
 export default Widget;
+

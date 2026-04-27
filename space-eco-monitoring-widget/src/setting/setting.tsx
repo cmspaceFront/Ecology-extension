@@ -150,3 +150,4 @@ const Setting = (props: AllWidgetSettingProps<IMConfig>) => {
 };
 
 export default Setting;
+

@@ -12,11 +12,13 @@ interface CarouselProps {
   currentLocale: string;
   cardLinkParams?: Record<string, IMLinkParam>;
   transitionDuration?: number;
+  autoRotateInterval?: number;
   context?: WidgetContext;
 }
 
-const DEFAULT_TRANSITION_DURATION = 900;
-const TRANSITION_LOCK_MAX = 450; // более короткая блокировка для отзывчивости
+const DEFAULT_TRANSITION_DURATION = 2200;
+const DEFAULT_AUTO_ROTATE_INTERVAL = 15000; // slower auto-rotation by default
+const TRANSITION_LOCK_MAX = 900; // reduce button lock time for quicker response
 const TRANSITION_EASING = 'cubic-bezier(0.2, 0.8, 0.2, 1)';
 
 const Carousel: React.FC<CarouselProps> = ({
@@ -24,6 +26,7 @@ const Carousel: React.FC<CarouselProps> = ({
   currentLocale,
   cardLinkParams,
   transitionDuration = DEFAULT_TRANSITION_DURATION,
+  autoRotateInterval = DEFAULT_AUTO_ROTATE_INTERVAL,
   context
 }) => {
   const [centerIndex, setCenterIndex] = useState(0);
@@ -32,6 +35,7 @@ const Carousel: React.FC<CarouselProps> = ({
   const [swipeOffset, setSwipeOffset] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const wasSwipeRef = useRef(false);
+  const autoRotateIntervalRef = useRef<number | null>(null);
   const transitionTimeoutRef = useRef<number | null>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const swipeOffsetRef = useRef(0);
@@ -112,6 +116,29 @@ const Carousel: React.FC<CarouselProps> = ({
     return (current - 1 + cards.length) % cards.length;
   }, [cards]);
 
+  const setupAutoRotate = React.useCallback(() => {
+    if (autoRotateIntervalRef.current) {
+      window.clearInterval(autoRotateIntervalRef.current);
+    }
+
+    if (!cards || cards.length === 0) {
+      return;
+    }
+
+    autoRotateIntervalRef.current = window.setInterval(() => {
+      startTransition('next');
+      setCenterIndex((prev) => getNextIndex(prev));
+    }, autoRotateInterval);
+  }, [cards, getNextIndex, startTransition, autoRotateInterval]);
+
+  useEffect(() => {
+    setupAutoRotate();
+    return () => {
+      if (autoRotateIntervalRef.current) {
+        window.clearInterval(autoRotateIntervalRef.current);
+      }
+    };
+  }, [setupAutoRotate]);
 
   useEffect(() => () => {
     if (transitionTimeoutRef.current) {
@@ -122,6 +149,9 @@ const Carousel: React.FC<CarouselProps> = ({
     }
   }, []);
 
+  const resetAutoRotate = React.useCallback(() => {
+    setupAutoRotate();
+  }, [setupAutoRotate]);
 
   const openLink = (param?: IMLinkParam) => {
     if (!param || !param.linkType || param.linkType === LinkType.None) {
@@ -165,12 +195,14 @@ const Carousel: React.FC<CarouselProps> = ({
     if (!cards || cards.length === 0 || isTransitioning) return;
     startTransition('prev');
     setCenterIndex((prev) => getPrevIndex(prev));
+    resetAutoRotate();
   };
 
   const handleNext = () => {
     if (!cards || cards.length === 0 || isTransitioning) return;
     startTransition('next');
     setCenterIndex((prev) => getNextIndex(prev));
+    resetAutoRotate();
   };
 
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -224,9 +256,11 @@ const Carousel: React.FC<CarouselProps> = ({
       if (deltaX > 0) {
         startTransition('prev');
         setCenterIndex((prev) => getPrevIndex(prev));
+        resetAutoRotate();
       } else {
         startTransition('next');
         setCenterIndex((prev) => getNextIndex(prev));
+        resetAutoRotate();
       }
 
       window.setTimeout(() => {
@@ -284,9 +318,11 @@ const Carousel: React.FC<CarouselProps> = ({
         if (deltaX > 0) {
           startTransition('prev');
           setCenterIndex((prev) => getPrevIndex(prev));
+          resetAutoRotate();
         } else {
           startTransition('next');
           setCenterIndex((prev) => getNextIndex(prev));
+          resetAutoRotate();
         }
 
         window.setTimeout(() => {
@@ -311,7 +347,7 @@ const Carousel: React.FC<CarouselProps> = ({
       window.removeEventListener('mousemove', handleGlobalMouseMove);
       window.removeEventListener('mouseup', handleGlobalMouseUp);
     };
-  }, [isDragging, getPrevIndex, getNextIndex, minSwipeDistance, transitionDuration]);
+  }, [isDragging, getPrevIndex, getNextIndex, resetAutoRotate, minSwipeDistance, transitionDuration]);
 
   const handleMouseDown = (e: React.MouseEvent) => {
     dragStartX.current = e.clientX;
@@ -355,17 +391,11 @@ const Carousel: React.FC<CarouselProps> = ({
 
   return (
     <div className="carousel-container">
-      <svg style={{ display: 'none', position: 'absolute' }} aria-hidden="true">
-        <filter id="lg-dist" x="-10%" y="-10%" width="120%" height="120%">
+      <svg style={{ display: 'none', position: 'absolute' }}>
+        <filter id="lg-dist" x="0%" y="0%" width="100%" height="100%">
           <feTurbulence type="fractalNoise" baseFrequency="0.008 0.008" numOctaves="2" seed="92" result="noise" />
           <feGaussianBlur in="noise" stdDeviation="2" result="blurred" />
           <feDisplacementMap in="SourceGraphic" in2="blurred" scale="70" xChannelSelector="R" yChannelSelector="G" />
-        </filter>
-        {/* Искажённое стекло только для центральной карточки */}
-        <filter id="lg-dist-center" x="-15%" y="-15%" width="130%" height="130%">
-          <feTurbulence type="fractalNoise" baseFrequency="0.012 0.012" numOctaves="3" seed="41" result="noise" />
-          <feGaussianBlur in="noise" stdDeviation="3" result="blurred" />
-          <feDisplacementMap in="SourceGraphic" in2="blurred" scale="110" xChannelSelector="R" yChannelSelector="G" />
         </filter>
       </svg>
 

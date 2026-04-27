@@ -16,15 +16,13 @@
 ========================================================= */
 
 .space-eco-monitoring-widget {
-  position: fixed !important;
-  top: 0 !important;
-  left: 0 !important;
-  width: 100vw !important;
-  height: 100vh !important;
+  position: relative;
+  width: 100%;
+  height: 100%;
   overflow: hidden;
   background: #000011;
-  z-index: 100;
 
+  /* ✅ enable container queries */
   container-type: inline-size;
   container-name: spaceeco;
 }
@@ -99,13 +97,18 @@
   text-transform: uppercase;
   line-height: 1.05;
 
+  /* ✅ adaptive font size */
   font-size: clamp(34px, 7.2vw, 120px);
+
+  /* ✅ adaptive letter spacing */
   letter-spacing: clamp(1px, 0.45vw, 8px);
 
+  /* ✅ FIX: prevent per-letter wrapping (NO "G" alone) */
   white-space: nowrap;
   overflow-wrap: normal;
   word-break: keep-all;
 
+  /* ✅ your gradient text stays */
   background: linear-gradient(135deg,
       #ffffff 0%,
       #ffffff 45%,
@@ -125,6 +128,7 @@
   margin-top: clamp(6px, 1vw, 16px);
 }
 
+/* Typewriter cursor animation */
 .typewriter-cursor {
   display: inline-block;
   margin-left: 4px;
@@ -237,6 +241,7 @@
   transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Enhanced Liquid Glass Effect for Open Buttons */
 .space-eco-language-toggle.open,
 .space-eco-profile-toggle.open {
   box-shadow: 0 12px 48px rgba(20, 20, 40, 0.75),
@@ -379,6 +384,7 @@
     inset 0 0 3px rgba(255, 255, 255, 0.2);
 }
 
+/* Profile block */
 .space-eco-profile-info {
   padding: 10px 16px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
@@ -545,6 +551,8 @@
   pointer-events: none;
   opacity: 0;
   transition: opacity 1.8s ease;
+
+  /* ✅ above earth (1), below UI (50) */
   z-index: 5;
 }
 
@@ -719,6 +727,7 @@
   }
 }
 
+/* ✅ main mobile layout */
 @media (max-width: 768px) {
   .space-eco-header {
     padding: 24px 18px !important;
@@ -780,6 +789,7 @@
   }
 }
 
+/* ✅ ultra small phones */
 @media (max-width: 360px) {
   .space-eco-title-container {
     top: 48% !important;
@@ -792,6 +802,7 @@
     letter-spacing: 1px !important;
   }
 }
+
 
 .space-eco-title-container {
   z-index: 60;
@@ -806,14 +817,19 @@
   z-index: 70;
 }
 
+/* --- Transition band: 1024 -> 768 (title becomes nicer while globe goes behind) --- */
 @container spaceeco (max-width: 1024px) {
   .space-eco-title-container {
+    /* меньше “жирной” ширины, чтобы не выдавливать композицию */
     width: min(90%, 760px);
   }
 
   .space-eco-title-line1,
   .space-eco-title-line2 {
+    /* мягче масштаб (в этом диапазоне 7.2vw слишком агрессивно) */
     font-size: clamp(34px, 6.1vw, 92px);
+
+    /* уменьшаем трекинг: он больше всего делает “sucks” */
     letter-spacing: clamp(1px, 0.22vw, 4px);
   }
 }
@@ -832,20 +848,26 @@
 
 /* =========================================================
    TITLE: TRUE RESPONSIVE SCALE (NO WRAP), OVERRIDE ALL
+   Paste at the VERY END of style.css
 ========================================================= */
 
 .space-eco-title-container .space-eco-title-line1,
 .space-eco-title-container .space-eco-title-line2 {
+  /* keep exactly 2 lines, no internal wrapping */
   white-space: nowrap !important;
   overflow-wrap: normal !important;
   word-break: keep-all !important;
 
+  /* ✅ main fix: sane scaling across ALL widths */
   font-size: clamp(28px, 5.2vw, 104px) !important;
+
+  /* ✅ main fix: tracking must NOT scale aggressively */
   letter-spacing: clamp(1px, 0.18vw, 4px) !important;
 
   line-height: 1.05 !important;
 }
 
+/* If container queries are supported, use container-width scaling (more stable in ExB layouts) */
 @supports (width: 1cqw) {
 
   .space-eco-title-container .space-eco-title-line1,
@@ -856,35 +878,85 @@
 }
 
 /* =========================================================
-   TITLE / GLOBE LAYERING
+   TITLE BEHIND GLOBE at <= 1024 (container width)
+   Paste at the VERY END of style.css
 ========================================================= */
 
+/* default: title above globe (your current desktop look) */
 .space-eco-title-container {
   z-index: 60;
 }
 
+/* <=1024: push ONLY the title behind the earth canvas (earth canvas is z-index: 2) */
 @container spaceeco (max-width: 1024px) {
   .space-eco-title-container {
-    z-index: 60 !important;
+    z-index: 1 !important;
+    /* behind globe, above background */
   }
 }
 
+/* fallback if container queries aren’t applied for some reason */
+@media (max-width: 1024px) {
+  .space-eco-title-container {
+    z-index: 1 !important;
+  }
+}
+
+/* keep UI controls above everything */
+.space-eco-header,
+.space-eco-dashboard-button,
+.space-eco-website-url {
+  z-index: 70 !important;
+}
+
+/* ===========================
+   iPad/<=1024: Globe behind title
+   =========================== */
+
+/* ensure earth canvas stays below */
+.space-eco-earth-layer canvas {
+  z-index: 2 !important;
+}
+
+/* <=1024: title ABOVE earth */
+@container spaceeco (max-width: 1024px) {
+  .space-eco-title-container {
+    z-index: 60 !important;
+    /* above earth canvas */
+  }
+}
+
+/* fallback if container queries not applied */
 @media (max-width: 1024px) {
   .space-eco-title-container {
     z-index: 60 !important;
   }
 }
 
-.space-eco-earth-layer canvas {
-  z-index: 2 !important;
+/* keep UI controls above everything */
+.space-eco-header,
+.space-eco-dashboard-button,
+.space-eco-website-url {
+  z-index: 70 !important;
 }
 
+/* =========================================================
+   FINAL LAYERING RULES (single source of truth)
+   ========================================================= */
+
+/* Earth canvas always below title text */
 .space-eco-earth-layer canvas {
   position: absolute;
   inset: 0;
   z-index: 2;
 }
 
+/* Title always above earth */
+.space-eco-title-container {
+  z-index: 60;
+}
+
+/* <=576: enforce same stacking (earth behind text) */
 @media (max-width: 576px) {
   .space-eco-earth-layer canvas {
     z-index: 2 !important;
@@ -895,81 +967,9 @@
   }
 }
 
+/* Controls always above everything */
 .space-eco-header,
 .space-eco-dashboard-button,
 .space-eco-website-url {
   z-index: 70 !important;
-}
-
-/* =========================================================
-   ONLY FOR FULL HD LAPTOP / 1920-ish WIDTH
-   does NOT affect 2K / 4K blocks
-========================================================= */
-
-@media (min-width: 1850px) and (max-width: 1940px) {
-  .falling-stars-layer {
-    overflow: hidden;
-  }
-
-  .falling-star {
-    position: absolute !important;
-  }
-
-  .space-eco-earth-layer {
-    transform: translateX(-2%) scale(1.05);
-    transform-origin: center right;
-  }
-
-  .falling-star::before {
-    width: 210px;
-  }
-
-  .falling-star-1,
-  .falling-star-2,
-  .falling-star-3,
-  .falling-star-4,
-  .falling-star-5,
-  .falling-star-7 {
-    display: none;
-  }
-
-  .falling-star-6 {
-    top: 6%;
-    left: 58%;
-  }
-
-  .falling-star-8 {
-    top: 9%;
-    left: 66%;
-  }
-
-  .falling-star-9 {
-    top: 12%;
-    left: 62%;
-  }
-
-  .falling-star-10 {
-    top: 5%;
-    left: 72%;
-  }
-
-  .falling-star-11 {
-    top: 10%;
-    left: 78%;
-  }
-
-  .falling-star-12 {
-    top: 14%;
-    left: 74%;
-  }
-
-  .falling-star-13 {
-    top: 7%;
-    left: 84%;
-  }
-
-  .falling-star-14 {
-    top: 16%;
-    left: 68%;
-  }
 }

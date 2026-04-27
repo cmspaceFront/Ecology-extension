@@ -22,12 +22,7 @@ export interface Config {
   cardLinkParams?: Record<string, IMLinkParam>;
   earthScale?: number;
   earthRotationSpeed?: number;
-  /** Смещение только 3D-модели (GLB) по оси Y. Управляется из настроек, влияет только на вертикальную позицию модели. */
-  glbPositionY?: number;
-  /** @deprecated используйте glbPositionY */
   earthPositionY?: number;
-  /** @deprecated используйте glbPositionY */
-  earthVerticalPosition?: number;
   carouselTransitionDuration?: number;
   carouselAutoRotateInterval?: number;
 }

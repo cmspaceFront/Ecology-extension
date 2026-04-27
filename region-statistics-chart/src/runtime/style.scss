@@ -257,7 +257,7 @@
 .region-card__title-wrapper {
   position: relative;
   width: 100%;
-  margin-bottom: 20px;
+  margin-bottom: 12px;
   min-height: 44px;
   animation: titleFadeInUp 0.7s ease-out both;
 }
@@ -317,16 +317,16 @@
 
 .region-card__title-center .region-card__title {
   pointer-events: auto;
-  max-width: min(560px, calc(100% - 200px));
-  padding: 0 12px;
+  max-width: min(560px, calc(100% - 130px));
+  padding: 0 8px;
 }
 
 .region-card__title {
   font-family: 'Geologica', sans-serif;
-  font-size: 18px;
+  font-size: 15px;
   font-weight: 400;
   text-align: center;
-  line-height: 28px;
+  line-height: 22px;
   min-width: 0;
   color: #ffffff;
   overflow: hidden;
@@ -477,6 +477,130 @@
   font-weight: 300;
   white-space: nowrap; // Предотвращаем перенос текста
   color: #afafb3;
+}
+
+// ─── Responsive: iPad and smaller viewports (≤1400px) ───────────────────────
+@media (max-width: 1400px) {
+  .region-card {
+    padding: 8px 10px;
+    border-radius: 16px;
+  }
+
+  // 3-колоночный grid: [левые кнопки] [заголовок] [правая кнопка]
+  // display:contents на title-bar "растворяет" его — дети участвуют в родительском grid
+  .region-card__title-wrapper {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    column-gap: 4px;
+    min-height: 32px;
+    margin-bottom: 6px;
+  }
+
+  .region-card__title-bar {
+    display: contents;
+  }
+
+  .region-card__title-left {
+    grid-column: 1;
+    grid-row: 1;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .region-card__title-right {
+    grid-column: 3;
+    grid-row: 1;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+
+  // явно col 2 row 1 — иначе auto-placement уходит на строку 2
+  .region-card__title-center {
+    position: static;
+    grid-column: 2;
+    grid-row: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+  }
+
+  .region-card__title {
+    font-size: 12px;
+    line-height: 16px;
+    white-space: normal;
+    overflow: hidden;
+    text-overflow: unset;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    text-align: center;
+  }
+
+  .region-card__title-center .region-card__title {
+    max-width: 100%;
+    padding: 0 2px;
+    pointer-events: auto;
+  }
+
+  .region-card__back-button {
+    width: 30px;
+    height: 30px;
+
+    svg {
+      width: 18px;
+      height: 18px;
+    }
+  }
+
+  .region-card__sort-button {
+    width: 30px;
+    height: 30px;
+    padding: 2px 4px;
+  }
+
+  .region-card__title-right-spacer {
+    width: 30px;
+    height: 30px;
+  }
+
+  .year-filter.year-filter--chart {
+    .year-filter__dropdown {
+      min-width: 80px;
+    }
+
+    .year-filter__trigger {
+      height: 32px;
+      font-size: 12px;
+    }
+  }
+
+  .region-card__title-year .year-filter.year-filter--chart {
+    .year-filter__trigger {
+      width: 78px;
+      min-width: 78px;
+      max-width: 78px;
+      padding-left: 6px;
+      padding-right: 22px;
+    }
+  }
+
+  .year-filter__option {
+    font-size: 12px;
+    padding: 8px 12px;
+  }
+
+  // Compensate canvas offset for reduced gridLeft at narrower container widths
+  .region-card__chart canvas {
+    left: -28px !important;
+  }
+
+  .region-card__chart--level-3 canvas {
+    left: -13px !important;
+  }
 }
 
 // Border Glow Animation - using theme colors (only border, no box-shadow)

@@ -53,6 +53,44 @@
   max-width: min(420px, calc(100% - 16px));
 }
 
+/* ≤ 1400px — iPad / smaller monitors */
+@media (max-width: 1400px) {
+  .map-popup {
+    width: 360px;
+    max-width: min(360px, calc(100% - 12px));
+    max-height: min(320px, calc(100% - 12px));
+  }
+
+  .map-popup__title {
+    font-size: 15px;
+  }
+
+  .map-popup__header {
+    margin-bottom: 12px;
+  }
+
+  .map-popup__field {
+    padding: 10px 0;
+    gap: 16px;
+  }
+
+  .map-popup__label,
+  .map-popup__value {
+    font-size: 13px;
+  }
+
+  .map-popup__section-title--after-global {
+    font-size: 15px;
+    margin-top: 14px;
+    padding-top: 10px;
+  }
+
+  .map-popup__edit-button {
+    padding: 9px 14px;
+    font-size: 13px;
+  }
+}
+
 @media (min-width: 1920px) {
   .map-popup {
     width: 520px;

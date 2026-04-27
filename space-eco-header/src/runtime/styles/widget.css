@@ -1836,11 +1836,150 @@
 }
 
 @media (max-width: 1400px) {
+  /* ── Header layout ── */
+  .header-right-side {
+    gap: 16px;
+  }
+
+  /* ── Icon buttons ── */
+  .icon-button {
+    width: 26px;
+    height: 26px;
+  }
+
   .icon-button svg {
     max-width: 20px;
     max-height: 20px;
   }
+
+  /* ── Search ── */
   .search-input {
-    font-size: 10px;
+    font-size: 12px;
+  }
+
+  /* ── Profile button ── */
+  .profile-button {
+    width: 32px;
+    height: 32px;
+    font-size: 13px;
+  }
+
+  /* ── Shared dropdown header (notifications / color / category) ── */
+  .notification-dropdown-menu,
+  .color-dropdown-menu,
+  .category-dropdown-menu {
+    width: 340px;
+  }
+
+  .notification-dropdown-header,
+  .color-dropdown-header,
+  .category-dropdown-header {
+    padding: 12px 16px;
+  }
+
+  .notification-dropdown-title,
+  .color-dropdown-title,
+  .category-dropdown-title {
+    font-size: 14px;
+    line-height: 20px;
+  }
+
+  /* ── Notification items ── */
+  .notification-item {
+    padding: 10px 16px;
+    gap: 10px;
+  }
+
+  .notification-icon-wrapper {
+    width: 32px;
+    height: 32px;
+  }
+
+  .notification-text {
+    font-size: 12px;
+    line-height: 17px;
+  }
+
+  .notification-timestamp {
+    font-size: 11px;
+    line-height: 14px;
+  }
+
+  .notification-list {
+    padding: 6px 0;
+  }
+
+  /* ── Theme color options ── */
+  .theme-options-container {
+    padding: 12px 16px;
+    gap: 8px;
+  }
+
+  .theme-option {
+    height: 60px;
+    border-radius: 10px;
+  }
+
+  .theme-name {
+    font-size: 14px;
+  }
+
+  /* ── Category content ── */
+  .category-content {
+    padding: 12px 16px;
+  }
+
+  .category-section {
+    margin-bottom: 16px;
+  }
+
+  .category-section-title {
+    font-size: 11px;
+    margin-bottom: 8px;
+  }
+
+  .category-item-title {
+    font-size: 13px;
+  }
+
+  .category-item-meta {
+    font-size: 11px;
+  }
+
+  /* ── Language dropdown ── */
+  .language-dropdown-menu {
+    min-width: 180px;
+  }
+
+  .language-dropdown-item {
+    padding: 9px 14px;
+    font-size: 13px;
+  }
+
+  .language-item-label {
+    font-size: 13px;
+  }
+
+  /* ── Profile/account dropdown ── */
+  .profile-account-dropdown-menu {
+    min-width: 190px;
+  }
+
+  .profile-account-dropdown-title {
+    font-size: 13px;
+  }
+
+  /* ── Notification pagination ── */
+  .notification-pagination {
+    padding: 8px 16px;
+  }
+
+  .notification-pagination-btn {
+    font-size: 11px;
+    padding: 4px 8px;
+  }
+
+  .notification-pagination-info {
+    font-size: 11px;
   }
 }

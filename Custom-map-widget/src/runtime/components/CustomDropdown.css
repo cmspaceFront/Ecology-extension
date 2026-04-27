@@ -177,6 +177,20 @@
   }
 }
 
+@media (max-width: 1400px) {
+  .custom-dropdown__trigger {
+    height: 40px;
+    padding: 10px 14px;
+    padding-right: 40px;
+    font-size: 13px;
+  }
+
+  .custom-dropdown__option {
+    padding: 10px 14px;
+    font-size: 13px;
+  }
+}
+
 
 
 

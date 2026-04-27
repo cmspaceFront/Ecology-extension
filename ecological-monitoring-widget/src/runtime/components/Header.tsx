@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { jsx, LinkType, jimuHistory, getAppStore, loadArcGISJSAPIModules } from 'jimu-core';
+import { jsx, LinkType, jimuHistory } from 'jimu-core';
 import type { IMLinkParam } from 'jimu-core';
 
 import { createPortal } from 'react-dom';
@@ -31,7 +31,9 @@ const Header: React.FC<HeaderProps> = ({ logoUrl, logoLinkParam, currentLocale, 
         const authData = JSON.parse(exbAuth);
         return authData.email || '';
       }
-    } catch (e) {}
+    } catch (e) {
+      console.error('Error parsing exb_auth:', e);
+    }
     return '';
   };
 
@@ -52,101 +54,6 @@ const Header: React.FC<HeaderProps> = ({ logoUrl, logoLinkParam, currentLocale, 
   const getTranslation = (key: 'account' | 'logout'): string => {
     const translations = profileTranslations[currentLocale] || profileTranslations['ru'];
     return translations[key];
-  };
-
-  // Portal / logout helpers — та же логика, что и у виджета space-eco-header
-  const getPortalBaseUrl = (): string => {
-    try {
-      const state = getAppStore().getState() as { portalUrl?: string };
-      const statePortal = state?.portalUrl;
-      const defaultPortal = "https://sgm.uzspace.uz/portal";
-      const normalize = (url?: string): string | null => {
-        if (typeof url !== "string") return null;
-        const trimmed = url.trim();
-        return trimmed ? trimmed.replace(/\/+$/, "") : null;
-      };
-      return normalize(statePortal) ?? defaultPortal;
-    } catch {
-      return "https://sgm.uzspace.uz/portal";
-    }
-  };
-
-  const getPortalClientId = (): string => "arcgisonline";
-
-  const getPortalHost = (): string | null => {
-    try {
-      return new URL(getPortalBaseUrl()).hostname;
-    } catch {
-      return null;
-    }
-  };
-
-  const buildCookieDomains = (): string[] => {
-    const domains = new Set<string>();
-    const portalHost = getPortalHost();
-    const currentHost = window.location.hostname;
-    const addHostVariants = (host: string | null) => {
-      if (!host) return;
-      domains.add(host);
-      domains.add(`.${host}`);
-      const parts = host.split(".");
-      if (parts.length > 2) {
-        domains.add(`.${parts.slice(parts.length - 2).join(".")}`);
-      }
-    };
-    addHostVariants(portalHost);
-    addHostVariants(currentHost);
-    return Array.from(domains);
-  };
-
-  const clearCookies = () => {
-    const expires = "Thu, 01 Jan 1970 00:00:00 GMT";
-    const domains = buildCookieDomains();
-    document.cookie.split(";").forEach((cookie) => {
-      const [name] = cookie.trim().split("=");
-      if (!name) return;
-      document.cookie = `${name}=;expires=${expires};path=/`;
-      domains.forEach((domain) => {
-        document.cookie = `${name}=;expires=${expires};path=/;domain=${domain}`;
-      });
-    });
-  };
-
-  const buildPortalSignOutUrl = (redirectUrl: string): string => {
-    const portalBase = getPortalBaseUrl();
-    const params = new URLSearchParams();
-    params.set("client_id", getPortalClientId());
-    params.set("redirect_uri", redirectUrl);
-    return `${portalBase}/sharing/rest/oauth2/signout?${params.toString()}`;
-  };
-
-  const revokePortalToken = async (IdentityManager: any) => {
-    const portalBase = getPortalBaseUrl();
-    const revokeUrl = `${portalBase}/sharing/rest/oauth2/revokeToken`;
-    try {
-      const clientIdFromConfig = getPortalClientId();
-      const credential =
-        IdentityManager?.credentials?.find(
-          (cred: any) =>
-            cred?.server?.startsWith(portalBase) || cred?.portalUrl?.startsWith(portalBase)
-        ) || IdentityManager?.credentials?.[0];
-      const refreshToken = credential?.refreshToken ?? credential?.token;
-      const clientId =
-        credential?.oAuthInfo?.appId ?? credential?.appId ?? clientIdFromConfig;
-      if (!refreshToken) return;
-      const body = new URLSearchParams({
-        f: "json",
-        auth_token: refreshToken,
-        client_id: clientId,
-        token_type_hint: "refresh_token",
-      });
-      await fetch(revokeUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body,
-        credentials: "include",
-      });
-    } catch (_) {}
   };
 
   useEffect(() => {
@@ -214,59 +121,11 @@ const Header: React.FC<HeaderProps> = ({ logoUrl, logoLinkParam, currentLocale, 
     window.dispatchEvent(new Event('storage'));
   };
 
-  const handleLogout = async () => {
-    setIsProfileOpen(false);
-
-    const siteUrl = "https://sgm.uzspace.uz/portal/apps/experiencebuilder/experience/?id=a4fdc44f5f3142f5aad408d12d7d00b0";
-    const portalBase = getPortalBaseUrl();
-    const clientId = getPortalClientId();
-    const authPageUrl = `${portalBase}/sharing/oauth2/authorize`;
-    const authUrlWithRedirect = new URL(authPageUrl);
-    authUrlWithRedirect.searchParams.set("client_id", clientId);
-    authUrlWithRedirect.searchParams.set("response_type", "code");
-    authUrlWithRedirect.searchParams.set("redirect_uri", siteUrl);
-    authUrlWithRedirect.searchParams.set("redirect", siteUrl);
-    const finalAuthUrl = authUrlWithRedirect.toString();
-
-    let IdentityManagerModule: any = null;
-    try {
-      [IdentityManagerModule] = await loadArcGISJSAPIModules([
-        "esri/identity/IdentityManager",
-      ]);
-    } catch (_) {
-      IdentityManagerModule = null;
-    }
-
-    clearCookies();
-    sessionStorage.clear();
-    localStorage.clear();
-
-    try {
-      if ("indexedDB" in window) {
-        const databases = await indexedDB.databases();
-        databases.forEach((db) => {
-          if (db.name) indexedDB.deleteDatabase(db.name);
-        });
-      }
-    } catch (_) {}
-
-    if (IdentityManagerModule) {
-      await revokePortalToken(IdentityManagerModule);
-      try {
-        IdentityManagerModule.destroyCredentials();
-      } catch (_) {}
-    }
-
-    const fullSignOutUrl = buildPortalSignOutUrl(finalAuthUrl);
-    if (window.top && window.top !== window) {
-      try {
-        window.top.location.replace(fullSignOutUrl);
-      } catch (e) {
-        window.location.replace(fullSignOutUrl);
-      }
-    } else {
-      window.location.replace(fullSignOutUrl);
-    }
+  const handleLogout = () => {
+    localStorage.removeItem('exb_auth');
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('token');
+    window.location.href = '/';
   };
 
   const renderFlag = (locale: string) => {

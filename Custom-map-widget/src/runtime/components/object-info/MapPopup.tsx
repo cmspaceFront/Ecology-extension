@@ -107,10 +107,11 @@ const MapPopup: React.FC<MapPopupProps> = ({
   };
 
   const handleEditClick = () => {
-    if (canEdit() && onEdit) {
-      onEdit();
-      onClose();
-    }
+    // Temporarily disabled: Edit button should not open the modal.
+    // if (canEdit() && onEdit) {
+    //   onEdit();
+    //   onClose();
+    // }
   };
 
   useEffect(() => {
@@ -543,10 +544,9 @@ const MapPopup: React.FC<MapPopupProps> = ({
           <div className="map-popup__section">
             <button
               type="button"
-              className={`map-popup__edit-button ${!canEdit() ? 'map-popup__edit-button--disabled' : ''}`}
-              onClick={handleEditClick}
-              disabled={!canEdit()}
-              title={!canEdit() ? t('popup.errors.noPermission') : ''}
+              className="map-popup__edit-button map-popup__edit-button--disabled"
+              disabled
+              title={t('popup.errors.noPermission')}
             >
               <svg
                 className="map-popup__edit-icon"

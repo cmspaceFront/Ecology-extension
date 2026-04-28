@@ -382,7 +382,7 @@
   height: 20px;
 }
 
-.map-popup__edit-button:hover {
+.map-popup__edit-button:hover:not(:disabled) {
   filter: brightness(1.1);
 }
 
@@ -394,6 +394,7 @@
 .map-popup__edit-button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+  pointer-events: none;
   background: rgba(148, 163, 184, 0.3);
   background-image: none;
 }

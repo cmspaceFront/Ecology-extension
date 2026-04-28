@@ -1195,10 +1195,9 @@ const PolygonPopup = ({ isOpen, onClose, properties, position, containerRef, onE
           <div className="map-popup__footer">
             <button
               type="button"
-              className={`map-popup__edit-button ${!canEdit() ? 'map-popup__edit-button--disabled' : ''}`}
-              onClick={handleEditClick}
-              disabled={!canEdit()}
-              title={!canEdit() ? t('popup.errors.noPermission') : ''}
+              className="map-popup__edit-button map-popup__edit-button--disabled"
+              disabled
+              title={t('popup.errors.noPermission')}
             >
               <svg
                 className="map-popup__edit-icon"
